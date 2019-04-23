@@ -1,0 +1,84 @@
+package com.example.state.list;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.Arrays;
+
+import com.example.main.LowReference;
+import com.example.state.State;
+import com.example.utils.ConsoleLog;
+import com.example.utils.KeyManager;
+import com.example.utils.MouseManager;
+
+public class Menu implements State
+{
+	public enum MenuButton
+	{
+		START,
+		SETTINGS,
+		QUIT
+	}
+
+	private int			selection;
+	private String[]	options;
+
+	public Menu()
+	{
+		int optionLen = MenuButton.values().length;
+		options = new String[optionLen];
+		for (int i = 0; i < optionLen; i++) {
+			options[i] = MenuButton.values()[i].toString();
+		}
+	}
+
+	private void selectOption()
+	{
+		// switch (selection)
+	}
+
+	@Override
+	public void processInput()
+	{
+		// if (KeyManager.wasPressed(KeyManager.UP)) {
+		// selection--;
+		// if (selection < 0) selection = options.length - 1;
+		// }
+		// if (KeyManager.wasPressed(KeyManager.DOWN)) {
+		// selection++;
+		// if (selection >= options.length) selection = 0;
+		// }
+		//
+		// if (KeyManager.wasPressed(KeyManager.ENTER)) {
+		// selectOption(sm);
+		// }
+	}
+
+	@Override
+	public void update()
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void render(Graphics2D g)
+	{
+		g.setColor(Color.MAGENTA);
+		g.fillRect(0, 0, LowReference.getWidth(), LowReference.getHeight());
+
+		g.setColor(Color.RED);
+		g.fillRect(0, 0, 50, 50);
+
+		g.fillRect(0, LowReference.getHeight() - 50, 50, 50);
+		g.setColor(Color.CYAN);
+
+		g.drawString("X: " + MouseManager.getX() + ", Y: " + MouseManager.getY(), 100, 100);
+	}
+
+	@Override
+	public String getName()
+	{
+		return "MENU";
+	}
+
+}
