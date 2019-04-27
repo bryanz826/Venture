@@ -2,10 +2,10 @@ package com.example.state.list;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.Arrays;
 
 import com.example.main.LowReference;
 import com.example.state.State;
+import com.example.state.StateManager;
 import com.example.utils.ConsoleLog;
 import com.example.utils.KeyManager;
 import com.example.utils.MouseManager;
@@ -51,6 +51,9 @@ public class Menu implements State
 		// if (KeyManager.wasPressed(KeyManager.ENTER)) {
 		// selectOption(sm);
 		// }
+		if (KeyManager.anyKeyPress()|| MouseManager.anyButtonPress()) {
+			StateManager.setState("PLAY");
+		}
 	}
 
 	@Override
@@ -63,7 +66,7 @@ public class Menu implements State
 	@Override
 	public void render(Graphics2D g)
 	{
-		g.setColor(Color.MAGENTA);
+		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, LowReference.getWidth(), LowReference.getHeight());
 
 		g.setColor(Color.RED);

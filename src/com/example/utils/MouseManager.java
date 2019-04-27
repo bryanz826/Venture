@@ -29,6 +29,10 @@ public class MouseManager extends MouseAdapter
 		return buttonState[i];
 	}
 
+	public static boolean isUp(int i) {
+		return !buttonState[i];
+	}
+
 	public static boolean wasPressed(int i)
 	{
 		return isDown(i) && !prevButtonState[i];

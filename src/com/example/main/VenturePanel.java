@@ -7,6 +7,7 @@ import java.awt.image.BufferStrategy;
 import com.example.state.StateManager;
 import com.example.state.list.Intro;
 import com.example.state.list.Menu;
+import com.example.state.list.Play;
 import com.example.utils.KeyManager;
 import com.example.utils.MouseManager;
 
@@ -37,6 +38,7 @@ public class VenturePanel extends Canvas implements Runnable
 	{
 		StateManager.addState(new Intro());
 		StateManager.addState(new Menu());
+		StateManager.addState(new Play());
 
 		FPS = FRAME_CAP;
 		UPS = TARGET_UPS;
@@ -71,8 +73,8 @@ public class VenturePanel extends Canvas implements Runnable
 				} finally {
 					g.dispose();
 				}
-				bs.show();
 			} while (bs.contentsRestored());
+			bs.show();
 		} while (bs.contentsLost());
 	}
 
@@ -104,11 +106,11 @@ public class VenturePanel extends Canvas implements Runnable
 				dt--;
 			}
 
-			try {
-				Thread.sleep(0, 1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			// try {
+			// Thread.sleep(0, 1);
+			// } catch (InterruptedException e) {
+			// e.printStackTrace();
+			// }
 
 			if (frameDuration >= FRAME_CAPPER) {
 				render();

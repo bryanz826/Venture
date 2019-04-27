@@ -43,6 +43,10 @@ public class KeyManager extends KeyAdapter
 		return keyState[i];
 	}
 
+	public static boolean isUp(int i) {
+		return !keyState[i];
+	}
+
 	public static boolean wasPressed(int i)
 	{
 		return isDown(i) && !prevKeyState[i];

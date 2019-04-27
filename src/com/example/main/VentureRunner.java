@@ -1,9 +1,13 @@
 package com.example.main;
 
+import java.awt.Cursor;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -51,6 +55,11 @@ public class VentureRunner
 		});
 		window.add(game);
 		window.setResizable(false);
+		
+		Image cImage = Toolkit.getDefaultToolkit().createImage(getClass().getResource("/res/cursor.png"));
+		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(cImage, new Point(0, 0), "Cursor");
+		window.setCursor(cursor);
+		
 		setFullscreen();
 
 		game.run();

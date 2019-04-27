@@ -32,7 +32,7 @@ public class Intro implements State
 	@Override
 	public void processInput()
 	{
-		if (KeyManager.anyKeyDown() || MouseManager.anyButtonDown()) {
+		if (KeyManager.anyKeyDown()|| MouseManager.anyButtonDown()) {
 			ConsoleLog.write(getName() + " state skipped.");
 			StateManager.setState("MENU");
 		}
