@@ -48,7 +48,7 @@ public class Intro implements State
 	}
 
 	@Override
-	public void render(Graphics2D g)
+	public void render(Graphics2D g, float interpolationTime)
 	{
 		g.setColor(Color.CYAN);
 		g.fillRect(0, 0, LowReference.getWidth(), LowReference.getHeight());

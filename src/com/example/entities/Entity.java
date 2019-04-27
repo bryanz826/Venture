@@ -31,11 +31,11 @@ public class Entity implements Loopable
 	}
 
 	@Override
-	public void render(Graphics2D g)
+	public void render(Graphics2D g, float interpolation)
 	{
 //		 g.drawImage(, (int) x, (int) y, (int) width, (int) height, null);
 		g.setColor(Color.RED);
-		g.fillOval(Math.round(x), Math.round(y), Math.round(width), Math.round(height));
+		g.fillOval(Math.round(x + interpolation * dx), Math.round(y + interpolation * dy), Math.round(width), Math.round(height));
 	}
 
 	public void setPosition(float x, float y)

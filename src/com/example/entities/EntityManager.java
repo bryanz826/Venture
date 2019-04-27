@@ -27,9 +27,9 @@ public class EntityManager implements Playable
 	}
 
 	@Override
-	public void render(Graphics2D g)
+	public void render(Graphics2D g, float interpolationTime)
 	{
-		player.render(g);
+		player.render(g, interpolationTime);
 	}
 
 }

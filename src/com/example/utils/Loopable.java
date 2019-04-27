@@ -6,5 +6,5 @@ public interface Loopable
 {
 	void update();
 
-	void render(Graphics2D g);
+	void render(Graphics2D g, float interpolation);
 }

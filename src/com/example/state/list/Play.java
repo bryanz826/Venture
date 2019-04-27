@@ -32,11 +32,11 @@ public class Play implements State
 	}
 
 	@Override
-	public void render(Graphics2D g)
+	public void render(Graphics2D g, float interpolationTime)
 	{
 		g.setColor(new Color(58, 46, 63));
 		g.fillRect(0, 0, LowReference.getWidth(), LowReference.getHeight());
-		em.render(g);
+		em.render(g, interpolationTime);
 	}
 
 	@Override

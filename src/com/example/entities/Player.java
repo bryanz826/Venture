@@ -228,9 +228,9 @@ public class Player extends Living
 	}
 
 	@Override
-	public void render(Graphics2D g)
+	public void render(Graphics2D g, float interpolationTime)
 	{
-		super.render(g);
+		super.render(g, interpolationTime);
 
 		g.setColor(Color.ORANGE);
 		g.drawString("Location: (" + Math.round(getX()) + ", " + Math.round(getY()) + ")", 100, 100);

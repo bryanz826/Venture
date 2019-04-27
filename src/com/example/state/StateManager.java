@@ -42,9 +42,9 @@ public class StateManager
 		currentState.update();
 	}
 
-	public static void render(Graphics2D g)
+	public static void render(Graphics2D g, float interpolation)
 	{
-		currentState.render(g);
+		currentState.render(g, interpolation);
 	}
 
 	public static State getCurrentState()

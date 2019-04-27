@@ -1,5 +1,6 @@
 package com.example.main;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
@@ -13,39 +14,39 @@ import java.awt.event.WindowEvent;
 
 import com.example.utils.ConsoleLog;
 
-/**
- * Game runner that contains a JFrame instance.
- * 
- * @author bryan
- *
+/*
+ * Game runner that contains a Frame that holds a game reference. Currently offers windowed and fullscreen
  */
 public class VentureRunner
 {
-	public static int				WINDOWED_WIDTH	= 800;
-	public static int				WINDOWED_HEIGHT	= 450;
+	public static int				WINDOWED_WIDTH	= 1600;	// currently only one windowed resolution
+	public static int				WINDOWED_HEIGHT	= 900;	// TASK select best windowed resolution
 
-	static int						WIDTH;
-	static int						HEIGHT;
+	static int						WIDTH;					// current width
+	static int						HEIGHT;					// current height
 
-	private static GraphicsDevice	device;
-//	private static DisplayMode		origDisplayMode;		// for use in window switching
+	private static GraphicsDevice	device;					// contains device configurations
+	// private static DisplayMode origDisplayMode; // for use in window switching
+	// (not sure if required) ^
 
-	private static Frame			window;
-	private static VenturePanel		game;
+	private static Frame			window;					// Window
+	private static VenturePanel		game;					// Game
 
-	private static int				windowOffsetX;
-	private static int				windowOffsetY;
-	private static boolean			full;
+	private static int				windowedOffsetX;		// Offsets as a result of the windowed bar etc
+	private static int				windowedOffsetY;
+
+	private static boolean			full;					// State for full or windowed
 
 	public VentureRunner()
 	{
 		device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-//		origDisplayMode = device.getDisplayMode();
+		// origDisplayMode = device.getDisplayMode();
 
 		game = new VenturePanel();
 
 		window = new Frame("Venture");
-		window.addWindowListener(new WindowAdapter()
+		window.setBackground(Color.BLACK);
+		window.addWindowListener(new WindowAdapter() // terminate program upon "close"
 		{
 			@Override
 			public void windowClosing(WindowEvent e)
@@ -53,24 +54,25 @@ public class VentureRunner
 				System.exit(0);
 			}
 		});
-		window.add(game);
-		window.setResizable(false);
-		
+		window.add(game); // add game to the window
+		window.setResizable(false); // fix size of window
+
 		Image cImage = Toolkit.getDefaultToolkit().createImage(getClass().getResource("/res/cursor.png"));
 		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(cImage, new Point(0, 0), "Cursor");
-		window.setCursor(cursor);
-		
-		setFullscreen();
+		window.setCursor(cursor); // TODO not sure if I will use this method for painting cursor
+		// may use a transparent cursor
+
+		setFullscreen(); // initial setting TODO will add to menu to make it toggleable
 
 		game.run();
 
 		// window.setIconImage(Toolkit.getDefaultToolkit().getImage(Reference.RESOURCE_LOC
-		// + "icon.png"));
+		// + "icon.png")); TODO set icon
 	}
 
-	public static void toggleScreenMode()
+	public static void toggleScreenMode() // in the name
 	{
-		window.dispose();
+		window.dispose(); // reset current window
 		if (full) {
 			setWindowed();
 		} else {
@@ -80,16 +82,18 @@ public class VentureRunner
 
 	private static void setWindowed()
 	{
-		window.setUndecorated(false);
-		device.setFullScreenWindow(null);
-		window.pack();
+		window.setUndecorated(false); // keep window bar
+		device.setFullScreenWindow(null); // center window
+		window.pack(); // correct window sizing (it's required)
 
-		Insets insets = window.getInsets();
-		windowOffsetX = insets.left + insets.right;
-		windowOffsetY = insets.top + insets.bottom;
-		window.setSize(WINDOWED_WIDTH + windowOffsetX, WINDOWED_HEIGHT + windowOffsetY);
+		Insets insets = window.getInsets(); // get size of window bar etc
+		windowedOffsetX = insets.left + insets.right;
+		windowedOffsetY = insets.top + insets.bottom;
+
+		window.setSize( // adjust size of window accordingly
+				WINDOWED_WIDTH + windowedOffsetX, WINDOWED_HEIGHT + windowedOffsetY);
 		window.setVisible(true);
-		window.setLocationRelativeTo(null);
+		window.setLocationRelativeTo(null); // center window
 
 		updateDimensions(true);
 		full = false;
@@ -98,27 +102,27 @@ public class VentureRunner
 
 	private static void setFullscreen()
 	{
-		if (device.isFullScreenSupported()) {
-			window.setUndecorated(true);
+		if (device.isFullScreenSupported()) { // check if full screen allowed
+			window.setUndecorated(true); // remove window bar (we want full screen!)
 			device.setFullScreenWindow(window);
-			window.validate();
+			window.validate(); // somehow it's here... I believe it's only recommended
 
-			updateDimensions(false); // TODO won't work with dif display modes
+			updateDimensions(false); // TODO work with display modes?
 			full = true;
 			ConsoleLog.write("Full Screen Initiated - " + WIDTH + " x " + HEIGHT);
-		} else {
+		} else { // if full screen isn't allowed :(
 			ConsoleLog.write("Fullscreen not supported. Switching screen mode to windowed");
 			if (!game.isRunning()) setWindowed();
 		}
 	}
 
-	private static void updateDimensions(boolean windowOffset)
+	private static void updateDimensions(boolean windowOffset) // update current window size to new window
 	{
 		WIDTH = window.getWidth();
 		HEIGHT = window.getHeight();
 		if (windowOffset) {
-			WIDTH -= windowOffsetX;
-			HEIGHT -= windowOffsetY;
+			WIDTH -= windowedOffsetX;
+			HEIGHT -= windowedOffsetY;
 		}
 	}
 
