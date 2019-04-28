@@ -3,22 +3,26 @@ package com.example.entities;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import com.example.utils.Loopable;
+import com.example.entities.animations.Render;
+import com.example.entities.animations.SingleRender;
+import com.example.utils.gameloop_i.Loopable;
 
 /*
  * Models real physics
  */
-public class Entity implements Loopable
+public abstract class Entity implements Loopable
 {
 	private float	x, y;
 	private float	width, height;
 	private float	dx, dy;			// d*: current speed;
 	private float	d2x, d2y;		// d2*: current accel;
+	private Render	render;
 
-	public Entity(float x, float y, float width, float height)
+	public Entity(float x, float y, float width, float height, Render render)
 	{
 		setPosition(x, y);
 		setDimensions(width, height);
+		this.render = render;
 	}
 
 	@Override
@@ -33,9 +37,10 @@ public class Entity implements Loopable
 	@Override
 	public void render(Graphics2D g, float interpolation)
 	{
-//		 g.drawImage(, (int) x, (int) y, (int) width, (int) height, null);
-		g.setColor(Color.RED);
-		g.fillOval(Math.round(x + interpolation * dx), Math.round(y + interpolation * dy), Math.round(width), Math.round(height));
+		// g.drawImage(Math.round(x + interpolation * dx), Math.round(y + interpolation
+		// * dy), Math.round(width), Math.round(height), null);
+		render.render(g, Math.round(x + interpolation * dx), Math.round(y + interpolation * dy), Math.round(width),
+				Math.round(height));
 	}
 
 	public void setPosition(float x, float y)

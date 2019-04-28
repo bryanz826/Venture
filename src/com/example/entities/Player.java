@@ -3,21 +3,23 @@ package com.example.entities;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import com.example.main.LowReference;
-import com.example.utils.KeyManager;
+import com.example.entities.animations.Render;
+import com.example.main.ReferenceConfig;
+import com.example.utils.input.KeyManager;
 
 public class Player extends Living
 {
-	private float	diagTargetSpd;
-	private int		tickUp;
+	private final float	diagTargetSpd;
+	private int			tickCircle;
 
-	public Player(float x, float y)
+	public Player(float x, float y, Render render)
 	{
-		super(x, y, 70, 70, 7, 0.25f);
+		super(x, y, 70, 70, 7, 0.25f, render);
 		diagTargetSpd = getTargetSpd() * 0.70710677f;
 	}
-	
-	public void processInputs() {
+
+	public void processInputSimple() // for demonstration purposes only (not actually used)
+	{
 		if (KeyManager.isDown(KeyManager.A)) {
 			setDx(-5);
 		} else if (KeyManager.isDown(KeyManager.D)) {
@@ -85,26 +87,26 @@ public class Player extends Living
 		 */
 		boolean diagonal = isMovingDiagonal(); // save "if moving diagonal"
 		if (isNowMovingDiagonal()) {
-			tickUp = 0; // reset tick for use in diagonal below
+			tickCircle = 0; // reset tick for use in diagonal below
 		}
 
 		// Models a circular curve to transform 8-directional movement to circular
 		// movement
 		if (diagonal) {
-			if (++tickUp > 60) tickUp = 60; // cap tick
+			if (++tickCircle > 60) tickCircle = 60; // cap tick
 
 			// Horizontal
 			if (KeyManager.isDown(KeyManager.A)) {
 				if (getDx() < -diagTargetSpd) { // if slowing down
 					// decelerate based on the curve
-					setD2x(getThrust() * (float) Math.sin(tickUp * Math.PI / 4 / LowReference.TARGET_UPS));
+					setD2x(getThrust() * (float) Math.sin(tickCircle * Math.PI / 4 / ReferenceConfig.TARGET_UPS));
 					if (getDx() + getD2x() > -diagTargetSpd) { // cap speed
 						setDx(-diagTargetSpd);
 						setD2x(0);
 					}
 				} else if (getDx() > -diagTargetSpd) { // if speeding up
 					// accelerate based on the curve
-					setD2x(-getThrust() * (float) Math.cos(tickUp * Math.PI / 4 / LowReference.TARGET_UPS));
+					setD2x(-getThrust() * (float) Math.cos(tickCircle * Math.PI / 4 / ReferenceConfig.TARGET_UPS));
 					if (getDx() < -diagTargetSpd) { // cap speed
 						setDx(-diagTargetSpd);
 						setD2x(0);
@@ -115,14 +117,14 @@ public class Player extends Living
 			} else if (KeyManager.isDown(KeyManager.D)) {
 				if (getDx() > diagTargetSpd) { // if slowing down
 					// decelerate based on the curve
-					setD2x(-getThrust() * (float) Math.sin(tickUp * Math.PI / 4 / LowReference.TARGET_UPS));
+					setD2x(-getThrust() * (float) Math.sin(tickCircle * Math.PI / 4 / ReferenceConfig.TARGET_UPS));
 					if (getDx() + getD2x() < diagTargetSpd) { // cap speed
 						setDx(diagTargetSpd);
 						setD2x(0);
 					}
 				} else if (getDx() < diagTargetSpd) { // if speeding up
 					// accelerate based on the curve
-					setD2x(getThrust() * (float) Math.cos(tickUp * Math.PI / 4 / LowReference.TARGET_UPS));
+					setD2x(getThrust() * (float) Math.cos(tickCircle * Math.PI / 4 / ReferenceConfig.TARGET_UPS));
 					if (getDx() > diagTargetSpd) {
 						setDx(diagTargetSpd); // cap speed
 						setD2x(0);
@@ -136,14 +138,14 @@ public class Player extends Living
 			if (KeyManager.isDown(KeyManager.W)) {
 				if (getDy() < -diagTargetSpd) { // if slowing down
 					// decelerate based on the curve
-					setD2y(getThrust() * (float) Math.sin(tickUp * Math.PI / 4 / LowReference.TARGET_UPS));
+					setD2y(getThrust() * (float) Math.sin(tickCircle * Math.PI / 4 / ReferenceConfig.TARGET_UPS));
 					if (getDy() + getD2y() > -diagTargetSpd) { // cap speed
 						setDy(-diagTargetSpd);
 						setD2y(0);
 					}
 				} else if (getDy() > -diagTargetSpd) { // if speeding up
 					// accelerate based on the curve
-					setD2y(-getThrust() * (float) Math.cos(tickUp * Math.PI / 4 / LowReference.TARGET_UPS));
+					setD2y(-getThrust() * (float) Math.cos(tickCircle * Math.PI / 4 / ReferenceConfig.TARGET_UPS));
 					if (getDy() < -diagTargetSpd) { // cap speed
 						setDy(-diagTargetSpd);
 						setD2y(0);
@@ -154,14 +156,14 @@ public class Player extends Living
 			} else if (KeyManager.isDown(KeyManager.S)) {
 				if (getDy() > diagTargetSpd) { // if slowing down
 					// decelerate based on the curve
-					setD2y(-getThrust() * (float) Math.sin(tickUp * Math.PI / 4 / LowReference.TARGET_UPS));
+					setD2y(-getThrust() * (float) Math.sin(tickCircle * Math.PI / 4 / ReferenceConfig.TARGET_UPS));
 					if (getDy() + getD2y() < diagTargetSpd) { // cap speed
 						setDy(diagTargetSpd);
 						setD2y(0);
 					}
 				} else if (getDy() < diagTargetSpd) { // if speeding up
 					// accelerate based on the curve
-					setD2y(getThrust() * (float) Math.cos(tickUp * Math.PI / 4 / LowReference.TARGET_UPS));
+					setD2y(getThrust() * (float) Math.cos(tickCircle * Math.PI / 4 / ReferenceConfig.TARGET_UPS));
 					if (getDy() > diagTargetSpd) { // cap speed
 						setDy(diagTargetSpd);
 						setD2y(0);
@@ -228,9 +230,11 @@ public class Player extends Living
 	}
 
 	@Override
-	public void render(Graphics2D g, float interpolationTime)
+	public void render(Graphics2D g, float interpolation)
 	{
-		super.render(g, interpolationTime);
+		g.setColor(Color.RED);
+		g.fillOval(Math.round(getX() + interpolation * getDx()), Math.round(getY() + interpolation * getDy()),
+				Math.round(getWidth()), Math.round(getHeight()));
 
 		g.setColor(Color.ORANGE);
 		g.drawString("Location: (" + Math.round(getX()) + ", " + Math.round(getY()) + ")", 100, 100);

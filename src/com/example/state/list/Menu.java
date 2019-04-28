@@ -3,12 +3,12 @@ package com.example.state.list;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import com.example.main.LowReference;
+import com.example.main.ReferenceConfig;
 import com.example.state.State;
 import com.example.state.StateManager;
 import com.example.utils.ConsoleLog;
-import com.example.utils.KeyManager;
-import com.example.utils.MouseManager;
+import com.example.utils.input.KeyManager;
+import com.example.utils.input.MouseManager;
 
 public class Menu implements State
 {
@@ -64,15 +64,15 @@ public class Menu implements State
 	}
 
 	@Override
-	public void render(Graphics2D g, float interpolationTime)
+	public void render(Graphics2D g, float interpolation)
 	{
 		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, LowReference.getWidth(), LowReference.getHeight());
+		g.fillRect(0, 0, ReferenceConfig.getWidth(), ReferenceConfig.getHeight());
 
 		g.setColor(Color.RED);
 		g.fillRect(0, 0, 50, 50);
 
-		g.fillRect(0, LowReference.getHeight() - 50, 50, 50);
+		g.fillRect(0, ReferenceConfig.getHeight() - 50, 50, 50);
 		g.setColor(Color.CYAN);
 
 		g.drawString("X: " + MouseManager.getX() + ", Y: " + MouseManager.getY(), 100, 100);

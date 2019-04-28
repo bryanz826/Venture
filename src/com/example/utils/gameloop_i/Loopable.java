@@ -1,4 +1,4 @@
-package com.example.utils;
+package com.example.utils.gameloop_i;
 
 import java.awt.Graphics2D;
 

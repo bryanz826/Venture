@@ -1,4 +1,4 @@
-package com.example.utils;
+package com.example.utils.input;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;

@@ -2,8 +2,11 @@ package com.example.entities;
 
 import java.awt.Graphics2D;
 
-import com.example.main.LowReference;
-import com.example.utils.Playable;
+import com.example.entities.animations.SingleRender;
+import com.example.entities.collisions.Collisions;
+import com.example.main.ReferenceConfig;
+import com.example.utils.gameloop_i.Playable;
+import com.example.utils.resource.Resource;
 
 public class EntityManager implements Playable
 {
@@ -11,7 +14,8 @@ public class EntityManager implements Playable
 
 	public EntityManager()
 	{
-		player = new Player(LowReference.getWidth() / 2, LowReference.getHeight() / 2);
+		player = new Player(ReferenceConfig.getWidth() / 2, ReferenceConfig.getHeight() / 2,
+				new SingleRender(0, new Resource("FILENAME"))); //TODO pic file of player
 	}
 
 	@Override
@@ -23,13 +27,15 @@ public class EntityManager implements Playable
 	@Override
 	public void update()
 	{
+		Collisions.update(player);
+
 		player.update();
 	}
 
 	@Override
-	public void render(Graphics2D g, float interpolationTime)
+	public void render(Graphics2D g, float interpolation)
 	{
-		player.render(g, interpolationTime);
+		player.render(g, interpolation);
 	}
 
 }

@@ -4,7 +4,7 @@ import java.awt.GraphicsDevice;
 
 import com.example.utils.ConsoleLog;
 
-public class LowReference
+public class ReferenceConfig
 {
 	public static final int FRAME_CAP = VenturePanel.FRAME_CAP;
 	public static final int TARGET_UPS = VenturePanel.TARGET_UPS;

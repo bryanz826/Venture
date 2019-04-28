@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.example.entities.EntityManager;
-import com.example.main.LowReference;
+import com.example.main.ReferenceConfig;
 import com.example.state.State;
 
 public class Play implements State
@@ -32,11 +32,11 @@ public class Play implements State
 	}
 
 	@Override
-	public void render(Graphics2D g, float interpolationTime)
+	public void render(Graphics2D g, float interpolation)
 	{
 		g.setColor(new Color(58, 46, 63));
-		g.fillRect(0, 0, LowReference.getWidth(), LowReference.getHeight());
-		em.render(g, interpolationTime);
+		g.fillRect(0, 0, ReferenceConfig.getWidth(), ReferenceConfig.getHeight());
+		em.render(g, interpolation);
 	}
 
 	@Override

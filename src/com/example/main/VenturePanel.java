@@ -8,8 +8,8 @@ import com.example.state.StateManager;
 import com.example.state.list.Intro;
 import com.example.state.list.Menu;
 import com.example.state.list.Play;
-import com.example.utils.KeyManager;
-import com.example.utils.MouseManager;
+import com.example.utils.input.KeyManager;
+import com.example.utils.input.MouseManager;
 
 /*
  * Is a Canvas and allows rendering (drawing) on it
@@ -121,7 +121,6 @@ public class VenturePanel extends Canvas implements Runnable
 				timer += 1000;
 				FPS = frameCount;
 				UPS = updates;
-				System.out.println(frameCount);
 				frameCount = 0;
 				updates = 0;
 			}

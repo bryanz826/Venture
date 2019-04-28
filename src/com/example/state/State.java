@@ -1,7 +1,7 @@
 package com.example.state;
 
 import com.example.utils.ConsoleLog;
-import com.example.utils.Playable;
+import com.example.utils.gameloop_i.Playable;
 
 public interface State extends Playable
 {

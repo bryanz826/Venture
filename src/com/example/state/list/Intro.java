@@ -3,12 +3,12 @@ package com.example.state.list;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import com.example.main.LowReference;
+import com.example.main.ReferenceConfig;
 import com.example.state.State;
 import com.example.state.StateManager;
 import com.example.utils.ConsoleLog;
-import com.example.utils.KeyManager;
-import com.example.utils.MouseManager;
+import com.example.utils.input.KeyManager;
+import com.example.utils.input.MouseManager;
 import com.example.utils.timing.TimeDuration;
 import com.example.utils.timing.TimingCurve;
 import com.example.utils.timing.TimingCurve.CurvePreset;
@@ -48,16 +48,16 @@ public class Intro implements State
 	}
 
 	@Override
-	public void render(Graphics2D g, float interpolationTime)
+	public void render(Graphics2D g, float interpolation)
 	{
 		g.setColor(Color.CYAN);
-		g.fillRect(0, 0, LowReference.getWidth(), LowReference.getHeight());
+		g.fillRect(0, 0, ReferenceConfig.getWidth(), ReferenceConfig.getHeight());
 
 		if (!fadeIn.isComplete()) alpha = 255 - Math.round(255 * fadeIn.getProgression());
 		else if (!fadeOut.isComplete()) alpha = Math.round(255 * fadeOut.getProgression());
 		
 		g.setColor(new Color(0, 0, 0, alpha));
-		g.fillRect(0, 0, LowReference.getWidth(), LowReference.getHeight());
+		g.fillRect(0, 0, ReferenceConfig.getWidth(), ReferenceConfig.getHeight());
 	}
 
 	@Override

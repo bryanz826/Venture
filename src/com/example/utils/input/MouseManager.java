@@ -1,4 +1,4 @@
-package com.example.utils;
+package com.example.utils.input;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

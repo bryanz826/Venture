@@ -1,6 +1,6 @@
 package com.example.utils.timing;
 
-import com.example.main.LowReference;
+import com.example.main.ReferenceConfig;
 
 public class TimeDuration
 {
@@ -10,7 +10,7 @@ public class TimeDuration
 	public TimeDuration(float seconds)
 	{
 		time = 0;
-		timeIncrement = 1f / (seconds * LowReference.TARGET_UPS);
+		timeIncrement = 1f / (seconds * ReferenceConfig.TARGET_UPS);
 	}
 
 	public void update()
