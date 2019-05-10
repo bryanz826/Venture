@@ -29,7 +29,8 @@ public class MouseManager extends MouseAdapter
 		return buttonState[i];
 	}
 
-	public static boolean isUp(int i) {
+	public static boolean isUp(int i)
+	{
 		return !buttonState[i];
 	}
 
@@ -70,7 +71,15 @@ public class MouseManager extends MouseAdapter
 	{
 		buttonState[e.getButton()] = false;
 	}
-	
+
+	@Override
+	public void mouseDragged(MouseEvent e)
+	{
+		x = e.getX();
+		y = e.getY();
+		moving = true;
+	}
+
 	@Override
 	public void mouseMoved(MouseEvent e)
 	{

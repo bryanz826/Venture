@@ -14,8 +14,9 @@ public class KeyManager extends KeyAdapter
 	public static int		SPACE			= 4;
 	public static int		ENTER			= 5;
 	public static int		ESCAPE			= 6;
+	public static int		E				= 7;
 
-	public static final int	NUM_KEYS		= 7;
+	public static final int	NUM_KEYS		= 8;
 
 	public static boolean[]	keyState		= new boolean[NUM_KEYS];
 	public static boolean[]	prevKeyState	= new boolean[NUM_KEYS];
@@ -29,6 +30,7 @@ public class KeyManager extends KeyAdapter
 		else if (KeyEvent.VK_SPACE == code) keyState[SPACE] = b;
 		else if (KeyEvent.VK_ENTER == code) keyState[ENTER] = b;
 		else if (KeyEvent.VK_ESCAPE == code) keyState[ESCAPE] = b;
+		else if (KeyEvent.VK_E == code) keyState[E] = b;
 	}
 
 	public static void update()

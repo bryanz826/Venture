@@ -1,9 +1,9 @@
 package com.example.state;
 
 import com.example.utils.ConsoleLog;
-import com.example.utils.gameloop_i.Playable;
+import com.example.utils.gameloop_instructions.Interactive;
 
-public interface State extends Playable
+public interface State extends Interactive
 {
 	public default void enter()
 	{

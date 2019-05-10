@@ -2,40 +2,34 @@ package com.example.entities;
 
 import java.awt.Graphics2D;
 
-import com.example.entities.animations.SingleRender;
 import com.example.entities.collisions.Collisions;
-import com.example.main.ReferenceConfig;
-import com.example.utils.gameloop_i.Playable;
-import com.example.utils.resource.Resource;
+import com.example.utils.gameloop_instructions.Interactive;
 
-public class EntityManager implements Playable
+public class EntityManager implements Interactive
 {
-	private Player player;
-
 	public EntityManager()
 	{
-		player = new Player(ReferenceConfig.getWidth() / 2, ReferenceConfig.getHeight() / 2,
-				new SingleRender(0, new Resource("FILENAME"))); //TODO pic file of player
+		Player.I();
 	}
 
 	@Override
 	public void processInput()
 	{
-		player.processInput();
+		Player.I().processInput();
 	}
 
 	@Override
 	public void update()
 	{
-		Collisions.update(player);
+		Collisions.update();
 
-		player.update();
+		Player.I().update();
 	}
 
 	@Override
 	public void render(Graphics2D g, float interpolation)
 	{
-		player.render(g, interpolation);
+		Player.I().render(g, interpolation);
 	}
 
 }

@@ -5,24 +5,28 @@ import com.example.main.ReferenceConfig;
 
 public class Collisions
 {
-	private static void handleCollisionWall(Player player)
+	private static void handleCollisionWall()
 	{
 		int space = 0;
-		if (player.getX() < space) {
-			player.setX(space);
-		} else if (player.getX() + player.getWidth() > ReferenceConfig.getWidth() - space) {
-			player.setX(ReferenceConfig.getWidth() - player.getWidth() - space);
-		}
-		
-		if (player.getY() < space) {
-			player.setY(space);
-		} else if (player.getY() + player.getHeight() > ReferenceConfig.getHeight() - space) {
-			player.setY(ReferenceConfig.getHeight() - player.getHeight() - space);
-		}
+		if (Player.I().getPosition().getX() < space) {
+			Player.I().getPosition().setX(space);
+		} else if (Player.I().getPosition().getX()
+				+ Player.I().getWidth() > ReferenceConfig.getWidth() - space) {
+					Player.I().getPosition()
+							.setX(ReferenceConfig.getWidth() - Player.I().getWidth() - space);
+				}
+
+		if (Player.I().getPosition().getY() < space) {
+			Player.I().getPosition().setY(space);
+		} else if (Player.I().getPosition().getY()
+				+ Player.I().getHeight() > ReferenceConfig.getHeight() - space) {
+					Player.I().getPosition()
+							.setY(ReferenceConfig.getHeight() - Player.I().getHeight() - space);
+				}
 	}
 
-	public static void update(Player player)
+	public static void update()
 	{
-		handleCollisionWall(player);
+		handleCollisionWall();
 	}
 }

@@ -1,0 +1,13 @@
+com.example.entities
+com.example.entities.animations
+com.example.entities.collisions
+com.example.entities.deprecated
+com.example.libs
+com.example.main
+com.example.state
+com.example.state.list
+com.example.utils
+com.example.utils.gameloop_instructions
+com.example.utils.input
+com.example.utils.resource
+com.example.utils.timing

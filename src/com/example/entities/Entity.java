@@ -1,147 +1,165 @@
 package com.example.entities;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.example.entities.animations.Render;
-import com.example.entities.animations.SingleRender;
-import com.example.utils.gameloop_i.Loopable;
+import com.example.libs.Vector2D;
+import com.example.utils.gameloop_instructions.Loopable;
 
-/*
- * Models real physics
+/**
+ * An Entity that can be represented on an (x,y) coordinate space, specified in
+ * floating-point precision.
+ * 
+ * @author poroia
+ *
  */
-public abstract class Entity implements Loopable
+public class Entity implements Loopable
 {
-	private float	x, y;
-	private float	width, height;
-	private float	dx, dy;			// d*: current speed;
-	private float	d2x, d2y;		// d2*: current accel;
-	private Render	render;
+	//
+	// FIELDS
+	//
 
-	public Entity(float x, float y, float width, float height, Render render)
+	/**
+	 * The width of this Entity.
+	 */
+	private float		width;
+
+	/**
+	 * The height of this Entity.
+	 */
+	private float		height;
+
+	/**
+	 * A vector representing the this Entity's location in the coordinate space.
+	 */
+	private Vector2D	position;
+
+	/**
+	 * The main image rendered that represents the main body. Calculations of
+	 * rotation are based off of this.
+	 */
+	private Render		mainRender;
+
+	//
+	// CONSTRUCTORS
+	//
+
+	/**
+	 * Constructs an Entity object that cannot move.
+	 * 
+	 * @param position
+	 *            The vector position of this Entity.
+	 * @param width
+	 *            The width of this Entity.
+	 * @param height
+	 *            The height of this Entity.
+	 * @param mainRender
+	 *            The main image to be rendered.
+	 */
+	public Entity(Vector2D position, float width, float height, Render mainRender)
 	{
-		setPosition(x, y);
-		setDimensions(width, height);
-		this.render = render;
+		this.position = position;
+		setWidth(width);
+		setHeight(height);
+		setMainRender(mainRender);
 	}
 
+	//
+	// GAMELOOP METHODS
+	//
+
+	/**
+	 * Updates the mainRender's rotation.
+	 */
 	@Override
 	public void update()
 	{
-		setDx(getDx() + getD2x());
-		setDy(getDy() + getD2y());
-		setX(getX() + getDx());
-		setY(getY() + getDy());
+		getMainRender().update();
 	}
 
+	/**
+	 * Renders the mainRender's image.
+	 */
 	@Override
 	public void render(Graphics2D g, float interpolation)
 	{
-		// g.drawImage(Math.round(x + interpolation * dx), Math.round(y + interpolation
-		// * dy), Math.round(width), Math.round(height), null);
-		render.render(g, Math.round(x + interpolation * dx), Math.round(y + interpolation * dy), Math.round(width),
-				Math.round(height));
+		getMainRender().render(g, Math.round(position.getX()), Math.round(position.getY()));
 	}
 
-	public void setPosition(float x, float y)
-	{
-		this.x = x;
-		this.y = y;
-	}
+	//
+	// SETTER AND GETTER METHODS
+	//
 
-	public void setDimensions(float width, float height)
-	{
-		this.width = width;
-		this.height = height;
-	}
-
-	public void setX(float x)
-	{
-		this.x = x;
-	}
-
-	public void setY(float y)
-	{
-		this.y = y;
-	}
-
+	/**
+	 * Sets the width.
+	 * 
+	 * @param width
+	 *            The width of the Entity.
+	 */
 	public void setWidth(float width)
 	{
 		this.width = width;
 	}
 
+	/**
+	 * Sets the height.
+	 * 
+	 * @param height
+	 *            The height of the Entity.
+	 */
 	public void setHeight(float height)
 	{
 		this.height = height;
 	}
 
-	public void setDx(float dx)
+	/**
+	 * Sets the main Render.
+	 * 
+	 * @param mainRender
+	 *            The main image associated with the body of the Entity.
+	 */
+	public void setMainRender(Render mainRender)
 	{
-		this.dx = dx;
+		this.mainRender = mainRender;
 	}
 
-	public void setDy(float dy)
-	{
-		this.dy = dy;
-	}
-
-	public void setD2x(float d2x)
-	{
-		this.d2x = d2x;
-	}
-
-	public void setD2y(float d2y)
-	{
-		this.d2y = d2y;
-	}
-
-	public float getX()
-	{
-		return x;
-	}
-
-	public float getY()
-	{
-		return y;
-	}
-
+	/**
+	 * Returns the width.
+	 * 
+	 * @return width
+	 */
 	public float getWidth()
 	{
 		return width;
 	}
 
+	/**
+	 * Returns the height.
+	 * 
+	 * @return height
+	 */
 	public float getHeight()
 	{
 		return height;
 	}
 
-	public float getDx()
+	/**
+	 * Returns the position vector.
+	 * 
+	 * @return position
+	 */
+	public Vector2D getPosition()
 	{
-		return dx;
+		return position;
 	}
 
-	public float getDy()
+	/**
+	 * Returns the main Render.
+	 * 
+	 * @return render
+	 */
+	public Render getMainRender()
 	{
-		return dy;
+		return mainRender;
 	}
-
-	public float getD2x()
-	{
-		return d2x;
-	}
-
-	public float getD2y()
-	{
-		return d2y;
-	}
-
-	// @Override
-	// public String toString()
-	// {
-	// return "Entity [x=" + x + ", y" + y + ", width=" + width + ", height=" +
-	// height + ", dx=" + dx + ", dy=" + dy
-	// + ", terminalDx=" + maxDx + ", terminalDy=" + maxDy + ", d2x=" + d2x + ",
-	// d2y=" + d2y;
-	// // + ", boundsCount=" + getBounds().size() + "]";
-	// }
 }

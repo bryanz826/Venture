@@ -1,16 +1,12 @@
 package com.example.entities;
 
 import com.example.entities.animations.Render;
+import com.example.libs.Vector2D;
 
 public class Inanimate extends Entity
 {
-	private float totalSpd;
-	private float angle;
-	
-	public Inanimate(float x, float y, float width, float height, Render render)
+	public Inanimate(Vector2D position, float width, float height, Render mainRender)
 	{
-		super(x, y, width, height, render);
-		// TODO Auto-generated constructor stub
+		super(position, width, height, mainRender);
 	}
-
 }

@@ -6,7 +6,7 @@ import java.util.Date;
 public class ConsoleLog
 {	
 	public static void write(String str) {
-		String currentTime =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
+//		String currentTime =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
 		System.out.println("\t| " + str);
 	}
 	

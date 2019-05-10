@@ -15,6 +15,14 @@ public class Resource
 	private String									fileName;
 
 	/*
+	 * Copy Constructor for basic copying
+	 */
+	public Resource(Resource resource) {
+		this.image = resource.image;
+		this.fileName = resource.fileName;
+	}
+	
+	/*
 	 * Retrieve or Place an image from the HashMap storage
 	 */
 	public Resource(String fileName)
@@ -31,6 +39,13 @@ public class Resource
 				System.err.printf("Cannot find " + fileName + "!\n");
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	public Resource(String fileName, boolean rotate90) {
+		this(fileName);
+		if (rotate90) {
+			setImage(ReferenceRes.rotate90(getImage()));
 		}
 	}
 

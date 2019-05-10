@@ -1,24 +1,57 @@
 package com.example.entities.animations;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 
-public abstract class Render
+import com.example.utils.resource.Resource;
+
+public class Render
 {
-	private float	lastRadians;
-	private float	radians;
+	private float		lastRadians;
+	private float		radians;
 
-	public Render(float degrees)
+	private Resource	currentFrame;
+	private Resource	rotatedFrame;
+
+	public Render(float radians)
 	{
-		this.radians = (float) (degrees * Math.PI / 180);
+		this.radians = radians;
+		currentFrame = new Resource("flying-bonger.png");
+		rotatedFrame = new Resource(currentFrame);
 	}
 
-	public abstract void update();
+	public Render(float radians, Resource currentFrame)
+	{
+		this.radians = radians;
+		this.currentFrame = currentFrame;
+		this.rotatedFrame = new Resource(currentFrame);
+		updateRotation(currentFrame);
+	}
 
-	public abstract void render(Graphics2D g, float x, float y);
+	public void update()
+	{
+		if (getRadians() != getLastRadians()) { // don't rotate if don't need to
+			updateRotation(currentFrame);
+		}
 
-	public abstract void render(Graphics2D g, float x, float y, float width, float height);
+		setLastRadians(getRadians()); // update current and prev radians
+	}
 
-	public void setLastRadians(float lastRadians)
+	public void render(Graphics2D g, float x, float y)
+	{
+		if (getRotatedFrame() != null) getRotatedFrame().render(g, x, y);
+	}
+
+	public void updateRotation(Resource currentFrame)
+	{
+		AffineTransform details = AffineTransform.getRotateInstance(getRadians(), currentFrame.getWidth() / 2,
+				currentFrame.getHeight() / 2);
+		rotatedFrame.setImage(
+				new AffineTransformOp(details, AffineTransformOp.TYPE_BICUBIC).filter(currentFrame.getImage(), null));
+	}
+
+	void setLastRadians(float lastRadians)
 	{
 		this.lastRadians = lastRadians;
 	}
@@ -26,6 +59,11 @@ public abstract class Render
 	public void setRadians(float radians)
 	{
 		this.radians = radians;
+	}
+
+	void setCurrentFrame(Resource currentFrame)
+	{
+		this.currentFrame = currentFrame;
 	}
 
 	public float getLastRadians()
@@ -36,5 +74,15 @@ public abstract class Render
 	public float getRadians()
 	{
 		return radians;
+	}
+
+	public Resource getCurrentFrame()
+	{
+		return currentFrame;
+	}
+
+	public Resource getRotatedFrame()
+	{
+		return rotatedFrame;
 	}
 }
