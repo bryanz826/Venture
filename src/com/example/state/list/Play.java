@@ -20,14 +20,12 @@ public class Play implements State
 	@Override
 	public void processInput()
 	{
-		// TODO Auto-generated method stub
 		em.processInput();
 	}
 
 	@Override
 	public void update()
 	{
-		// TODO Auto-generated method stub
 		em.update();
 	}
 

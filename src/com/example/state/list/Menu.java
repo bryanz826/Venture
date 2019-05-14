@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import com.example.main.ReferenceConfig;
 import com.example.state.State;
 import com.example.state.StateManager;
-import com.example.utils.ConsoleLog;
 import com.example.utils.input.KeyManager;
 import com.example.utils.input.MouseManager;
 

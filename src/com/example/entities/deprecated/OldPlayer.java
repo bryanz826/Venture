@@ -5,10 +5,10 @@ import java.awt.Graphics2D;
 
 import com.example.entities.animations.Render;
 import com.example.libs.Reference;
+import com.example.libs.ReferenceResource;
 import com.example.main.ReferenceConfig;
 import com.example.utils.input.KeyManager;
 import com.example.utils.input.MouseManager;
-import com.example.utils.resource.ReferenceRes;
 import com.example.utils.resource.Resource;
 
 public class OldPlayer
@@ -37,8 +37,8 @@ public class OldPlayer
 		setThrust(1 / (float) Math.E);
 		targetSpd = 7;
 		diagTargetSpd = targetSpd * 0.70710677f;
-		mainRender = new Render(0, new Resource(ReferenceRes.PLAYER_LOC + "player-orange.png", true));
-		damage = new Render(0, new Resource(ReferenceRes.PLAYER_LOC + "player-damaged-3.png", true));
+		mainRender = new Render(0, new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true));
+		damage = new Render(0, new Resource(ReferenceResource.PLAYER_LOC + "player-damaged-3.png", true));
 	}
 
 	/**

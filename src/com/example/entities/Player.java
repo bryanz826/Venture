@@ -5,12 +5,13 @@ import java.awt.Graphics2D;
 
 import com.example.entities.animations.Render;
 import com.example.libs.Reference;
+import com.example.libs.ReferenceResource;
 import com.example.libs.Vector2D;
 import com.example.main.ReferenceConfig;
+import com.example.utils.ConsoleLog;
 import com.example.utils.gameloop_instructions.Interactive;
 import com.example.utils.input.KeyManager;
 import com.example.utils.input.MouseManager;
-import com.example.utils.resource.ReferenceRes;
 import com.example.utils.resource.Resource;
 
 /**
@@ -22,12 +23,6 @@ public final class Player extends Moving implements Interactive
 	//
 	// FIELDS
 	//
-
-	/**
-	 * The target velocity in floating-point precision. It is used to cap the
-	 * velocity of this Player to prevent it from going too fast.
-	 */
-	private float		targetSpd;
 
 	/**
 	 * The current target rotation (pseudo-terminal speed) in radians based on the
@@ -56,11 +51,12 @@ public final class Player extends Moving implements Interactive
 	 */
 	private Player()
 	{
-		super(new Vector2D(ReferenceConfig.getWidth() / 2 - 50, ReferenceConfig.getHeight() / 2 - 50), 100, 100,
-				1 / (float) Math.E, new Render(0, new Resource(ReferenceRes.PLAYER_LOC + "player-orange.png", true)));
-		setTargetSpd(7);
+		super(new Vector2D(ReferenceConfig.getWidth() / 2 - 50, ReferenceConfig.getHeight() / 2 - 50), 100, 100, 7,
+				1 / (float) Math.E, BoundsType.RECT_COMPLEX_BOUNDS, new Render(0, new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true)));
 		resistance = new Vector2D();
-		damageRender = new Render(0, new Resource(ReferenceRes.PLAYER_LOC + "player-damaged-2.png", true));
+		damageRender = new Render(0, new Resource(ReferenceResource.PLAYER_LOC + "player-damaged-2.png", true));
+
+		ConsoleLog.write("Player constructed.");
 	}
 
 	//
@@ -123,8 +119,8 @@ public final class Player extends Moving implements Interactive
 	}
 
 	/**
-	 * Updates the various movement vectors including the resistance/friction of
-	 * Player Player and the renders and the rotation.
+	 * Updates the various movement vectors including the resistance/friction of the
+	 * Player and the renders and the rotation.
 	 */
 	@Override
 	public void update()
@@ -151,7 +147,13 @@ public final class Player extends Moving implements Interactive
 		if (damageRender != null) damageRender.render(g, x, y);
 
 		if (Reference.DEBUG) {
+			Vector2D front = getFront();
+			g.setColor(Color.MAGENTA);
+			g.fillOval(Math.round(front.getX() - 5 + interpolation * getVelocity().getX()),
+					Math.round(front.getY() - 5 + interpolation * getVelocity().getY()), 10, 10);
+
 			g.setColor(Color.ORANGE);
+			g.drawString("Mouse:           (" + MouseManager.getX() + ", " + MouseManager.getY() + ")", 100, 100);
 			g.drawString("Location:        (" + Math.round(getPosition().getX()) + ", "
 					+ Math.round(getPosition().getY()) + ")", 100, 120);
 			g.drawString("Speed:           (" + getVelocity().getX(), 100, 140);
@@ -160,10 +162,10 @@ public final class Player extends Moving implements Interactive
 			g.drawString("Acceleration: (" + getAcceleration().getX(), 100, 160);
 			g.drawString(", " + getAcceleration().getY() + ")", 250, 160);
 
-			g.drawString("Target Degrees: " + Math.round(Math.toDegrees(targetRotation)), 100, 180);
+			g.drawString("Resistance:   (" + resistance.getX(), 100, 180);
+			g.drawString(", " + resistance.getY() + ")", 250, 180);
 
-			g.drawString("Resistance:           (" + resistance.getX(), 100, 200);
-			g.drawString(", " + resistance.getY() + ")", 250, 200);
+			g.drawString("Target Degrees: " + Math.round(Math.toDegrees(targetRotation)), 100, 200);
 		}
 	}
 
@@ -199,9 +201,9 @@ public final class Player extends Moving implements Interactive
 	protected void calcVelocity()
 	{
 		float vLength = getVelocity().getExactLength();
-		if (vLength > targetSpd) {
+		if (vLength > getTargetSpd()) {
 			getVelocity().quickNormalize(vLength);
-			getVelocity().scale(targetSpd);
+			getVelocity().scale(getTargetSpd());
 		}
 		getVelocity().validateZero();
 	}
@@ -215,30 +217,5 @@ public final class Player extends Moving implements Interactive
 	{
 		return KeyManager.isDown(KeyManager.W) && KeyManager.isDown(KeyManager.A) && KeyManager.isDown(KeyManager.S)
 				&& KeyManager.isDown(KeyManager.D);
-	}
-
-	//
-	// SETTER AND GETTER METHODS
-	//
-
-	/**
-	 * Sets the target speed.
-	 * 
-	 * @param targetSpd
-	 *            The target or capped speed.
-	 */
-	public void setTargetSpd(float targetSpd)
-	{
-		this.targetSpd = targetSpd;
-	}
-
-	/**
-	 * Returns the target speed.
-	 * 
-	 * @return targetSpd
-	 */
-	public float getTargetSpd()
-	{
-		return targetSpd;
 	}
 }

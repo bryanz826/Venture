@@ -7,23 +7,51 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import com.example.libs.ReferenceResource;
+
 public class Resource
 {
-	// Stores all resources to be retrieved later (no repeat loading)
+	//
+	// FIELDS
+	//
+
+	/**
+	 * A HashMp that stores all resources to be retrieved later (no repeat loading)
+	 * and uses a file path to access the BufferedImage
+	 */
 	private final static Map<String, BufferedImage>	map	= new HashMap<String, BufferedImage>();
-	private BufferedImage							image;
+
+	/**
+	 * The file path of the stored BufferedImage
+	 */
 	private String									fileName;
 
-	/*
-	 * Copy Constructor for basic copying
+	/**
+	 * The BufferedImage stored in the HashMap
 	 */
-	public Resource(Resource resource) {
+	private BufferedImage							image;
+
+	//
+	// CONSTRUCTORS
+	//
+
+	/**
+	 * Copy Constructor for basic copying
+	 * 
+	 * @param resource
+	 *            The other resource to be copied
+	 */
+	public Resource(Resource resource)
+	{
 		this.image = resource.image;
 		this.fileName = resource.fileName;
 	}
-	
-	/*
+
+	/**
 	 * Retrieve or Place an image from the HashMap storage
+	 * 
+	 * @param fileName
+	 *            The file path to retrieve/place the image
 	 */
 	public Resource(String fileName)
 	{
@@ -33,7 +61,7 @@ public class Resource
 			this.image = resource;
 		} else { // else load the image in
 			try {
-				image = ImageIO.read(getClass().getResourceAsStream(ReferenceRes.RESOURCE_LOC + fileName));
+				image = ImageIO.read(getClass().getResourceAsStream(ReferenceResource.RESOURCE_LOC + fileName));
 				map.put(fileName, image);
 			} catch (Exception e) {
 				System.err.printf("Cannot find " + fileName + "!\n");
@@ -41,11 +69,19 @@ public class Resource
 			}
 		}
 	}
-	
-	public Resource(String fileName, boolean rotate90) {
+
+	/**
+	 * Constructs a Resource that does what Resource(String fileName) does but also
+	 * has the option of rotating the image 90 degrees clockwise
+	 * 
+	 * @param fileName
+	 * @param rotate90
+	 */
+	public Resource(String fileName, boolean rotate90)
+	{
 		this(fileName);
 		if (rotate90) {
-			setImage(ReferenceRes.rotate90(getImage()));
+			setImage(ReferenceResource.rotate90(getImage()));
 		}
 	}
 
@@ -73,9 +109,10 @@ public class Resource
 		this.image = res.image.getSubimage(xCoord, yCoord, width, height); // get subimage
 	}
 
-	/*
-	 * Render the image
-	 */
+	//
+	// GAMELOOP METHODS
+	//
+
 	public void render(Graphics2D g, float x, float y)
 	{
 		g.drawImage(image, Math.round(x), Math.round(y), null);
@@ -86,9 +123,9 @@ public class Resource
 		g.drawImage(image, Math.round(x), Math.round(y), Math.round(width), Math.round(height), null);
 	}
 
-	/*
-	 * Setters and getters
-	 */
+	//
+	// SETTERS AND GETTERS
+	//
 	public void setImage(BufferedImage image)
 	{
 		this.image = image;

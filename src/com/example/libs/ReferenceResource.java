@@ -1,13 +1,14 @@
-package com.example.utils.resource;
+package com.example.libs;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-public class ReferenceRes
+public class ReferenceResource
 {
 	public static final String	RESOURCE_LOC	= "/com/example/xres/";
 
 	public static final String	PLAYER_LOC		= "player/";
+	public static final String	METEOR_LOC		= "meteor/";
 
 	public static BufferedImage rotate90(BufferedImage image)
 	{

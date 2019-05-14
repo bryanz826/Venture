@@ -2,15 +2,9 @@ package com.example.libs;
 
 public class Reference
 {
+	/**
+	 * When true, it will show the bounds of entities, areas of interactions, and
+	 * player data.
+	 */
 	public static final boolean DEBUG = true;
-	
-	public static float modulus(float a, float b)
-	{
-		return (a % b + b) % b;
-	}
-
-	public static double modulus(double a, double b)
-	{
-		return (a % b + b) % b;
-	}
 }

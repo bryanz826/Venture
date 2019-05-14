@@ -38,18 +38,29 @@ public class AnimatedRender extends Render
 	public void update()
 	{
 		tick++;
-		if (speed == 0 && getRadians() != getLastRadians()) { // rotate every update and sidestep divide by zero
-			updateRotation(getCurrentFrame());
-		} else if (tick % speed == 1 && getRadians() != getLastRadians()) { // and don't rotate if don't need to
-			updateRotation(getCurrentFrame());
+
+		if (getWidth() != 0 && getHeight() != 0) {
+			if (speed == 0 && getWidth() != getLastWidth() && getHeight() != getLastHeight()) {
+				updateScale();
+			} else if (tick % speed == 1 && getWidth() != getLastWidth() && getHeight() != getLastHeight()) {
+				updateScale();
+			}
+			setLastWidth(getWidth());
+			setLastHeight(getHeight());
 		}
 		
+		if (speed == 0 && getRadians() != getLastRadians()) { // rotate every update and sidestep divide by zero
+			updateRotation();
+		} else if (tick % speed == 1 && getRadians() != getLastRadians()) { // and don't rotate if don't need to
+			updateRotation();
+		}
+		setLastRadians(getRadians()); // update current and prev radians
+
 		if (tick > speed) {
 			nextFrame();
 			tick = 0;
 		}
-		
-		setLastRadians(getRadians()); // update current and prev radians
+
 	}
 
 	public boolean isOneCycleComplete()

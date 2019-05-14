@@ -12,8 +12,8 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import com.example.libs.ReferenceResource;
 import com.example.utils.ConsoleLog;
-import com.example.utils.resource.ReferenceRes;
 
 /*
  * Game runner that contains a Frame that holds a game reference. Currently offers windowed and fullscreen
@@ -58,7 +58,7 @@ public class VentureRunner
 		window.add(game); // add game to the window
 		window.setResizable(false); // fix size of window
 
-		String cLocation = ReferenceRes.RESOURCE_LOC + "cursor.png";
+		String cLocation = ReferenceResource.RESOURCE_LOC + "cursor.png";
 		Image cImage = Toolkit.getDefaultToolkit().createImage(getClass().getResource(cLocation));
 		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(cImage, new Point(0, 0), "Cursor");
 		window.setCursor(cursor); // TODO not sure if I will use this method for painting cursor

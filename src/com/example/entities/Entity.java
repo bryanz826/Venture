@@ -1,8 +1,10 @@
 package com.example.entities;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
 import com.example.entities.animations.Render;
+import com.example.entities.collisions.Circle;
 import com.example.libs.Vector2D;
 import com.example.utils.gameloop_instructions.Loopable;
 
@@ -11,13 +13,27 @@ import com.example.utils.gameloop_instructions.Loopable;
  * floating-point precision.
  * 
  * @author poroia
- *
  */
 public class Entity implements Loopable
 {
 	//
 	// FIELDS
 	//
+
+	/**
+	 * All bounds updating types. Used to determine how bounds should be updated.
+	 */
+	public enum BoundsType
+	{
+		NO_BOUNDS,
+		RECT_BOUNDS,
+		CIRC_BOUNDS,
+		COMPLEX_CIRC_BOUNDS,
+		RECT_CIRC_BOUNDS,
+		RECT_COMPLEX_BOUNDS,
+		CIRC_COMPLEX_BOUNDS,
+		ALL_BOUNDS
+	}
 
 	/**
 	 * The width of this Entity.
@@ -33,6 +49,27 @@ public class Entity implements Loopable
 	 * A vector representing the this Entity's location in the coordinate space.
 	 */
 	private Vector2D	position;
+
+	/**
+	 * The bounds of the Entity represented by a rectangle.
+	 */
+	private Rectangle	rectBounds;
+
+	/**
+	 * The bounds of the Entity represented by a circle.
+	 */
+	private Circle		circBounds;
+
+	/**
+	 * The bounds of the Entity represented by many circles and must be initialized
+	 * if it is used. If not initialized, then uses circBounds.
+	 */
+	private Circle[]	complexCircBounds;
+
+	/**
+	 * Refers to bound updating type. See final fields for more information.
+	 */
+	private BoundsType	boundsType;
 
 	/**
 	 * The main image rendered that represents the main body. Calculations of
@@ -56,12 +93,14 @@ public class Entity implements Loopable
 	 * @param mainRender
 	 *            The main image to be rendered.
 	 */
-	public Entity(Vector2D position, float width, float height, Render mainRender)
+	public Entity(Vector2D position, float width, float height, BoundsType boundsType, Render mainRender)
 	{
 		this.position = position;
-		setWidth(width);
-		setHeight(height);
+		this.width = width;
+		this.height = height;
+		setBoundsType(boundsType);
 		setMainRender(mainRender);
+		updateBounds();
 	}
 
 	//
@@ -87,6 +126,128 @@ public class Entity implements Loopable
 	}
 
 	//
+	// GENERAL METHODS
+	//
+
+	/**
+	 * Repositions the Entity based off of an offset.
+	 * 
+	 * @param offset
+	 *            The amount to be subtracted.
+	 */
+	public void reposition(float offset)
+	{
+		getPosition().reposition(offset);
+		updateBounds();
+	}
+
+	/**
+	 * Calculates and returns a vector representing the top-center of this Entity.
+	 * 
+	 * @return front
+	 */
+	public Vector2D getFront()
+	{
+		Vector2D center = getCenter();
+		float x = getHeight() / 2 * (float) Math.cos(mainRender.getRadians()) + center.getX();
+		float y = getHeight() / 2 * (float) Math.sin(mainRender.getRadians()) + center.getY();
+		return new Vector2D(x, y);
+	}
+
+	/**
+	 * Calculates and returns a vector representing the absolute center of Entity.
+	 * 
+	 * @return center
+	 */
+	public Vector2D getCenter()
+	{
+		float x = position.getX() + width / 2;
+		float y = position.getY() + height / 2;
+		return new Vector2D(x, y);
+	}
+
+	/**
+	 * Updates all the bounds.
+	 */
+	public void updateBounds()
+	{
+		switch (boundsType)
+		{
+			case RECT_BOUNDS:
+			{
+				updateRectBounds();
+				break;
+			}
+			case CIRC_BOUNDS:
+			{
+				updateCircBounds();
+				break;
+			}
+			case COMPLEX_CIRC_BOUNDS:
+			{
+				updateComplexCircBounds();
+				break;
+			}
+			case RECT_CIRC_BOUNDS:
+			{
+				updateRectBounds();
+				updateCircBounds();
+				break;
+			}
+			case RECT_COMPLEX_BOUNDS:
+			{
+				updateRectBounds();
+				updateComplexCircBounds();
+				break;
+			}
+			case CIRC_COMPLEX_BOUNDS:
+			{
+				updateCircBounds();
+				updateComplexCircBounds();
+				break;
+			}
+			case ALL_BOUNDS:
+			{
+				updateRectBounds();
+				updateCircBounds();
+				updateComplexCircBounds();
+				break;
+			}
+			case NO_BOUNDS:
+			{
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Updates the rectBounds.
+	 */
+	public void updateRectBounds()
+	{
+		rectBounds = new Rectangle(Math.round(position.getX()), Math.round(position.getY()), Math.round(width),
+				Math.round(height));
+	}
+
+	/**
+	 * Updates the circBounds.
+	 */
+	public void updateCircBounds()
+	{
+		circBounds = new Circle(position.getX(), position.getY(), width);
+	}
+
+	/**
+	 * Updates the complexCircBounds.
+	 */
+	public void updateComplexCircBounds()
+	{
+//		for (Circle circ : complexCircBounds) {
+//			
+//		}
+	}
+
+	//
 	// SETTER AND GETTER METHODS
 	//
 
@@ -99,6 +260,7 @@ public class Entity implements Loopable
 	public void setWidth(float width)
 	{
 		this.width = width;
+		updateBounds();
 	}
 
 	/**
@@ -110,6 +272,18 @@ public class Entity implements Loopable
 	public void setHeight(float height)
 	{
 		this.height = height;
+		updateBounds(); // used for entity where no constant bounds check
+	}
+
+	/**
+	 * Sets the boundsType.
+	 * 
+	 * @param boundsType
+	 *            The type of bounds used.
+	 */
+	public void setBoundsType(BoundsType boundsType)
+	{
+		this.boundsType = boundsType;
 	}
 
 	/**
@@ -151,6 +325,46 @@ public class Entity implements Loopable
 	public Vector2D getPosition()
 	{
 		return position;
+	}
+
+	/**
+	 * Returns the bounds represented by a rectangle.
+	 * 
+	 * @return rectBounds
+	 */
+	public Rectangle getRectBounds()
+	{
+		return rectBounds;
+	}
+
+	/**
+	 * Returns the bounds represented by a circle.
+	 * 
+	 * @return circBounds
+	 */
+	public Circle getCircBounds()
+	{
+		return circBounds;
+	}
+
+	/**
+	 * Returns the bounds represented by many circles specified.
+	 * 
+	 * @return complexCircBounds
+	 */
+	public Circle[] getComplexCircBounds()
+	{
+		return complexCircBounds;
+	}
+
+	/**
+	 * Returns the boundsType
+	 * 
+	 * @return boundsType
+	 */
+	public BoundsType getBoundsType()
+	{
+		return boundsType;
 	}
 
 	/**

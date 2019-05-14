@@ -1,8 +1,11 @@
 package com.example.entities;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.example.entities.animations.Render;
+import com.example.libs.Reference;
+import com.example.libs.ReferenceRender;
 import com.example.libs.Vector2D;
 
 /**
@@ -29,6 +32,12 @@ public class Moving extends Entity
 	private Vector2D	acceleration;
 
 	/**
+	 * The target velocity in floating-point precision. It is used to cap the
+	 * velocity of this Player to prevent it from going too fast.
+	 */
+	private float		targetSpd;
+
+	/**
 	 * The self acceleration capabilities upon movement in floating-point precision.
 	 */
 	private float		thrust;
@@ -46,17 +55,21 @@ public class Moving extends Entity
 	 *            The width of this Entity.
 	 * @param height
 	 *            The height of this Entity.
+	 * @param targetSpd
+	 *            The target/capped speed of this Entity.
 	 * @param thrust
 	 *            The thrust capabilities.
 	 * @param mainRender
 	 *            The main image to be rendered.
 	 */
-	public Moving(Vector2D position, float width, float height, float thrust, Render mainRender)
+	public Moving(Vector2D position, float width, float height, float targetSpd, float thrust, BoundsType boundsType,
+			Render mainRender)
 	{
-		super(position, width, height, mainRender);
+		super(position, width, height, boundsType, mainRender);
 		velocity = new Vector2D();
 		acceleration = new Vector2D();
-		setThrust(1 / (float) Math.E);
+		setTargetSpd(targetSpd);
+		setThrust(thrust);
 	}
 
 	//
@@ -71,6 +84,8 @@ public class Moving extends Entity
 	{
 		super.update();
 
+		updateBounds();
+
 		calcAcceleration();
 		getVelocity().add(getAcceleration());
 
@@ -84,9 +99,83 @@ public class Moving extends Entity
 	@Override
 	public void render(Graphics2D g, float interpolation)
 	{
-		float x = getPosition().getX() + interpolation * getVelocity().getX();
-		float y = getPosition().getY() + interpolation * getVelocity().getY();
+		int x = ReferenceRender.getInterpolatedX(getPosition(), velocity, interpolation);
+		int y = ReferenceRender.getInterpolatedY(getPosition(), velocity, interpolation);
 		getMainRender().render(g, x, y);
+
+		if (Reference.DEBUG) {
+			
+
+
+			g.setColor(new Color(255, 255, 255));
+			// for (Circle circ : )
+
+			switch (getBoundsType())
+			{
+				case RECT_BOUNDS:
+				{
+					g.setColor(new Color(128, 128, 128)); // rectBounds
+					ReferenceRender.drawInterpolatedRect(g, getRectBounds(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRectBounds(), velocity, interpolation);
+					break;
+				}
+				case CIRC_BOUNDS:
+				{
+					g.setColor(new Color(192, 192, 192)); // circBounds
+					ReferenceRender.drawInterpolatedCirc(g, getCircBounds(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "circBounds", getCircBounds(), velocity, interpolation);
+					break;
+				}
+				case COMPLEX_CIRC_BOUNDS:
+				{
+//					updateComplexCircBounds();
+					break;
+				}
+				case RECT_CIRC_BOUNDS:
+				{
+					g.setColor(new Color(128, 128, 128)); // rectBounds
+					ReferenceRender.drawInterpolatedRect(g, getRectBounds(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRectBounds(), velocity, interpolation);
+					
+					g.setColor(new Color(192, 192, 192)); // circBounds
+					ReferenceRender.drawInterpolatedCirc(g, getCircBounds(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "circBounds", getCircBounds(), velocity, interpolation);
+					break;
+				}
+				case RECT_COMPLEX_BOUNDS:
+				{
+					g.setColor(new Color(128, 128, 128)); // rectBounds
+					ReferenceRender.drawInterpolatedRect(g, getRectBounds(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRectBounds(), velocity, interpolation);
+//					updateComplexCircBounds();
+					break;
+				}
+				case CIRC_COMPLEX_BOUNDS:
+				{
+					g.setColor(new Color(192, 192, 192)); // cirBounds
+					ReferenceRender.drawInterpolatedCirc(g, getCircBounds(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "circBounds", getCircBounds(), velocity, interpolation);
+//					updateComplexCircBounds();
+					break;
+				}
+				case ALL_BOUNDS:
+				{
+					g.setColor(new Color(128, 128, 128)); // rectBounds
+					ReferenceRender.drawInterpolatedRect(g, getRectBounds(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRectBounds(), velocity, interpolation);
+
+					g.setColor(new Color(192, 192, 192)); // circBounds
+					ReferenceRender.drawInterpolatedCirc(g, getCircBounds(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "circBounds", getCircBounds(), velocity, interpolation);
+//					updateComplexCircBounds();
+					break;
+				}
+				case NO_BOUNDS:
+				{
+					break;
+				}
+			}
+		}
 	}
 
 	//
@@ -116,10 +205,32 @@ public class Moving extends Entity
 	//
 
 	/**
+	 * Sets the velocity vector.
+	 * 
+	 * @param velocity
+	 *            The velocity vector
+	 */
+	public void setVelocity(Vector2D velocity)
+	{
+		this.velocity = velocity;
+	}
+
+	/**
+	 * Sets the target speed.
+	 * 
+	 * @param targetSpd
+	 *            The target or capped speed.
+	 */
+	public void setTargetSpd(float targetSpd)
+	{
+		this.targetSpd = targetSpd;
+	}
+
+	/**
 	 * Sets the thrust.
 	 * 
 	 * @param thrust
-	 * The thrust capabilities.
+	 *            The thrust capabilities.
 	 */
 	public void setThrust(float thrust)
 	{
@@ -144,6 +255,16 @@ public class Moving extends Entity
 	public Vector2D getAcceleration()
 	{
 		return acceleration;
+	}
+
+	/**
+	 * Returns the target speed.
+	 * 
+	 * @return targetSpd
+	 */
+	public float getTargetSpd()
+	{
+		return targetSpd;
 	}
 
 	/**
