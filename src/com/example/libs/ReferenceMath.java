@@ -1,8 +1,8 @@
 package com.example.libs;
 
-import java.awt.Rectangle;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.example.entities.collisions.Bounds;
 import com.example.main.ReferenceConfig;
 
 public class ReferenceMath
@@ -98,10 +98,10 @@ public class ReferenceMath
 	 *            The point will be found in this rectangle
 	 * @return randPoint
 	 */
-	public static Vector2D getRandInPoint(Rectangle rect)
+	public static Vector2D getRandInPoint(Bounds rect)
 	{
-		float x = getRandomFloat((float) rect.getX(), (float) (rect.getX() + rect.getWidth()));
-		float y = getRandomFloat((float) rect.getY(), (float) (rect.getY() + rect.getHeight()));
+		float x = getRandomFloat(rect.getX(), rect.getX() + rect.getWidth());
+		float y = getRandomFloat(rect.getY(), rect.getY() + rect.getHeight());
 		return new Vector2D(x, y);
 	}
 
@@ -111,14 +111,14 @@ public class ReferenceMath
 	 * 
 	 * @return randPoint
 	 */
-	public static Vector2D getRandPerimeterPoint(Rectangle rect)
+	public static Vector2D getRandPerimeterPoint(Bounds rect)
 	{
 		Vector2D randPoint = new Vector2D();
 
-		Vector2D topLeft = new Vector2D(rect.x, rect.y);
-		Vector2D topRight = new Vector2D(rect.x + rect.width, rect.y);
-		Vector2D bottomLeft = new Vector2D(rect.x, rect.y + rect.height);
-		Vector2D bottomRight = new Vector2D(rect.x + rect.width, rect.y + rect.height);
+		Vector2D topLeft = new Vector2D(rect.getX(), rect.getY());
+		Vector2D topRight = new Vector2D(rect.getX() + rect.getWidth(), rect.getY());
+		Vector2D bottomLeft = new Vector2D(rect.getX(), rect.getY() + rect.getHeight());
+		Vector2D bottomRight = new Vector2D(rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight());
 
 		int r = ThreadLocalRandom.current().nextInt(4);
 		switch (r)

@@ -80,6 +80,7 @@ public class VentureRunner
 		} else {
 			setFullscreen();
 		}
+		ReferenceConfig.updateOuter();
 	}
 
 	private static void setWindowed()

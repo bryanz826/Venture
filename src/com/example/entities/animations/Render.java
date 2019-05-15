@@ -24,12 +24,12 @@ public class Render
 
 	public Render(float radians)
 	{
-		setRadians(radians);
-		setLastRadians(radians);
-		setCurrentFrame(new Resource("flying-bonger.png"));
-		scaledFrame = new Resource(this.currentFrame);
-		rotatedFrame = new Resource(this.scaledFrame);
-		updateRotation();
+		this(radians, new Resource("flying-bonger.png"));
+	}
+
+	public Render(float radians, float width, float height)
+	{
+		this(radians, width, height, new Resource("flying-bonger.png"));
 	}
 
 	public Render(float radians, Resource currentFrame)

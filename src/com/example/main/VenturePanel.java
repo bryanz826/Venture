@@ -125,7 +125,7 @@ public class VenturePanel extends Canvas implements Runnable
 				UPS = updates;
 				frameCount = 0;
 				updates = 0;
-				if (Reference.DEBUG) ConsoleLog.write("" + FPS);
+//				if (Reference.DEBUG) ConsoleLog.write("" + FPS);
 			}
 
 			// Below statements supposedly may cut down CPU usage

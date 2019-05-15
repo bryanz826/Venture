@@ -14,6 +14,7 @@ public class Play implements State
 	@Override
 	public void enter()
 	{	
+		ReferenceConfig.initOuter();
 		em = new EntityManager();
 	}
 	

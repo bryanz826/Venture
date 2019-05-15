@@ -52,7 +52,7 @@ public final class Player extends Moving implements Interactive
 	private Player()
 	{
 		super(new Vector2D(ReferenceConfig.getWidth() / 2 - 50, ReferenceConfig.getHeight() / 2 - 50), 100, 100, 7,
-				1 / (float) Math.E, BoundsType.RECT_COMPLEX_BOUNDS, new Render(0, new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true)));
+				1 / (float) Math.E, BoundsCombination.ALL, new Render(0, new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true)));
 		resistance = new Vector2D();
 		damageRender = new Render(0, new Resource(ReferenceResource.PLAYER_LOC + "player-damaged-2.png", true));
 

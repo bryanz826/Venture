@@ -62,10 +62,10 @@ public class Moving extends Entity
 	 * @param mainRender
 	 *            The main image to be rendered.
 	 */
-	public Moving(Vector2D position, float width, float height, float targetSpd, float thrust, BoundsType boundsType,
-			Render mainRender)
+	public Moving(Vector2D position, float width, float height, float targetSpd, float thrust,
+			BoundsCombination boundsCombination, Render mainRender)
 	{
-		super(position, width, height, boundsType, mainRender);
+		super(position, width, height, boundsCombination, mainRender);
 		velocity = new Vector2D();
 		acceleration = new Vector2D();
 		setTargetSpd(targetSpd);
@@ -104,73 +104,74 @@ public class Moving extends Entity
 		getMainRender().render(g, x, y);
 
 		if (Reference.DEBUG) {
-			
-
-
-			g.setColor(new Color(255, 255, 255));
-			// for (Circle circ : )
-
-			switch (getBoundsType())
+			switch (getBoundsUpdateType())
 			{
-				case RECT_BOUNDS:
+				case RECT:
 				{
 					g.setColor(new Color(128, 128, 128)); // rectBounds
-					ReferenceRender.drawInterpolatedRect(g, getRectBounds(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRectBounds(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedRect(g, getRect(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRect(), velocity, interpolation);
 					break;
 				}
-				case CIRC_BOUNDS:
+				case CIRC:
 				{
 					g.setColor(new Color(192, 192, 192)); // circBounds
-					ReferenceRender.drawInterpolatedCirc(g, getCircBounds(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "circBounds", getCircBounds(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedCirc(g, getCirc(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "circBounds", getCirc(), velocity, interpolation);
 					break;
 				}
-				case COMPLEX_CIRC_BOUNDS:
+				case COMCIRC:
 				{
-//					updateComplexCircBounds();
+					g.setColor(new Color(255, 255, 255));
+					// updateComplexCircBounds();
 					break;
 				}
-				case RECT_CIRC_BOUNDS:
+				case RECT_CIRC:
 				{
 					g.setColor(new Color(128, 128, 128)); // rectBounds
-					ReferenceRender.drawInterpolatedRect(g, getRectBounds(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRectBounds(), velocity, interpolation);
-					
+					ReferenceRender.drawInterpolatedRect(g, getRect(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRect(), velocity, interpolation);
+
 					g.setColor(new Color(192, 192, 192)); // circBounds
-					ReferenceRender.drawInterpolatedCirc(g, getCircBounds(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "circBounds", getCircBounds(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedCirc(g, getCirc(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "circBounds", getCirc(), velocity, interpolation);
 					break;
 				}
-				case RECT_COMPLEX_BOUNDS:
+				case RECT_COMCIRC:
 				{
 					g.setColor(new Color(128, 128, 128)); // rectBounds
-					ReferenceRender.drawInterpolatedRect(g, getRectBounds(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRectBounds(), velocity, interpolation);
-//					updateComplexCircBounds();
+					ReferenceRender.drawInterpolatedRect(g, getRect(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRect(), velocity, interpolation);
+
+					g.setColor(new Color(255, 255, 255));
+					// updateComplexCircBounds();
 					break;
 				}
-				case CIRC_COMPLEX_BOUNDS:
+				case CIRC_COMCIRC:
 				{
 					g.setColor(new Color(192, 192, 192)); // cirBounds
-					ReferenceRender.drawInterpolatedCirc(g, getCircBounds(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "circBounds", getCircBounds(), velocity, interpolation);
-//					updateComplexCircBounds();
+					ReferenceRender.drawInterpolatedCirc(g, getCirc(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "circBounds", getCirc(), velocity, interpolation);
+
+					g.setColor(new Color(255, 255, 255));
+					// updateComplexCircBounds();
 					break;
 				}
-				case ALL_BOUNDS:
+				case ALL:
 				{
 					g.setColor(new Color(128, 128, 128)); // rectBounds
-					ReferenceRender.drawInterpolatedRect(g, getRectBounds(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRectBounds(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedRect(g, getRect(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRect(), velocity, interpolation);
 
 					g.setColor(new Color(192, 192, 192)); // circBounds
-					ReferenceRender.drawInterpolatedCirc(g, getCircBounds(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "circBounds", getCircBounds(), velocity, interpolation);
-//					updateComplexCircBounds();
+					ReferenceRender.drawInterpolatedCirc(g, getCirc(), velocity, interpolation);
+					ReferenceRender.drawInterpolatedString(g, "circBounds", getCirc(), velocity, interpolation);
+
+					g.setColor(new Color(255, 255, 255));
+					// updateComplexCircBounds();
 					break;
 				}
-				case NO_BOUNDS:
+				case NONE:
 				{
 					break;
 				}

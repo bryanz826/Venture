@@ -1,10 +1,12 @@
 package com.example.entities;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 
 import com.example.entities.animations.Render;
-import com.example.entities.collisions.Circle;
+import com.example.entities.collisions.Bounds;
+import com.example.libs.Reference;
+import com.example.libs.ReferenceRender;
 import com.example.libs.Vector2D;
 import com.example.utils.gameloop_instructions.Loopable;
 
@@ -16,66 +18,66 @@ import com.example.utils.gameloop_instructions.Loopable;
  */
 public class Entity implements Loopable
 {
+	/**
+	 * All bounds updating types. Used to determine how bounds should be updated.
+	 */
+	public enum BoundsCombination
+	{
+		NONE,
+		RECT,
+		CIRC,
+		COMCIRC,
+		RECT_CIRC,
+		RECT_COMCIRC,
+		CIRC_COMCIRC,
+		ALL
+	}
+
 	//
 	// FIELDS
 	//
 
 	/**
-	 * All bounds updating types. Used to determine how bounds should be updated.
-	 */
-	public enum BoundsType
-	{
-		NO_BOUNDS,
-		RECT_BOUNDS,
-		CIRC_BOUNDS,
-		COMPLEX_CIRC_BOUNDS,
-		RECT_CIRC_BOUNDS,
-		RECT_COMPLEX_BOUNDS,
-		CIRC_COMPLEX_BOUNDS,
-		ALL_BOUNDS
-	}
-
-	/**
 	 * The width of this Entity.
 	 */
-	private float		width;
+	private float				width;
 
 	/**
 	 * The height of this Entity.
 	 */
-	private float		height;
+	private float				height;
 
 	/**
 	 * A vector representing the this Entity's location in the coordinate space.
 	 */
-	private Vector2D	position;
+	private Vector2D			position;
 
 	/**
 	 * The bounds of the Entity represented by a rectangle.
 	 */
-	private Rectangle	rectBounds;
+	private Bounds				rect;
 
 	/**
 	 * The bounds of the Entity represented by a circle.
 	 */
-	private Circle		circBounds;
+	private Bounds				circ;
 
 	/**
 	 * The bounds of the Entity represented by many circles and must be initialized
 	 * if it is used. If not initialized, then uses circBounds.
 	 */
-	private Circle[]	complexCircBounds;
+	private Bounds[]			comCirc;
 
 	/**
-	 * Refers to bound updating type. See final fields for more information.
+	 * Refers to bound updating type. See class enum for more information.
 	 */
-	private BoundsType	boundsType;
+	private BoundsCombination	boundsCombination;
 
 	/**
 	 * The main image rendered that represents the main body. Calculations of
 	 * rotation are based off of this.
 	 */
-	private Render		mainRender;
+	private Render				mainRender;
 
 	//
 	// CONSTRUCTORS
@@ -93,14 +95,16 @@ public class Entity implements Loopable
 	 * @param mainRender
 	 *            The main image to be rendered.
 	 */
-	public Entity(Vector2D position, float width, float height, BoundsType boundsType, Render mainRender)
+	public Entity(Vector2D position, float width, float height, BoundsCombination boundsCombination, Render mainRender)
 	{
 		this.position = position;
 		this.width = width;
 		this.height = height;
-		setBoundsType(boundsType);
+		setBoundsCombination(boundsCombination);
 		setMainRender(mainRender);
-		updateBounds();
+
+		this.rect = new Bounds(position.getX(), position.getY(), width, height);
+		this.circ = new Bounds(position.getX(), position.getY(), width);
 	}
 
 	//
@@ -123,6 +127,81 @@ public class Entity implements Loopable
 	public void render(Graphics2D g, float interpolation)
 	{
 		getMainRender().render(g, Math.round(position.getX()), Math.round(position.getY()));
+
+		if (Reference.DEBUG) {
+			switch (getBoundsUpdateType())
+			{
+				case RECT:
+				{
+					g.setColor(new Color(128, 128, 128)); // rectBounds
+					ReferenceRender.drawRect(g, getRect());
+					ReferenceRender.drawString(g, "rectBounds", getRect());
+					break;
+				}
+				case CIRC:
+				{
+					g.setColor(new Color(192, 192, 192)); // circBounds
+					ReferenceRender.drawCirc(g, getCirc());
+					ReferenceRender.drawString(g, "circBounds", getCirc());
+					break;
+				}
+				case COMCIRC:
+				{
+					g.setColor(new Color(255, 255, 255));
+					// updateComplexCircBounds();
+					break;
+				}
+				case RECT_CIRC:
+				{
+					g.setColor(new Color(128, 128, 128)); // rectBounds
+					ReferenceRender.drawRect(g, getRect());
+					ReferenceRender.drawString(g, "rectBounds", getRect());
+
+					g.setColor(new Color(192, 192, 192)); // circBounds
+					ReferenceRender.drawCirc(g, getCirc());
+					ReferenceRender.drawString(g, "circBounds", getCirc());
+					break;
+				}
+				case RECT_COMCIRC:
+				{
+					g.setColor(new Color(128, 128, 128)); // rectBounds
+					ReferenceRender.drawRect(g, getRect());
+					ReferenceRender.drawString(g, "rectBounds", getRect());
+
+					g.setColor(new Color(255, 255, 255));
+					// updateComplexCircBounds();
+					break;
+				}
+				case CIRC_COMCIRC:
+				{
+					g.setColor(new Color(192, 192, 192)); // cirBounds
+					ReferenceRender.drawCirc(g, getCirc());
+					ReferenceRender.drawString(g, "circBounds", getCirc());
+
+					g.setColor(new Color(255, 255, 255));
+					// updateComplexCircBounds();
+					break;
+				}
+				case ALL:
+				{
+					g.setColor(new Color(128, 128, 128)); // rectBounds
+					ReferenceRender.drawRect(g, getRect());
+					ReferenceRender.drawString(g, "rectBounds", getRect());
+
+					g.setColor(new Color(192, 192, 192)); // circBounds
+					ReferenceRender.drawCirc(g, getCirc());
+					ReferenceRender.drawString(g, "circBounds", getCirc());
+
+					g.setColor(new Color(255, 255, 255));
+					// updateComplexCircBounds();
+					break;
+				}
+				case NONE:
+				{
+					break;
+				}
+			}
+		}
 	}
 
 	//
@@ -167,53 +246,53 @@ public class Entity implements Loopable
 	}
 
 	/**
-	 * Updates all the bounds.
+	 * Updates all the bounds depending on the BoundsType.
 	 */
 	public void updateBounds()
 	{
-		switch (boundsType)
+		switch (boundsCombination)
 		{
-			case RECT_BOUNDS:
+			case RECT:
 			{
-				updateRectBounds();
+				updateRect();
 				break;
 			}
-			case CIRC_BOUNDS:
+			case CIRC:
 			{
-				updateCircBounds();
+				updateCirc();
 				break;
 			}
-			case COMPLEX_CIRC_BOUNDS:
+			case COMCIRC:
 			{
-				updateComplexCircBounds();
+				updateComCirc();
 				break;
 			}
-			case RECT_CIRC_BOUNDS:
+			case RECT_CIRC:
 			{
-				updateRectBounds();
-				updateCircBounds();
+				updateRect();
+				updateCirc();
 				break;
 			}
-			case RECT_COMPLEX_BOUNDS:
+			case RECT_COMCIRC:
 			{
-				updateRectBounds();
-				updateComplexCircBounds();
+				updateRect();
+				updateComCirc();
 				break;
 			}
-			case CIRC_COMPLEX_BOUNDS:
+			case CIRC_COMCIRC:
 			{
-				updateCircBounds();
-				updateComplexCircBounds();
+				updateCirc();
+				updateComCirc();
 				break;
 			}
-			case ALL_BOUNDS:
+			case ALL:
 			{
-				updateRectBounds();
-				updateCircBounds();
-				updateComplexCircBounds();
+				updateRect();
+				updateCirc();
+				updateComCirc();
 				break;
 			}
-			case NO_BOUNDS:
+			case NONE:
 			{
 				break;
 			}
@@ -221,30 +300,29 @@ public class Entity implements Loopable
 	}
 
 	/**
-	 * Updates the rectBounds.
+	 * Updates the rect.
 	 */
-	public void updateRectBounds()
+	public void updateRect()
 	{
-		rectBounds = new Rectangle(Math.round(position.getX()), Math.round(position.getY()), Math.round(width),
-				Math.round(height));
+		rect.setRect(position.getX(), position.getY(), width, height);
 	}
 
 	/**
-	 * Updates the circBounds.
+	 * Updates the circ.
 	 */
-	public void updateCircBounds()
+	public void updateCirc()
 	{
-		circBounds = new Circle(position.getX(), position.getY(), width);
+		circ.setCirc(position.getX(), position.getY(), width);
 	}
 
 	/**
-	 * Updates the complexCircBounds.
+	 * Updates the comCirc.
 	 */
-	public void updateComplexCircBounds()
+	public void updateComCirc()
 	{
-//		for (Circle circ : complexCircBounds) {
-//			
-//		}
+		// for (Circle circ : complexCircBounds) {
+		//
+		// }
 	}
 
 	//
@@ -276,14 +354,14 @@ public class Entity implements Loopable
 	}
 
 	/**
-	 * Sets the boundsType.
+	 * Sets the boundsCombination.
 	 * 
-	 * @param boundsType
-	 *            The type of bounds used.
+	 * @param boundsCombination
+	 *            The type of bounds combination used.
 	 */
-	public void setBoundsType(BoundsType boundsType)
+	public void setBoundsCombination(BoundsCombination boundsCombination)
 	{
-		this.boundsType = boundsType;
+		this.boundsCombination = boundsCombination;
 	}
 
 	/**
@@ -294,7 +372,8 @@ public class Entity implements Loopable
 	 */
 	public void setMainRender(Render mainRender)
 	{
-		this.mainRender = mainRender;
+		if (mainRender != null) this.mainRender = mainRender;
+		else this.mainRender = new Render(0, width, height);
 	}
 
 	/**
@@ -328,43 +407,43 @@ public class Entity implements Loopable
 	}
 
 	/**
-	 * Returns the bounds represented by a rectangle.
+	 * Returns the Bounds represented by a rectangle.
 	 * 
-	 * @return rectBounds
+	 * @return rect
 	 */
-	public Rectangle getRectBounds()
+	public Bounds getRect()
 	{
-		return rectBounds;
+		return rect;
 	}
 
 	/**
-	 * Returns the bounds represented by a circle.
+	 * Returns the Bounds represented by a circle.
 	 * 
-	 * @return circBounds
+	 * @return circ
 	 */
-	public Circle getCircBounds()
+	public Bounds getCirc()
 	{
-		return circBounds;
+		return circ;
 	}
 
 	/**
-	 * Returns the bounds represented by many circles specified.
+	 * Returns the Bounds represented by many circles specified.
 	 * 
-	 * @return complexCircBounds
+	 * @return comCirc
 	 */
-	public Circle[] getComplexCircBounds()
+	public Bounds[] getComCirc()
 	{
-		return complexCircBounds;
+		return comCirc;
 	}
 
 	/**
-	 * Returns the boundsType
+	 * Returns the boundsBoundsCombination
 	 * 
-	 * @return boundsType
+	 * @return boundsBoundsCombinations
 	 */
-	public BoundsType getBoundsType()
+	public BoundsCombination getBoundsUpdateType()
 	{
-		return boundsType;
+		return boundsCombination;
 	}
 
 	/**

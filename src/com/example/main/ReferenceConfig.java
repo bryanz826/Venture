@@ -1,12 +1,26 @@
 package com.example.main;
 
 import java.awt.GraphicsDevice;
-import java.awt.Rectangle;
+
+import com.example.entities.collisions.Bounds;
 
 public class ReferenceConfig
 {
 	public static final int	FRAME_CAP	= VenturePanel.FRAME_CAP;
 	public static final int	TARGET_UPS	= VenturePanel.TARGET_UPS;
+
+	public static Bounds	outer;
+
+	public static void initOuter()
+	{
+		int space = 120;
+
+		int x = -space;
+		int y = -space;
+		int width = getWidth() + 2 * space;
+		int height = getHeight() + 2 * space;
+		outer = new Bounds(x, y, width, height);
+	}
 
 	public static int getWidth()
 	{
@@ -18,15 +32,19 @@ public class ReferenceConfig
 		return VentureRunner.HEIGHT;
 	}
 
-	public static Rectangle getOuterBounds()
+	public static void updateOuter()
 	{
 		int space = 120;
 		
-		int x = -space;
-		int y = -space;
 		int width = getWidth() + 2 * space;
 		int height = getHeight() + 2 * space;
-		return new Rectangle(x, y, width, height);
+		outer.setWidth(width);
+		outer.setHeight(height);
+	}
+
+	public static Bounds getOuter()
+	{
+		return outer;
 	}
 
 	public static int getFPS()

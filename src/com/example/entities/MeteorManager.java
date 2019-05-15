@@ -2,13 +2,13 @@ package com.example.entities;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.example.entities.collisions.Bounds;
 import com.example.libs.Reference;
 import com.example.libs.ReferenceMath;
 import com.example.libs.ReferenceRender;
@@ -17,6 +17,7 @@ import com.example.main.ReferenceConfig;
 import com.example.utils.gameloop_instructions.Loopable;
 
 /**
+ * Manages the meteors' cooldown and launch.
  * 
  * @author poroia
  */
@@ -34,7 +35,7 @@ public class MeteorManager implements Loopable
 	/**
 	 * The target area of the meteors around the Player.
 	 */
-	private Rectangle		targetArea;
+	private Bounds			targetArea;
 
 	/**
 	 * The target area size proportion compared to the screen.
@@ -44,7 +45,7 @@ public class MeteorManager implements Loopable
 	/**
 	 * The hitting area of the meteors if they fail to hit the target area.
 	 */
-	private Rectangle		failArea;
+	private Bounds			failArea;
 
 	/**
 	 * The chance that the the meteors will hit the target area. If it misses, it
@@ -98,8 +99,8 @@ public class MeteorManager implements Loopable
 	public MeteorManager(float targetAreaProportion, float failAreaProportion, float successRate,
 			float launchPreparationSec, float launchWindowSec, int launchCount)
 	{
-		targetArea = new Rectangle();
-		failArea = new Rectangle();
+		targetArea = new Bounds(Bounds.Type.RECT);
+		failArea = new Bounds(Bounds.Type.RECT);
 
 		setTargetAreaProportion(targetAreaProportion);
 		setFailAreaProportion(failAreaProportion);
@@ -138,7 +139,7 @@ public class MeteorManager implements Loopable
 			// iter.remove();
 			// }
 
-			if (!meteor.getRectBounds().intersects(ReferenceConfig.getOuterBounds())) {
+			if (!meteor.getRect().intersects(ReferenceConfig.getOuter())) {
 				iter.remove(); // remove off-screen meteors
 			}
 		}
@@ -175,7 +176,7 @@ public class MeteorManager implements Loopable
 	public void launchMeteor()
 	{
 		// determine launch and target coordinates
-		Vector2D launch = ReferenceMath.getRandPerimeterPoint(ReferenceConfig.getOuterBounds());
+		Vector2D launch = ReferenceMath.getRandPerimeterPoint(ReferenceConfig.getOuter());
 		Vector2D target = null;
 		if (ThreadLocalRandom.current().nextFloat() < successRate) target = ReferenceMath.getRandInPoint(targetArea);
 		else target = ReferenceMath.getRandInPoint(failArea);
@@ -243,10 +244,11 @@ public class MeteorManager implements Loopable
 	{
 		float width = ReferenceConfig.getWidth() * proportion;
 		float height = ReferenceConfig.getHeight() * proportion;
+		
 		float x = Player.I().getCenter().getX() - width / 2;
 		float y = Player.I().getCenter().getY() - height / 2;
 
-		targetArea.setBounds(Math.round(x), Math.round(y), Math.round(width), Math.round(height));
+		targetArea.setRect(x, y, width, height);
 	}
 
 	/**
@@ -264,7 +266,7 @@ public class MeteorManager implements Loopable
 		float x = ReferenceConfig.getWidth() / 2 - width / 2;
 		float y = ReferenceConfig.getHeight() / 2 - height / 2;
 
-		failArea.setBounds(Math.round(x), Math.round(y), Math.round(width), Math.round(height));
+		failArea.setRect(x, y, width, height);
 	}
 
 	//
@@ -341,21 +343,21 @@ public class MeteorManager implements Loopable
 	}
 
 	/**
-	 * Returns the target area Rectangle of the meteors.
+	 * Returns the target area rect of the meteors.
 	 * 
 	 * @return targetArea
 	 */
-	public Rectangle getTargetArea()
+	public Bounds getTargetArea()
 	{
 		return targetArea;
 	}
 
 	/**
-	 * Returns the fail area Rectangle of the meteors.
+	 * Returns the fail area rect of the meteors.
 	 * 
 	 * @return failArea
 	 */
-	public Rectangle getFailArea()
+	public Bounds getFailArea()
 	{
 		return failArea;
 	}
