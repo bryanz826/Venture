@@ -1,5 +1,7 @@
 package com.example.entities.collisions;
 
+import com.example.libs.Vector2D;
+
 /**
  * The bounds used for collision detection.
  * 
@@ -17,29 +19,24 @@ public class Bounds
 	}
 
 	/**
-	 * The x-coordinate of this Bounds.
+	 * The 2D coordinates of this Bounds represented by a vector.
 	 */
-	private float	x;
-
-	/**
-	 * The y-coordinate of this Bounds.
-	 */
-	private float	y;
+	private Vector2D	position;
 
 	/**
 	 * The width of this Bounds.
 	 */
-	private float	width;
+	private float		width;
 
 	/**
 	 * The height of this Bounds.
 	 */
-	private float	height;
+	private float		height;
 
 	/**
 	 * The bounds type specified in this class's enum Type.
 	 */
-	private Type	type;
+	private Type		type;
 
 	/**
 	 * Constructs a Bound with a specified type.
@@ -62,9 +59,9 @@ public class Bounds
 	 * @param size
 	 *            The size
 	 */
-	public Bounds(float x, float y, float size)
+	public Bounds(Vector2D position, float size)
 	{
-		setCirc(x, y, size);
+		setCirc(position, size);
 		this.type = Type.CIRC;
 	}
 
@@ -80,9 +77,9 @@ public class Bounds
 	 * @param height
 	 *            The height
 	 */
-	public Bounds(float x, float y, float width, float height)
+	public Bounds(Vector2D position, float width, float height)
 	{
-		setRect(x, y, width, height);
+		setRect(position, width, height);
 		this.type = Type.RECT;
 	}
 
@@ -213,7 +210,7 @@ public class Bounds
 	 *            The type for comparison
 	 * @return if same type
 	 */
-	public boolean checkType(Bounds bounds, Type type)
+	public static boolean checkType(Bounds bounds, Type type)
 	{
 		return bounds.getType() == type;
 	}
@@ -232,10 +229,9 @@ public class Bounds
 	 * @param size
 	 *            The size
 	 */
-	public void setCirc(float x, float y, float size)
+	public void setCirc(Vector2D position, float size)
 	{
-		setX(x);
-		setY(y);
+		setPosition(position);
 		setSize(size);
 	}
 
@@ -251,34 +247,22 @@ public class Bounds
 	 * @param height
 	 *            The height
 	 */
-	public void setRect(float x, float y, float width, float height)
+	public void setRect(Vector2D position, float width, float height)
 	{
-		setX(x);
-		setY(y);
+		setPosition(position);
 		setWidth(width);
 		setHeight(height);
 	}
 
 	/**
-	 * Sets the x-coordinates.
+	 * Sets the 2D coordinate vector.
 	 * 
 	 * @param x
 	 *            The x-coordinates
 	 */
-	public void setX(float x)
+	public void setPosition(Vector2D position)
 	{
-		this.x = x;
-	}
-
-	/**
-	 * Sets the y-coordinates.
-	 * 
-	 * @param y
-	 *            The y-coordinates
-	 */
-	public void setY(float y)
-	{
-		this.y = y;
+		this.position = position;
 	}
 
 	/**
@@ -322,7 +306,7 @@ public class Bounds
 	 */
 	public float getX()
 	{
-		return x;
+		return position.getX();
 	}
 
 	/**
@@ -332,7 +316,7 @@ public class Bounds
 	 */
 	public float getCenterX()
 	{
-		return x + width / 2;
+		return position.getX() + width / 2;
 	}
 
 	/**
@@ -342,7 +326,7 @@ public class Bounds
 	 */
 	public float getY()
 	{
-		return y;
+		return position.getY();
 	}
 
 	/**
@@ -352,7 +336,7 @@ public class Bounds
 	 */
 	public float getCenterY()
 	{
-		return y + height / 2;
+		return position.getY() + height / 2;
 	}
 
 	/**

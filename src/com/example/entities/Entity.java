@@ -26,10 +26,10 @@ public class Entity implements Loopable
 		NONE,
 		RECT,
 		CIRC,
-		COMCIRC,
+		COMPLEX,
 		RECT_CIRC,
-		RECT_COMCIRC,
-		CIRC_COMCIRC,
+		RECT_COMPLEX,
+		CIRC_COMPLEX,
 		ALL
 	}
 
@@ -53,6 +53,11 @@ public class Entity implements Loopable
 	private Vector2D			position;
 
 	/**
+	 * The rotation of this Entity specified in radians.
+	 */
+	private float				rotation;
+
+	/**
 	 * The bounds of the Entity represented by a rectangle.
 	 */
 	private Bounds				rect;
@@ -66,7 +71,7 @@ public class Entity implements Loopable
 	 * The bounds of the Entity represented by many circles and must be initialized
 	 * if it is used. If not initialized, then uses circBounds.
 	 */
-	private Bounds[]			comCirc;
+	private Bounds[]			complex;
 
 	/**
 	 * Refers to bound updating type. See class enum for more information.
@@ -103,8 +108,8 @@ public class Entity implements Loopable
 		setBoundsCombination(boundsCombination);
 		setMainRender(mainRender);
 
-		this.rect = new Bounds(position.getX(), position.getY(), width, height);
-		this.circ = new Bounds(position.getX(), position.getY(), width);
+		this.rect = new Bounds(position, width, height);
+		this.circ = new Bounds(position, width);
 	}
 
 	//
@@ -117,7 +122,7 @@ public class Entity implements Loopable
 	@Override
 	public void update()
 	{
-		getMainRender().update();
+		mainRender.update(width, height, rotation);
 	}
 
 	/**
@@ -126,7 +131,7 @@ public class Entity implements Loopable
 	@Override
 	public void render(Graphics2D g, float interpolation)
 	{
-		getMainRender().render(g, Math.round(position.getX()), Math.round(position.getY()));
+		mainRender.render(g, Math.round(position.getX()), Math.round(position.getY()));
 
 		if (Reference.DEBUG) {
 			switch (getBoundsUpdateType())
@@ -145,10 +150,10 @@ public class Entity implements Loopable
 					ReferenceRender.drawString(g, "circBounds", getCirc());
 					break;
 				}
-				case COMCIRC:
+				case COMPLEX:
 				{
 					g.setColor(new Color(255, 255, 255));
-					// updateComplexCircBounds();
+					ReferenceRender.drawComplex(g, getComplex());
 					break;
 				}
 				case RECT_CIRC:
@@ -162,24 +167,24 @@ public class Entity implements Loopable
 					ReferenceRender.drawString(g, "circBounds", getCirc());
 					break;
 				}
-				case RECT_COMCIRC:
+				case RECT_COMPLEX:
 				{
 					g.setColor(new Color(128, 128, 128)); // rectBounds
 					ReferenceRender.drawRect(g, getRect());
 					ReferenceRender.drawString(g, "rectBounds", getRect());
 
 					g.setColor(new Color(255, 255, 255));
-					// updateComplexCircBounds();
+					ReferenceRender.drawComplex(g, getComplex());
 					break;
 				}
-				case CIRC_COMCIRC:
+				case CIRC_COMPLEX:
 				{
 					g.setColor(new Color(192, 192, 192)); // cirBounds
 					ReferenceRender.drawCirc(g, getCirc());
 					ReferenceRender.drawString(g, "circBounds", getCirc());
 
 					g.setColor(new Color(255, 255, 255));
-					// updateComplexCircBounds();
+					ReferenceRender.drawComplex(g, getComplex());
 					break;
 				}
 				case ALL:
@@ -193,7 +198,7 @@ public class Entity implements Loopable
 					ReferenceRender.drawString(g, "circBounds", getCirc());
 
 					g.setColor(new Color(255, 255, 255));
-					// updateComplexCircBounds();
+					ReferenceRender.drawComplex(g, getComplex());
 					break;
 				}
 				case NONE:
@@ -228,8 +233,8 @@ public class Entity implements Loopable
 	public Vector2D getFront()
 	{
 		Vector2D center = getCenter();
-		float x = getHeight() / 2 * (float) Math.cos(mainRender.getRadians()) + center.getX();
-		float y = getHeight() / 2 * (float) Math.sin(mainRender.getRadians()) + center.getY();
+		float x = getWidth() / 2 * (float) Math.cos(rotation) + center.getX();
+		float y = getHeight() / 2 * (float) Math.sin(rotation) + center.getY();
 		return new Vector2D(x, y);
 	}
 
@@ -262,9 +267,9 @@ public class Entity implements Loopable
 				updateCirc();
 				break;
 			}
-			case COMCIRC:
+			case COMPLEX:
 			{
-				updateComCirc();
+				updateComplex();
 				break;
 			}
 			case RECT_CIRC:
@@ -273,23 +278,23 @@ public class Entity implements Loopable
 				updateCirc();
 				break;
 			}
-			case RECT_COMCIRC:
+			case RECT_COMPLEX:
 			{
 				updateRect();
-				updateComCirc();
+				updateComplex();
 				break;
 			}
-			case CIRC_COMCIRC:
+			case CIRC_COMPLEX:
 			{
 				updateCirc();
-				updateComCirc();
+				updateComplex();
 				break;
 			}
 			case ALL:
 			{
 				updateRect();
 				updateCirc();
-				updateComCirc();
+				updateComplex();
 				break;
 			}
 			case NONE:
@@ -304,7 +309,7 @@ public class Entity implements Loopable
 	 */
 	public void updateRect()
 	{
-		rect.setRect(position.getX(), position.getY(), width, height);
+		rect.setRect(position, width, height);
 	}
 
 	/**
@@ -312,17 +317,26 @@ public class Entity implements Loopable
 	 */
 	public void updateCirc()
 	{
-		circ.setCirc(position.getX(), position.getY(), width);
+		circ.setCirc(position, width);
 	}
 
 	/**
-	 * Updates the comCirc.
+	 * Updates the complex. Must specifically override to use and make specific circs.
 	 */
-	public void updateComCirc()
+	public void updateComplex()
+	{}
+
+	/**
+	 * Inits the complex bounds with a specified size and filled with RECT types.
+	 * 
+	 * @param size
+	 *            The size of complex bounds array.
+	 */
+	public void initComplex(int size)
 	{
-		// for (Circle circ : complexCircBounds) {
-		//
-		// }
+		this.complex = new Bounds[size];
+		for (int i = 0; i < size; i++)
+			complex[i] = new Bounds(position, width, height);
 	}
 
 	//
@@ -354,6 +368,17 @@ public class Entity implements Loopable
 	}
 
 	/**
+	 * Sets the rotation specified in radians.
+	 * 
+	 * @param rotation
+	 *            The rotation of this entity in radians.
+	 */
+	public void setRotation(float rotation)
+	{
+		this.rotation = rotation;
+	}
+
+	/**
 	 * Sets the boundsCombination.
 	 * 
 	 * @param boundsCombination
@@ -373,7 +398,7 @@ public class Entity implements Loopable
 	public void setMainRender(Render mainRender)
 	{
 		if (mainRender != null) this.mainRender = mainRender;
-		else this.mainRender = new Render(0, width, height);
+		else this.mainRender = new Render();
 	}
 
 	/**
@@ -394,6 +419,16 @@ public class Entity implements Loopable
 	public float getHeight()
 	{
 		return height;
+	}
+
+	/**
+	 * Returns the rotation specified in radians.
+	 * 
+	 * @return rotation in radians
+	 */
+	public float getRotation()
+	{
+		return rotation;
 	}
 
 	/**
@@ -429,11 +464,11 @@ public class Entity implements Loopable
 	/**
 	 * Returns the Bounds represented by many circles specified.
 	 * 
-	 * @return comCirc
+	 * @return complex
 	 */
-	public Bounds[] getComCirc()
+	public Bounds[] getComplex()
 	{
-		return comCirc;
+		return complex;
 	}
 
 	/**

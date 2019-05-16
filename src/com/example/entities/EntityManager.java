@@ -4,9 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
-import javax.swing.JLabel;
-
 import com.example.entities.Entity.BoundsCombination;
+import com.example.entities.collisions.Bounds;
 import com.example.entities.collisions.Collisions;
 import com.example.libs.Vector2D;
 import com.example.utils.gameloop_instructions.Interactive;
@@ -36,6 +35,8 @@ public class EntityManager implements Interactive
 	{
 		Collisions.update();
 
+		dummy.update();
+
 		mm.update();
 		Player.I().update();
 	}
@@ -43,14 +44,19 @@ public class EntityManager implements Interactive
 	@Override
 	public void render(Graphics2D g, float interpolation)
 	{
-		boolean collide = Player.I().getCirc().intersects(dummy.getRect());
+		boolean collide = false;
+		for (Bounds b : Player.I().getComplex())
+			if (b.intersects(dummy.getRect())) {
+				collide = true;
+				break;
+			}
 		g.setColor(Color.ORANGE);
 		g.setFont(new Font("Arial", Font.PLAIN, 50));
 		g.drawString("COLLISION: " + collide, 500, 300);
 		g.setFont(new Font("Arial", Font.PLAIN, 12));
 
 		dummy.render(g, interpolation);
-		
+
 		mm.render(g, interpolation);
 		Player.I().render(g, interpolation);
 	}

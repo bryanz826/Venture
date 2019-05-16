@@ -139,7 +139,7 @@ public class MeteorManager implements Loopable
 			// iter.remove();
 			// }
 
-			if (!meteor.getRect().intersects(ReferenceConfig.getOuter())) {
+			if (!meteor.getCirc().intersects(ReferenceConfig.getOuter())) {
 				iter.remove(); // remove off-screen meteors
 			}
 		}
@@ -248,7 +248,7 @@ public class MeteorManager implements Loopable
 		float x = Player.I().getCenter().getX() - width / 2;
 		float y = Player.I().getCenter().getY() - height / 2;
 
-		targetArea.setRect(x, y, width, height);
+		targetArea.setRect(new Vector2D(x, y), width, height);
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class MeteorManager implements Loopable
 		float x = ReferenceConfig.getWidth() / 2 - width / 2;
 		float y = ReferenceConfig.getHeight() / 2 - height / 2;
 
-		failArea.setRect(x, y, width, height);
+		failArea.setRect(new Vector2D(x, y), width, height);
 	}
 
 	//

@@ -1,5 +1,6 @@
 package com.example.entities;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -83,7 +84,6 @@ public class Moving extends Entity
 	public void update()
 	{
 		super.update();
-
 		updateBounds();
 
 		calcAcceleration();
@@ -120,10 +120,10 @@ public class Moving extends Entity
 					ReferenceRender.drawInterpolatedString(g, "circBounds", getCirc(), velocity, interpolation);
 					break;
 				}
-				case COMCIRC:
+				case COMPLEX:
 				{
 					g.setColor(new Color(255, 255, 255));
-					// updateComplexCircBounds();
+					ReferenceRender.drawInterpolatedComplex(g, getComplex(), velocity, interpolation);
 					break;
 				}
 				case RECT_CIRC:
@@ -137,24 +137,24 @@ public class Moving extends Entity
 					ReferenceRender.drawInterpolatedString(g, "circBounds", getCirc(), velocity, interpolation);
 					break;
 				}
-				case RECT_COMCIRC:
+				case RECT_COMPLEX:
 				{
 					g.setColor(new Color(128, 128, 128)); // rectBounds
 					ReferenceRender.drawInterpolatedRect(g, getRect(), velocity, interpolation);
 					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRect(), velocity, interpolation);
 
 					g.setColor(new Color(255, 255, 255));
-					// updateComplexCircBounds();
+					ReferenceRender.drawInterpolatedComplex(g, getComplex(), velocity, interpolation);
 					break;
 				}
-				case CIRC_COMCIRC:
+				case CIRC_COMPLEX:
 				{
 					g.setColor(new Color(192, 192, 192)); // cirBounds
 					ReferenceRender.drawInterpolatedCirc(g, getCirc(), velocity, interpolation);
 					ReferenceRender.drawInterpolatedString(g, "circBounds", getCirc(), velocity, interpolation);
 
 					g.setColor(new Color(255, 255, 255));
-					// updateComplexCircBounds();
+					ReferenceRender.drawInterpolatedComplex(g, getComplex(), velocity, interpolation);
 					break;
 				}
 				case ALL:
@@ -168,7 +168,9 @@ public class Moving extends Entity
 					ReferenceRender.drawInterpolatedString(g, "circBounds", getCirc(), velocity, interpolation);
 
 					g.setColor(new Color(255, 255, 255));
-					// updateComplexCircBounds();
+					g.setColor(Color.MAGENTA);
+					g.setStroke(new BasicStroke(2));
+					ReferenceRender.drawInterpolatedComplex(g, getComplex(), velocity, interpolation);
 					break;
 				}
 				case NONE:

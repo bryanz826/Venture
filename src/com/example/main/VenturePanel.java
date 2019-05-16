@@ -4,12 +4,10 @@ import java.awt.Canvas;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 
-import com.example.libs.Reference;
 import com.example.state.StateManager;
 import com.example.state.list.Intro;
 import com.example.state.list.Menu;
 import com.example.state.list.Play;
-import com.example.utils.ConsoleLog;
 import com.example.utils.input.KeyManager;
 import com.example.utils.input.MouseManager;
 

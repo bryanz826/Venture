@@ -2,9 +2,18 @@ package com.example.entities.animations;
 
 import com.example.utils.resource.Resource;
 
+/**
+ * Creates an animated render that extracts frames from a spritesheet to create
+ * animations, and follows the movement of the object it is on.
+ * 
+ * @author poroia
+ */
 public class AnimatedRender extends Render
 {
-	private Resource[]	frames;				// array of frames
+	/**
+	 * Array of Resource frames holding individual spritesheet images.
+	 */
+	private Resource[]	frames;
 
 	private int			index;				// index of current frame of Resource[] frames
 	private int			speed;				// speed of animation (0 is fastest w/ 60 frames per second)
@@ -14,12 +23,7 @@ public class AnimatedRender extends Render
 
 	public AnimatedRender(int speed, Resource... frames)
 	{
-		this(0, speed, frames);
-	}
-
-	public AnimatedRender(float radians, int speed, Resource... frames)
-	{
-		super(radians);
+		super();
 		this.speed = speed;
 		this.frames = frames;
 		oneCycleComplete = false;
@@ -35,26 +39,24 @@ public class AnimatedRender extends Render
 	}
 
 	@Override
-	public void update()
+	public void update(float width, float height, float rotation)
 	{
 		tick++;
 
-		if (getWidth() != 0 && getHeight() != 0) {
-			if (speed == 0 && getWidth() != getLastWidth() && getHeight() != getLastHeight()) {
-				updateScale();
-			} else if (tick % speed == 1 && getWidth() != getLastWidth() && getHeight() != getLastHeight()) {
-				updateScale();
-			}
-			setLastWidth(getWidth());
-			setLastHeight(getHeight());
+		if (speed == 0 && width != getLastWidth() && height != getLastHeight()) {
+			updateScale(width, height);
+		} else if (tick % speed == 1 && width != getLastWidth() && height != getLastHeight()) {
+			updateScale(width, height);
 		}
-		
-		if (speed == 0 && getRadians() != getLastRadians()) { // rotate every update and sidestep divide by zero
-			updateRotation();
-		} else if (tick % speed == 1 && getRadians() != getLastRadians()) { // and don't rotate if don't need to
-			updateRotation();
+		setLastWidth(width);
+		setLastHeight(height);
+
+		if (speed == 0 && rotation != getLastRotation()) { // rotate every update and sidestep divide by zero
+			updateRotation(rotation);
+		} else if (tick % speed == 1 && rotation != getLastRotation()) { // and don't rotate if don't need to
+			updateRotation(rotation);
 		}
-		setLastRadians(getRadians()); // update current and prev radians
+		setLastRotation(rotation); // update current and prev radians
 
 		if (tick > speed) {
 			nextFrame();

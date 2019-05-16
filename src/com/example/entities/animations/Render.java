@@ -10,11 +10,7 @@ import com.example.utils.resource.Resource;
 
 public class Render
 {
-	private float		radians;
-	private float		lastRadians;
-
-	private float		width;
-	private float		height;
+	private float		lastRotation;
 	private float		lastWidth;
 	private float		lastHeight;
 
@@ -22,55 +18,31 @@ public class Render
 	private Resource	scaledFrame;
 	private Resource	rotatedFrame;
 
-	public Render(float radians)
+	public Render()//, float radians)
 	{
-		this(radians, new Resource("flying-bonger.png"));
+		this(new Resource("flying-bonger.png"));
 	}
 
-	public Render(float radians, float width, float height)
+	public Render(Resource currentFrame)
 	{
-		this(radians, width, height, new Resource("flying-bonger.png"));
-	}
-
-	public Render(float radians, Resource currentFrame)
-	{
-		setRadians(radians);
-		setLastRadians(radians);
 		setCurrentFrame(currentFrame);
 		scaledFrame = new Resource(this.currentFrame);
 		rotatedFrame = new Resource(this.scaledFrame);
-		updateRotation();
 	}
 
-	public Render(float radians, float width, float height, Resource currentFrame)
+	public void update(float width, float height, float rotation)
 	{
-		setRadians(radians);
-		setLastRadians(radians);
-		setCurrentFrame(currentFrame);
-		setWidth(width);
+		if (width != getLastWidth() && height != getLastHeight()) {
+			updateScale(width, height);
+			updateRotation(rotation);
+		}
 		setLastWidth(width);
-		setHeight(height);
 		setLastHeight(height);
-		scaledFrame = new Resource(this.currentFrame);
-		rotatedFrame = new Resource(this.scaledFrame);
-		updateScale();
-		updateRotation();
-	}
 
-	public void update()
-	{
-		if (width != 0 && height != 0) {
-			if (getWidth() != getLastWidth() && getHeight() != getLastHeight()) {
-				updateScale();
-			}
-			setLastWidth(getWidth());
-			setLastHeight(getHeight());
+		if (rotation != getLastRotation()) { // don't rotate if don't need to
+			updateRotation(rotation);
 		}
-		
-		if (getRadians() != getLastRadians()) { // don't rotate if don't need to
-			updateRotation();
-		}
-		setLastRadians(getRadians()); // update current and prev radians
+		setLastRotation(rotation); // update current and prev rotation
 	}
 
 	public void render(Graphics2D g, float x, float y)
@@ -78,7 +50,7 @@ public class Render
 		if (getRotatedFrame() != null) getRotatedFrame().render(g, x, y);
 	}
 
-	public void updateScale()
+	void updateScale(float width, float height)
 	{
 		BufferedImage resizedImage = new BufferedImage(Math.round(width), Math.round(height),
 				BufferedImage.TYPE_INT_ARGB);
@@ -86,42 +58,21 @@ public class Render
 		g.drawImage(currentFrame.getImage(), 0, 0, Math.round(width), Math.round(height), null);
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		g.dispose();
-
+		
 		scaledFrame.setImage(resizedImage);
 	}
 
-	public void updateRotation()
+	void updateRotation(float rotation)
 	{
-		AffineTransform details = AffineTransform.getRotateInstance(getRadians(), scaledFrame.getWidth() / 2,
+		AffineTransform details = AffineTransform.getRotateInstance(rotation, scaledFrame.getWidth() / 2,
 				scaledFrame.getHeight() / 2);
 		rotatedFrame.setImage(
 				new AffineTransformOp(details, AffineTransformOp.TYPE_BICUBIC).filter(scaledFrame.getImage(), null));
 	}
 
-	public void setRadians(float radians)
+	void setLastRotation(float lastRotation)
 	{
-		this.radians = radians;
-	}
-
-	void setLastRadians(float lastRadians)
-	{
-		this.lastRadians = lastRadians;
-	}
-
-	public void setSize(float size)
-	{
-		setWidth(size);
-		setHeight(size);
-	}
-
-	public void setWidth(float width)
-	{
-		this.width = width;
-	}
-
-	public void setHeight(float height)
-	{
-		this.height = height;
+		this.lastRotation = lastRotation;
 	}
 
 	void setLastWidth(float lastWidth)
@@ -139,27 +90,12 @@ public class Render
 		this.currentFrame = currentFrame;
 	}
 
-	public float getRadians()
+	float getLastRotation()
 	{
-		return radians;
+		return lastRotation;
 	}
 
-	float getLastRadians()
-	{
-		return lastRadians;
-	}
-
-	public float getWidth()
-	{
-		return width;
-	}
-
-	public float getHeight()
-	{
-		return height;
-	}
-
-	float getLastWidth()
+	public float getLastWidth()
 	{
 		return lastWidth;
 	}

@@ -23,6 +23,7 @@ public class OldPlayer
 	private float	thrust;
 	private int		tickMovement;
 
+	private float 	rotation;
 	private float	targetRotation;
 
 	private Render	mainRender;
@@ -37,8 +38,8 @@ public class OldPlayer
 		setThrust(1 / (float) Math.E);
 		targetSpd = 7;
 		diagTargetSpd = targetSpd * 0.70710677f;
-		mainRender = new Render(0, new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true));
-		damage = new Render(0, new Resource(ReferenceResource.PLAYER_LOC + "player-damaged-3.png", true));
+		mainRender = new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true));
+		damage = new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-damaged-3.png", true));
 	}
 
 	/**
@@ -288,16 +289,15 @@ public class OldPlayer
 
 	public void update()
 	{
-		mainRender.setRadians(targetRotation);
-		damage.setRadians(targetRotation);
+		rotation = targetRotation;
 
 		setDx(getDx() + getD2x());
 		setDy(getDy() + getD2y());
 		setX(getX() + getDx());
 		setY(getY() + getDy());
 
-		mainRender.update();
-		damage.update();
+		mainRender.update(width, height, rotation);
+		damage.update(width, height, rotation);
 	}
 
 	public void render(Graphics2D g, float interpolation)
@@ -379,7 +379,7 @@ public class OldPlayer
 	 */
 	public float getFrontX()
 	{
-		float xLoc = getHeight() / 2 * (float) Math.cos(mainRender.getRadians());
+		float xLoc = getHeight() / 2 * (float) Math.cos(rotation);
 		return xLoc + getCenterX();
 	}
 
@@ -390,7 +390,7 @@ public class OldPlayer
 	 */
 	public float getFrontY()
 	{
-		float yLoc = getHeight() / 2 * (float) Math.sin(mainRender.getRadians());
+		float yLoc = getHeight() / 2 * (float) Math.sin(rotation);
 		return yLoc + getCenterY();
 	}
 

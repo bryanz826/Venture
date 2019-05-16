@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.example.entities.animations.Render;
+import com.example.entities.collisions.Bounds;
 import com.example.libs.Reference;
 import com.example.libs.ReferenceResource;
 import com.example.libs.Vector2D;
@@ -37,6 +38,7 @@ public final class Player extends Moving implements Interactive
 	 * down.
 	 */
 	private Vector2D	resistance;
+
 	/**
 	 * A visual Render that is representative of the damage done on this ship body.
 	 */
@@ -52,9 +54,11 @@ public final class Player extends Moving implements Interactive
 	private Player()
 	{
 		super(new Vector2D(ReferenceConfig.getWidth() / 2 - 50, ReferenceConfig.getHeight() / 2 - 50), 100, 100, 7,
-				1 / (float) Math.E, BoundsCombination.ALL, new Render(0, new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true)));
+				1 / (float) Math.E, BoundsCombination.ALL,
+				new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true)));
 		resistance = new Vector2D();
-		damageRender = new Render(0, new Resource(ReferenceResource.PLAYER_LOC + "player-damaged-2.png", true));
+		damageRender = new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-damaged-2.png", true));
+		initComplex(4);
 
 		ConsoleLog.write("Player constructed.");
 	}
@@ -128,10 +132,9 @@ public final class Player extends Moving implements Interactive
 		calcResistance();
 		getVelocity().add(resistance);
 		super.update();
-		damageRender.update();
+		damageRender.update(getWidth(), getHeight(), getRotation());
 
-		getMainRender().setRadians(targetRotation);
-		damageRender.setRadians(targetRotation);
+		setRotation(targetRotation);
 	}
 
 	/**
@@ -147,26 +150,63 @@ public final class Player extends Moving implements Interactive
 		if (damageRender != null) damageRender.render(g, x, y);
 
 		if (Reference.DEBUG) {
-			Vector2D front = getFront();
-			g.setColor(Color.MAGENTA);
-			g.fillOval(Math.round(front.getX() - 5 + interpolation * getVelocity().getX()),
-					Math.round(front.getY() - 5 + interpolation * getVelocity().getY()), 10, 10);
-
 			g.setColor(Color.ORANGE);
 			g.drawString("Mouse:           (" + MouseManager.getX() + ", " + MouseManager.getY() + ")", 100, 100);
 			g.drawString("Location:        (" + Math.round(getPosition().getX()) + ", "
 					+ Math.round(getPosition().getY()) + ")", 100, 120);
-			g.drawString("Speed:           (" + getVelocity().getX(), 100, 140);
+			g.drawString("Speed:            (" + getVelocity().getX(), 100, 140);
 			g.drawString(", " + getVelocity().getY() + ")", 250, 140);
 
-			g.drawString("Acceleration: (" + getAcceleration().getX(), 100, 160);
+			g.drawString("Acceleration:  (" + getAcceleration().getX(), 100, 160);
 			g.drawString(", " + getAcceleration().getY() + ")", 250, 160);
 
 			g.drawString("Resistance:   (" + resistance.getX(), 100, 180);
 			g.drawString(", " + resistance.getY() + ")", 250, 180);
 
-			g.drawString("Target Degrees: " + Math.round(Math.toDegrees(targetRotation)), 100, 200);
+			g.drawString("Rotation:         " + Math.round(Math.toDegrees(getRotation())), 100, 200);
 		}
+	}
+
+	//
+	// GENERAL METHODS
+	//
+
+	@Override
+	public void updateComplex()
+	{
+		Vector2D center = getCenter();
+		
+		/*
+		 * TOP
+		 */
+		float size = 22;
+		float x = 38 * (float) Math.cos(getRotation()) + center.getX() - size / 2;
+		float y = 38 * (float) Math.sin(getRotation()) + center.getY() - size / 2;
+		getComplex()[0] = new Bounds(new Vector2D(x, y), size);
+		
+		/*
+		 * CENTER
+		 */
+		size = 60;
+		x = 4 * (float) Math.cos(getRotation()) + center.getX() - size / 2;
+		y = 4 * (float) Math.sin(getRotation()) + center.getY() - size / 2;
+		getComplex()[1] = new Bounds(new Vector2D(x, y), size);
+		
+		/*
+		 * BOTTOM LEFT
+		 */
+		size = 24;
+		x = 36 * (float) Math.cos(getRotation() + Math.toRadians(102)) + center.getX() - size / 2;
+		y = 36 * (float) Math.sin(getRotation() + Math.toRadians(102)) + center.getY() - size / 2;
+		getComplex()[2] = new Bounds(new Vector2D(x, y), size);
+		
+		/*
+		 * BOTTOM RIGHT
+		 */
+		size = 24;
+		x = 36 * (float) Math.cos(getRotation() + Math.toRadians(-102)) + center.getX() - size / 2;
+		y = 36 * (float) Math.sin(getRotation() + Math.toRadians(-102)) + center.getY() - size / 2;
+		getComplex()[3] = new Bounds(new Vector2D(x, y), size);
 	}
 
 	//

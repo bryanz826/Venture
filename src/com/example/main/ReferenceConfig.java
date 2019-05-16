@@ -3,6 +3,7 @@ package com.example.main;
 import java.awt.GraphicsDevice;
 
 import com.example.entities.collisions.Bounds;
+import com.example.libs.Vector2D;
 
 public class ReferenceConfig
 {
@@ -19,7 +20,7 @@ public class ReferenceConfig
 		int y = -space;
 		int width = getWidth() + 2 * space;
 		int height = getHeight() + 2 * space;
-		outer = new Bounds(x, y, width, height);
+		outer = new Bounds(new Vector2D(x, y), width, height);
 	}
 
 	public static int getWidth()

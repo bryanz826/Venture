@@ -13,8 +13,8 @@ public class Meteor extends Moving
 
 	public Meteor(Vector2D position, Vector2D velocity, float size, float radPerSec)
 	{
-		super(position, size, size, ReferenceMath.getRandomFloat(5, 12), 0, BoundsCombination.RECT_CIRC, null);
-		setMainRender(new Render(0, size, size, new Resource(
+		super(position, size, size, ReferenceMath.getRandomFloat(5, 12), 0, BoundsCombination.CIRC, null);
+		setMainRender(new Render(new Resource(
 				ReferenceResource.METEOR_LOC + "meteor-" + chooseRandColor() + "-" + chooseRandType() + ".png")));
 		radPerTick = radPerSec / ReferenceConfig.TARGET_UPS;
 
@@ -27,7 +27,7 @@ public class Meteor extends Moving
 	public void update()
 	{
 		super.update();
-		getMainRender().setRadians(getMainRender().getRadians() + radPerTick);
+		setRotation(getRotation() + radPerTick);
 	}
 
 	//

@@ -148,6 +148,6 @@ public class Resource
 
 	public String toString()
 	{
-		return fileName;
+		return hashCode() + " | " + fileName;
 	}
 }

@@ -2,29 +2,29 @@ package com.example.entities.animations;
 
 import java.awt.Graphics2D;
 
+import com.example.libs.Vector2D;
 import com.example.utils.resource.Resource;
 
+/**
+ * Creates an animated render that extracts frames from a spritesheet to create
+ * animations on the specified coordinates.
+ * 
+ * @author poroia
+ */
 public class StationaryAnimatedRender extends AnimatedRender
 {
-	private float	x;
-	private float	y;
+	private Vector2D position;
 
-	public StationaryAnimatedRender(float x, float y, int speed, Resource... frames)
-	{
-		this(x, y, 0, speed, frames);
-	}
-
-	public StationaryAnimatedRender(float x, float y, float radians, int speed,
+	public StationaryAnimatedRender(Vector2D position, int speed,
 			Resource... frames)
 	{
-		super(radians, speed, frames);
-		this.x = x;
-		this.y = y;
+		super(speed, frames);
+		this.position = position;
 	}
 
 	@Override
 	public void render(Graphics2D g, float x, float y) // since I'm bad at coding, ignore parameters
 	{
-		if (getRotatedFrame() != null) getRotatedFrame().render(g, this.x, this.y);
+		if (getRotatedFrame() != null) getRotatedFrame().render(g, position.getX(), position.getY());
 	}
 }

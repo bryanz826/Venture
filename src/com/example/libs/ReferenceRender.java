@@ -6,14 +6,13 @@ import com.example.entities.collisions.Bounds;
 
 public class ReferenceRender
 {
+	//
+	// GENERAL METHODS
+	//
+
 	public static int getInterpolatedX(Vector2D position, Vector2D velocity, float interpolation)
 	{
 		return Math.round(position.getX() + interpolation * velocity.getX());
-	}
-
-	public static int getInterpolatedX(Bounds bounds, Vector2D velocity, float interpolation)
-	{
-		return Math.round(bounds.getX() + interpolation * velocity.getX());
 	}
 
 	public static int getInterpolatedY(Vector2D position, Vector2D velocity, float interpolation)
@@ -21,28 +20,33 @@ public class ReferenceRender
 		return Math.round(position.getY() + interpolation * velocity.getY());
 	}
 
+	//
+	// DEBUG METHODS
+	//
+
+	public static int getInterpolatedX(Bounds bounds, Vector2D velocity, float interpolation)
+	{
+		return Math.round(bounds.getX() + interpolation * velocity.getX());
+	}
+
 	public static int getInterpolatedY(Bounds bounds, Vector2D velocity, float interpolation)
 	{
 		return Math.round(bounds.getY() + interpolation * velocity.getY());
 	}
 
-	public static void drawRect(Graphics2D g, float width, float height, Vector2D position)
-	{
-		g.drawRect(Math.round(position.getX()), Math.round(position.getY()), Math.round(width), Math.round(height));
-	}
-
+	/*
+	 * RECT
+	 */
 	public static void drawRect(Graphics2D g, Bounds rect)
 	{
 		g.drawRect(Math.round(rect.getX()), Math.round(rect.getY()), Math.round(rect.getWidth()),
 				Math.round(rect.getHeight()));
 	}
 
-	public static void drawInterpolatedRect(Graphics2D g, float width, float height, Vector2D position,
-			Vector2D velocity, float interpolation)
+	public static void drawRectFromCenter(Graphics2D g, Bounds rect)
 	{
-		int x = getInterpolatedX(position, velocity, interpolation);
-		int y = getInterpolatedY(position, velocity, interpolation);
-		g.drawRect(x, y, Math.round(width), Math.round(height));
+		g.drawOval(Math.round(rect.getX() - rect.getWidth() / 2), Math.round(rect.getY() - rect.getHeight() / 2),
+				Math.round(rect.getWidth()), Math.round(rect.getHeight()));
 	}
 
 	public static void drawInterpolatedRect(Graphics2D g, Bounds rect, Vector2D velocity, float interpolation)
@@ -54,23 +58,28 @@ public class ReferenceRender
 		g.drawRect(x, y, width, height);
 	}
 
-	public static void drawCirc(Graphics2D g, float size, Vector2D position)
+	public static void drawInterpolatedRectFromCenter(Graphics2D g, Bounds rect, Vector2D velocity, float interpolation)
 	{
-		g.drawOval(Math.round(position.getX()), Math.round(position.getY()), Math.round(size), Math.round(size));
+		int x = getInterpolatedX(rect, velocity, interpolation) - Math.round(rect.getWidth() / 2);
+		int y = getInterpolatedY(rect, velocity, interpolation) - Math.round(rect.getHeight() / 2);
+		int width = Math.round(rect.getWidth());
+		int height = Math.round(rect.getHeight());
+		g.drawRect(x, y, width, height);
 	}
 
+	/*
+	 * CIRC
+	 */
 	public static void drawCirc(Graphics2D g, Bounds circ)
 	{
 		g.drawOval(Math.round(circ.getX()), Math.round(circ.getY()), Math.round(circ.getWidth()),
 				Math.round(circ.getWidth()));
 	}
 
-	public static void drawInterpolatedCirc(Graphics2D g, float size, Vector2D position, Vector2D velocity,
-			float interpolation)
+	public static void drawCircFromCenter(Graphics2D g, Bounds circ)
 	{
-		int x = getInterpolatedX(position, velocity, interpolation);
-		int y = getInterpolatedY(position, velocity, interpolation);
-		g.drawOval(x, y, Math.round(size), Math.round(size));
+		g.drawOval(Math.round(circ.getX() - circ.getRadius()), Math.round(circ.getY() - circ.getRadius()),
+				Math.round(circ.getWidth()), Math.round(circ.getWidth()));
 	}
 
 	public static void drawInterpolatedCirc(Graphics2D g, Bounds circ, Vector2D velocity, float interpolation)
@@ -81,22 +90,51 @@ public class ReferenceRender
 		g.drawOval(x, y, size, size);
 	}
 
-	public static void drawString(Graphics2D g, String str, Vector2D position)
+	public static void drawInterpolatedCircFromCenter(Graphics2D g, Bounds circ, Vector2D velocity, float interpolation)
 	{
-		g.drawString(str, position.getX(), position.getY());
+		int x = getInterpolatedX(circ, velocity, interpolation) - Math.round(circ.getRadius());
+		int y = getInterpolatedY(circ, velocity, interpolation) - Math.round(circ.getRadius());
+		int size = Math.round(circ.getWidth());
+		g.drawOval(x, y, size, size);
 	}
 
+	/*
+	 * COMPLEX
+	 */
+	public static void drawComplex(Graphics2D g, Bounds[] complex)
+	{
+		for (Bounds b : complex) {
+			if (Bounds.checkType(b, Bounds.Type.CIRC)) drawCircFromCenter(g, b);
+			else if (Bounds.checkType(b, Bounds.Type.RECT)) drawRectFromCenter(g, b);
+		}
+	}
+
+	public static void drawInterpolatedComplex(Graphics2D g, Bounds[] complex, Vector2D velocity, float interpolation)
+	{
+		for (Bounds b : complex) {
+			if (Bounds.checkType(b, Bounds.Type.CIRC)) //
+				drawInterpolatedCirc(g, b, velocity, interpolation);
+			else if (Bounds.checkType(b, Bounds.Type.RECT)) drawInterpolatedRect(g, b, velocity, interpolation);
+		}
+	}
+
+	public static void drawInterpolatedComplexFromCenter(Graphics2D g, Bounds[] complex, Vector2D velocity,
+			float interpolation)
+	{
+		for (Bounds b : complex) {
+			if (Bounds.checkType(b, Bounds.Type.CIRC)) //
+				drawInterpolatedCircFromCenter(g, b, velocity, interpolation);
+			else if (Bounds.checkType(b, Bounds.Type.RECT))
+				drawInterpolatedRectFromCenter(g, b, velocity, interpolation);
+		}
+	}
+
+	/*
+	 * STRING
+	 */
 	public static void drawString(Graphics2D g, String str, Bounds bounds)
 	{
 		g.drawString(str, bounds.getX(), bounds.getY());
-	}
-
-	public static void drawInterpolatedString(Graphics2D g, String str, Vector2D position, Vector2D velocity,
-			float interpolation)
-	{
-		int x = getInterpolatedX(position, velocity, interpolation);
-		int y = getInterpolatedY(position, velocity, interpolation);
-		g.drawString(str, x, y);
 	}
 
 	public static void drawInterpolatedString(Graphics2D g, String str, Bounds bounds, Vector2D velocity,
@@ -104,7 +142,7 @@ public class ReferenceRender
 	{
 		int x = getInterpolatedX(bounds, velocity, interpolation);
 		int y = getInterpolatedY(bounds, velocity, interpolation);
-		if (bounds.checkType(bounds, Bounds.Type.RECT)) g.drawString(str, x, y);
-		else if (bounds.checkType(bounds, Bounds.Type.CIRC)) g.drawString(str, x, y + bounds.getHeight());
+		if (Bounds.checkType(bounds, Bounds.Type.RECT)) g.drawString(str, x, y);
+		else if (Bounds.checkType(bounds, Bounds.Type.CIRC)) g.drawString(str, x, y + bounds.getHeight());
 	}
 }
