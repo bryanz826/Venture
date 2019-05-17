@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.example.entities.EntityManager;
-import com.example.main.ReferenceConfig;
+import com.example.libs.ReferenceConfig;
 import com.example.state.State;
 
 public class Play implements State
@@ -14,7 +14,6 @@ public class Play implements State
 	@Override
 	public void enter()
 	{	
-		ReferenceConfig.initOuter();
 		em = new EntityManager();
 	}
 	

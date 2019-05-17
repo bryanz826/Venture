@@ -1,7 +1,7 @@
 package com.example.entities.collisions;
 
 import com.example.entities.Player;
-import com.example.main.ReferenceConfig;
+import com.example.libs.ReferenceConfig;
 
 public class Collisions
 {

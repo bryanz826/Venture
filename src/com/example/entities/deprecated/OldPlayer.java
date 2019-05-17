@@ -5,8 +5,8 @@ import java.awt.Graphics2D;
 
 import com.example.entities.animations.Render;
 import com.example.libs.Reference;
+import com.example.libs.ReferenceConfig;
 import com.example.libs.ReferenceResource;
-import com.example.main.ReferenceConfig;
 import com.example.utils.input.KeyManager;
 import com.example.utils.input.MouseManager;
 import com.example.utils.resource.Resource;

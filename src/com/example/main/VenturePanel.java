@@ -18,14 +18,14 @@ import com.example.utils.input.MouseManager;
 @SuppressWarnings("serial")
 public class VenturePanel extends Canvas implements Runnable
 {
-	static final int	TARGET_UPS	= 60;	// target updates per second
-	static final int	FRAME_CAP	= 60;	// FPS cap
-	private int			UPS;
-	private int			FPS;
+	public static final int	TARGET_UPS	= 60;	// target updates per second
+	public static final int	FRAME_CAP	= 60;	// FPS cap
+	private int				UPS;
+	private int				FPS;
 
-	private Thread		thread;
+	private Thread			thread;
 
-	private boolean		running;			// is programming running
+	private boolean			running;			// is programming running
 
 	public VenturePanel() //
 	{
@@ -123,7 +123,7 @@ public class VenturePanel extends Canvas implements Runnable
 				UPS = updates;
 				frameCount = 0;
 				updates = 0;
-//				if (Reference.DEBUG) ConsoleLog.write("" + FPS);
+				// if (Reference.DEBUG) ConsoleLog.write("" + FPS);
 			}
 
 			// Below statements supposedly may cut down CPU usage

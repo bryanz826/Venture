@@ -47,6 +47,7 @@ public class Bounds
 	public Bounds(Type type)
 	{
 		this.type = type;
+		position = new Vector2D(0, 0);
 	}
 
 	/**
@@ -266,6 +267,18 @@ public class Bounds
 	}
 
 	/**
+	 * Sets the 2D coordinate vector with x and y coordinates.
+	 * 
+	 * @param x
+	 *            The x-coordinates
+	 */
+	public void setPosition(float x, float y)
+	{
+		position.setX(x);
+		position.setY(y);
+	}
+
+	/**
 	 * Sets the size of this Bounds.
 	 * 
 	 * @param size
@@ -378,5 +391,20 @@ public class Bounds
 	public Type getType()
 	{
 		return type;
+	}
+
+	//
+	// INHERENT METHODS
+	//
+
+	@Override
+	public String toString()
+	{
+		if (checkType(this, Bounds.Type.RECT)) {
+			return "RECT: " + position + ", width=" + width + " height=" + height;
+		} else if (checkType(this, Bounds.Type.CIRC)) {
+			return "CIRC: " + position + ", size=" + width;
+		}
+		return "Oops, what Bounds are you using?";
 	}
 }

@@ -351,7 +351,7 @@ public class Vector2D
 	}
 
 	//
-	// INNATE METHODS
+	// INHERENT METHODS
 	//
 
 	@Override

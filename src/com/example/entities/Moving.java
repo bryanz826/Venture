@@ -13,7 +13,7 @@ import com.example.libs.Vector2D;
  * A Moving entity that has models real world physics using velocity and
  * acceleration, resulting in smooth motion.
  * 
- * @author bryan
+ * @author poroia
  *
  */
 public class Moving extends Entity

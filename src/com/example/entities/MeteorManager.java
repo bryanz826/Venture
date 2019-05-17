@@ -10,10 +10,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.example.entities.collisions.Bounds;
 import com.example.libs.Reference;
+import com.example.libs.ReferenceConfig;
 import com.example.libs.ReferenceMath;
 import com.example.libs.ReferenceRender;
 import com.example.libs.Vector2D;
-import com.example.main.ReferenceConfig;
 import com.example.utils.gameloop_instructions.Loopable;
 
 /**

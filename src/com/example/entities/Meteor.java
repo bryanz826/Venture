@@ -1,10 +1,10 @@
 package com.example.entities;
 
 import com.example.entities.animations.Render;
+import com.example.libs.ReferenceConfig;
 import com.example.libs.ReferenceMath;
 import com.example.libs.ReferenceResource;
 import com.example.libs.Vector2D;
-import com.example.main.ReferenceConfig;
 import com.example.utils.resource.Resource;
 
 public class Meteor extends Moving

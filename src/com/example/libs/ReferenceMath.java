@@ -3,7 +3,6 @@ package com.example.libs;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.example.entities.collisions.Bounds;
-import com.example.main.ReferenceConfig;
 
 public class ReferenceMath
 {
