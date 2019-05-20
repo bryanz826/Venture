@@ -5,9 +5,8 @@ import com.example.libs.Vector2D;
 
 public class Inanimate extends Entity
 {
-	public Inanimate(Vector2D position, float width, float height, BoundsCombination boundsCombination,
-			Render mainRender)
+	public Inanimate(Vector2D position, float width, float height, Render mainRender, ID id)
 	{
-		super(position, width, height, boundsCombination, mainRender);
+		super(position, width, height, mainRender, id);
 	}
 }

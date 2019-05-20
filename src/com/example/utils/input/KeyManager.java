@@ -3,6 +3,7 @@ package com.example.utils.input;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import com.example.libs.Reference;
 import com.example.main.VentureRunner;
 
 public class KeyManager extends KeyAdapter
@@ -80,6 +81,10 @@ public class KeyManager extends KeyAdapter
 	{
 		if (e.getKeyCode() == KeyEvent.VK_PAGE_DOWN) System.exit(0);
 		if (e.getKeyCode() == KeyEvent.VK_O) VentureRunner.toggleScreenMode();
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			if (Reference.PAUSE) Reference.PAUSE = false;
+			else Reference.PAUSE = true;
+		}
 		KeyManager.keySet(e.getKeyCode(), true);
 	}
 

@@ -156,11 +156,11 @@ public class Bounds
 	 */
 	private boolean circIntersectsRect(Bounds rect)
 	{
-		float closestX = clip(this.getCenterX(), rect.getX(), rect.getX() + rect.getWidth());
-		float closestY = clip(this.getCenterY(), rect.getY(), rect.getY() + rect.getHeight());
+		float closestX = clip(this.getCenter().getX(), rect.getX(), rect.getX() + rect.getWidth());
+		float closestY = clip(this.getCenter().getY(), rect.getY(), rect.getY() + rect.getHeight());
 
-		float distX = this.getCenterX() - closestX;
-		float distY = this.getCenterY() - closestY;
+		float distX = this.getCenter().getX() - closestX;
+		float distY = this.getCenter().getY() - closestY;
 		float distRad = this.getRadius();
 		return distX * distX + distY * distY <= distRad * distRad;
 	}
@@ -174,11 +174,11 @@ public class Bounds
 	 */
 	private boolean rectIntersectsCirc(Bounds circ)
 	{
-		float closestX = clip(circ.getCenterX(), this.getX(), this.getX() + this.getWidth());
-		float closestY = clip(circ.getCenterY(), this.getY(), this.getY() + this.getHeight());
+		float closestX = clip(circ.getCenter().getX(), this.getX(), this.getX() + this.getWidth());
+		float closestY = clip(circ.getCenter().getY(), this.getY(), this.getY() + this.getHeight());
 
-		float distX = circ.getCenterX() - closestX;
-		float distY = circ.getCenterY() - closestY;
+		float distX = circ.getCenter().getX() - closestX;
+		float distY = circ.getCenter().getY() - closestY;
 		float distRad = circ.getRadius();
 		return distX * distX + distY * distY <= distRad * distRad;
 	}
@@ -323,16 +323,6 @@ public class Bounds
 	}
 
 	/**
-	 * Returns the x-coordinate for the center.
-	 * 
-	 * @return centerX
-	 */
-	public float getCenterX()
-	{
-		return position.getX() + width / 2;
-	}
-
-	/**
 	 * Returns the y-coordinate.
 	 * 
 	 * @return y
@@ -347,9 +337,11 @@ public class Bounds
 	 * 
 	 * @return centerY
 	 */
-	public float getCenterY()
+	public Vector2D getCenter()
 	{
-		return position.getY() + height / 2;
+		float x = position.getX() + width / 2;
+		float y = position.getY() + height / 2;
+		return new Vector2D(x, y);
 	}
 
 	/**

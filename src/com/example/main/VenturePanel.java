@@ -4,10 +4,12 @@ import java.awt.Canvas;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 
+import com.example.libs.Reference;
 import com.example.state.StateManager;
 import com.example.state.list.Intro;
 import com.example.state.list.Menu;
 import com.example.state.list.Play;
+import com.example.utils.ConsoleLog;
 import com.example.utils.input.KeyManager;
 import com.example.utils.input.MouseManager;
 
@@ -105,7 +107,7 @@ public class VenturePanel extends Canvas implements Runnable
 
 			if (dt >= 1.0) { // update once the time (dt (for updates)) has reached OPTIMAL_TIME
 				processInput();
-				update();
+				if (!Reference.PAUSE) update();
 				updates++; // we've updated once, now let's add it to the tracker!
 				dt--; // reset dt, but at same time adjust dt for real time if there are leftovers
 			}
@@ -123,7 +125,7 @@ public class VenturePanel extends Canvas implements Runnable
 				UPS = updates;
 				frameCount = 0;
 				updates = 0;
-				// if (Reference.DEBUG) ConsoleLog.write("" + FPS);
+				if (Reference.DEBUG) ConsoleLog.write("" + FPS);
 			}
 
 			// Below statements supposedly may cut down CPU usage
@@ -138,6 +140,7 @@ public class VenturePanel extends Canvas implements Runnable
 		if (running) return;
 		thread = new Thread(this, "GameMain-Thread");
 		thread.start();
+		running = true;
 	}
 
 	public void stop() // stop the thread
@@ -156,7 +159,6 @@ public class VenturePanel extends Canvas implements Runnable
 	public void run()
 	{
 		init();
-		running = true;
 		gameLoop();
 	}
 

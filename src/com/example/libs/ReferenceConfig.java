@@ -6,8 +6,8 @@ import com.example.main.VentureRunner;
 
 public class ReferenceConfig
 {
-	public static final int	FRAME_CAP	= VenturePanel.FRAME_CAP;
-	public static final int	TARGET_UPS	= VenturePanel.TARGET_UPS;
+	public static final int	FRAME_CAP			= VenturePanel.FRAME_CAP;
+	public static final int	TARGET_UPS			= VenturePanel.TARGET_UPS;
 
 	public static int getWidth()
 	{

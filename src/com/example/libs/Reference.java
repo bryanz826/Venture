@@ -7,4 +7,9 @@ public class Reference
 	 * player data.
 	 */
 	public static final boolean DEBUG = true;
+	
+	/**
+	 * When paused, game is paused. Temporary, and will be implemented another way later.
+	 */
+	public static boolean PAUSE = false;
 }

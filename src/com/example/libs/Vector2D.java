@@ -72,57 +72,32 @@ public class Vector2D
 	 * @param other
 	 *            The other vector used in the calculation.
 	 */
-	public void add(Vector2D other)
+	public static Vector2D add(Vector2D v1, Vector2D v2)
 	{
-		x += other.x;
-		y += other.y;
+		return new Vector2D(v1.getX() + v2.getX(), v1.getY() + v2.getY());
 	}
 
-	/**
-	 * Adds a multitude of other vectors to this vector.
-	 * 
-	 * @param others
-	 */
-	public void add(Vector2D... others)
-	{
-		for (Vector2D other : others) {
-			this.add(other);
-		}
-	}
-
-	/**
-	 * Normalizes this vector.
-	 */
-	public void normalize()
-	{
-		float length = getExactLength();
-		quickNormalize(length);
-	}
-
-	/**
-	 * Normalizes this vector based on a length specification. Can be used to
-	 * prevent recalculation of the costly length method.
-	 * 
-	 * @param length
-	 *            The length or magnitude of this vector.
-	 */
-	public void quickNormalize(float length)
-	{
-		if (length != 0f) {
-			x /= length;
-			y /= length;
-		}
-	}
+//	/**
+//	 * Adds a multitude of other vectors to this vector.
+//	 * 
+//	 * @param others
+//	 */
+//	public static Vector2D add(Vector2D... others)
+//	{
+//		for (Vector2D other : others) {
+//			this.add(other);
+//		}
+//		return new Vector2D(x, y);
+//	}
 
 	/**
 	 * Multiply this vector by a scalar value.
 	 * 
 	 * @param scalar
 	 */
-	public void scale(float scalar)
+	public static Vector2D getScaled(Vector2D v, float scalar)
 	{
-		x *= scalar;
-		y *= scalar;
+		return new Vector2D(v.getX() * scalar, v.getY() * scalar);
 	}
 
 	/**
@@ -152,7 +127,7 @@ public class Vector2D
 	 */
 	public static float getDot(Vector2D v1, Vector2D v2)
 	{
-		return v1.x * v2.x + v1.y * v2.y;
+		return v1.getX() * v2.getX() + v1.getY() * v2.getY();
 	}
 
 	/**
@@ -169,6 +144,30 @@ public class Vector2D
 		float x = ReferenceMath.getRandomFloat(v1.getX(), v2.getX());
 		float y = ReferenceMath.getRandomFloat(v1.getY(), v2.getY());
 		return new Vector2D(x, y);
+	}
+
+	/**
+	 * Normalizes this vector.
+	 */
+	public void normalize()
+	{
+		float length = getExactLength();
+		quickNormalize(length);
+	}
+
+	/**
+	 * Normalizes this vector based on a length specification. Can be used to
+	 * prevent recalculation of the costly length method.
+	 * 
+	 * @param length
+	 *            The length or magnitude of this vector.
+	 */
+	public void quickNormalize(float length)
+	{
+		if (length != 0f) {
+			x /= length;
+			y /= length;
+		}
 	}
 
 	/**
@@ -261,10 +260,9 @@ public class Vector2D
 	/**
 	 * Negates the x and y values.
 	 */
-	public void negate()
+	public Vector2D getNegate()
 	{
-		negateX();
-		negateY();
+		return new Vector2D(-x, -y);
 	}
 
 	/**
@@ -282,7 +280,7 @@ public class Vector2D
 	{
 		y = -y;
 	}
-	
+
 	/**
 	 * Repositions entire vector based on offset. Used mainly for position vectors.
 	 */
@@ -353,6 +351,13 @@ public class Vector2D
 	//
 	// INHERENT METHODS
 	//
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		Vector2D other = (Vector2D) obj;
+		return this.getX() == other.getX() && this.getY() == other.getY();
+	}
 
 	@Override
 	public String toString()

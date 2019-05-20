@@ -92,7 +92,7 @@ public class VentureRunner
 
 		setFullscreen(); // initial setting TODO will add to menu to make it toggleable
 
-		game.run();
+		game.start();
 
 		// window.setIconImage(Toolkit.getDefaultToolkit().getImage(Reference.RESOURCE_LOC
 		// + "icon.png")); TODO set icon
@@ -106,6 +106,7 @@ public class VentureRunner
 		} else {
 			setFullscreen();
 		}
+//		resizeAll(Entity.class, width, new String[] { "width" });
 	}
 
 	private static void setWindowed()
@@ -239,4 +240,42 @@ public class VentureRunner
 	{
 		return full;
 	}
+
+//	private static void resizeAll(Class<?> clazz, float newSize, String[] wantedFields)
+//	{
+//		List<Field> fields = new ArrayList<Field>();
+//		for (Class<?> c = clazz; c != null; c = c.getSuperclass()) {
+//			fields.addAll(Arrays.asList(c.getDeclaredFields()));
+//		}
+//
+//		for (int i = 0; i < wantedFields.length; i++)
+//			for (int j = 0; j < fields.size(); j++) {
+//				if (wantedFields[i].equals(fields.get(j).getName())) {
+//					String name = wantedFields[i].substring(0, 1).toUpperCase() + wantedFields[i].substring(1);
+//
+//					Method method = null;
+//					try {
+//						method = clazz.getMethod("set" + name, float.class);
+//					} catch (NoSuchMethodException | SecurityException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//
+//					try {
+//						method.invoke(clazz.newInstance(), 900);
+//					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					} catch (InstantiationException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+//			}
+//	}
+//
+//	private static float getResize(float size, float newSize)
+//	{
+//		return size * newSize / ReferenceConfig.getWidth();
+//	}
 }

@@ -1,6 +1,6 @@
 package com.example.utils.gameloop_instructions;
 
-public interface Interactive extends Loopable
+public interface Playable extends Loopable
 {
 	void processInput();
 }

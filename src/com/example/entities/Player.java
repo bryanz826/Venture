@@ -10,7 +10,7 @@ import com.example.libs.ReferenceConfig;
 import com.example.libs.ReferenceResource;
 import com.example.libs.Vector2D;
 import com.example.utils.ConsoleLog;
-import com.example.utils.gameloop_instructions.Interactive;
+import com.example.utils.gameloop_instructions.Playable;
 import com.example.utils.input.KeyManager;
 import com.example.utils.input.MouseManager;
 import com.example.utils.resource.Resource;
@@ -19,7 +19,7 @@ import com.example.utils.resource.Resource;
  * The player-controlled space ship that utilizes a singleton pattern allowing
  * the class to be accessed anywhere.
  */
-public final class Player extends Moving implements Interactive
+public final class Player extends Moving implements Playable
 {
 	//
 	// FIELDS
@@ -54,11 +54,10 @@ public final class Player extends Moving implements Interactive
 	private Player()
 	{
 		super(new Vector2D(ReferenceConfig.getWidth() / 2 - 50, ReferenceConfig.getHeight() / 2 - 50), 100, 100, 7,
-				1 / (float) Math.E, BoundsCombination.ALL,
-				new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true)));
+				1 / (float) Math.E, new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true)),
+				ID.PLAYER);
 		resistance = new Vector2D();
 		damageRender = new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-damaged-2.png", true));
-		initComplex(4);
 
 		ConsoleLog.write("Player constructed.");
 	}
@@ -130,7 +129,7 @@ public final class Player extends Moving implements Interactive
 	public void update()
 	{
 		calcResistance();
-		getVelocity().add(resistance);
+		setVelocity(Vector2D.add(getVelocity(), resistance));
 		super.update();
 		damageRender.update(getWidth(), getHeight(), getRotation());
 
@@ -172,41 +171,45 @@ public final class Player extends Moving implements Interactive
 	//
 
 	@Override
-	public void updateComplex()
+	public Bounds[] getComplex()
 	{
+		Bounds[] complex = new Bounds[4];
+
 		Vector2D center = getCenter();
-		
+
 		/*
 		 * TOP
 		 */
 		float size = 22;
 		float x = 38 * (float) Math.cos(getRotation()) + center.getX() - size / 2;
 		float y = 38 * (float) Math.sin(getRotation()) + center.getY() - size / 2;
-		getComplex()[0] = new Bounds(new Vector2D(x, y), size);
-		
+		complex[0] = new Bounds(new Vector2D(x, y), size);
+
 		/*
 		 * CENTER
 		 */
 		size = 60;
-		x = 4 * (float) Math.cos(getRotation()) + center.getX() - size / 2;
-		y = 4 * (float) Math.sin(getRotation()) + center.getY() - size / 2;
-		getComplex()[1] = new Bounds(new Vector2D(x, y), size);
-		
+		x = center.getX() - size / 2;
+		y = center.getY() - size / 2;
+		complex[1] = new Bounds(new Vector2D(x, y), size);
+
 		/*
 		 * BOTTOM LEFT
 		 */
 		size = 24;
 		x = 36 * (float) Math.cos(getRotation() + Math.toRadians(102)) + center.getX() - size / 2;
 		y = 36 * (float) Math.sin(getRotation() + Math.toRadians(102)) + center.getY() - size / 2;
-		getComplex()[2] = new Bounds(new Vector2D(x, y), size);
-		
+		complex[2] = new Bounds(new Vector2D(x, y), size);
+
 		/*
 		 * BOTTOM RIGHT
 		 */
 		size = 24;
 		x = 36 * (float) Math.cos(getRotation() + Math.toRadians(-102)) + center.getX() - size / 2;
 		y = 36 * (float) Math.sin(getRotation() + Math.toRadians(-102)) + center.getY() - size / 2;
-		getComplex()[3] = new Bounds(new Vector2D(x, y), size);
+		complex[3] = new Bounds(new Vector2D(x, y), size);
+
+		return complex;
 	}
 
 	//
@@ -218,7 +221,9 @@ public final class Player extends Moving implements Interactive
 	 */
 	private void calcResistance()
 	{
-		if (!userMovementInput()) {
+		// if there is no user input...
+		if (!(KeyManager.isDown(KeyManager.W) && KeyManager.isDown(KeyManager.A) && KeyManager.isDown(KeyManager.S)
+				&& KeyManager.isDown(KeyManager.D))) {
 			if (getVelocity().getX() != 0) resistance.setX(getThrust() * -getVelocity().getX() / getTargetSpd());
 			else resistance.setX(0);
 
@@ -234,7 +239,7 @@ public final class Player extends Moving implements Interactive
 		if (aLength > 1) { // limit to circular movement
 			getAcceleration().quickNormalize(aLength);
 		}
-		getAcceleration().scale(getThrust());
+		setAcceleration(Vector2D.getScaled(getAcceleration(), getThrust()));
 	}
 
 	@Override
@@ -243,19 +248,15 @@ public final class Player extends Moving implements Interactive
 		float vLength = getVelocity().getExactLength();
 		if (vLength > getTargetSpd()) {
 			getVelocity().quickNormalize(vLength);
-			getVelocity().scale(getTargetSpd());
+			setVelocity(Vector2D.getScaled(getVelocity(), getTargetSpd()));
 		}
 		getVelocity().validateZero();
 	}
 
-	/**
-	 * Determines if there is user movement input based on the WASD keys.
-	 * 
-	 * @return userMovementInput
-	 */
-	private boolean userMovementInput()
+	@Override
+	public void renderBounds(Graphics2D g, float interpolation)
 	{
-		return KeyManager.isDown(KeyManager.W) && KeyManager.isDown(KeyManager.A) && KeyManager.isDown(KeyManager.S)
-				&& KeyManager.isDown(KeyManager.D);
+		renderCirc(g, interpolation);
+		renderComplex(g, interpolation);
 	}
 }

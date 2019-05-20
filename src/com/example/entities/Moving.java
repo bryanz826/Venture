@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.example.entities.animations.Render;
+import com.example.entities.collisions.Bounds;
 import com.example.libs.Reference;
 import com.example.libs.ReferenceRender;
 import com.example.libs.Vector2D;
@@ -63,10 +64,9 @@ public class Moving extends Entity
 	 * @param mainRender
 	 *            The main image to be rendered.
 	 */
-	public Moving(Vector2D position, float width, float height, float targetSpd, float thrust,
-			BoundsCombination boundsCombination, Render mainRender)
+	public Moving(Vector2D position, float width, float height, float targetSpd, float thrust, Render mainRender, ID id)
 	{
-		super(position, width, height, boundsCombination, mainRender);
+		super(position, width, height, mainRender, id);
 		velocity = new Vector2D();
 		acceleration = new Vector2D();
 		setTargetSpd(targetSpd);
@@ -84,13 +84,12 @@ public class Moving extends Entity
 	public void update()
 	{
 		super.update();
-		updateBounds();
 
 		calcAcceleration();
-		getVelocity().add(getAcceleration());
+		setVelocity(Vector2D.add(getVelocity(), getAcceleration()));
 
 		calcVelocity();
-		getPosition().add(getVelocity());
+		setPosition(Vector2D.add(getPosition(), getVelocity()));
 	}
 
 	/**
@@ -103,82 +102,44 @@ public class Moving extends Entity
 		int y = ReferenceRender.getInterpolatedY(getPosition(), velocity, interpolation);
 		getMainRender().render(g, x, y);
 
-		if (Reference.DEBUG) {
-			switch (getBoundsUpdateType())
-			{
-				case RECT:
-				{
-					g.setColor(new Color(128, 128, 128)); // rectBounds
-					ReferenceRender.drawInterpolatedRect(g, getRect(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRect(), velocity, interpolation);
-					break;
-				}
-				case CIRC:
-				{
-					g.setColor(new Color(192, 192, 192)); // circBounds
-					ReferenceRender.drawInterpolatedCirc(g, getCirc(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "circBounds", getCirc(), velocity, interpolation);
-					break;
-				}
-				case COMPLEX:
-				{
-					g.setColor(new Color(255, 255, 255));
-					ReferenceRender.drawInterpolatedComplex(g, getComplex(), velocity, interpolation);
-					break;
-				}
-				case RECT_CIRC:
-				{
-					g.setColor(new Color(128, 128, 128)); // rectBounds
-					ReferenceRender.drawInterpolatedRect(g, getRect(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRect(), velocity, interpolation);
+		if (Reference.DEBUG) renderBounds(g, interpolation);
+	}
 
-					g.setColor(new Color(192, 192, 192)); // circBounds
-					ReferenceRender.drawInterpolatedCirc(g, getCirc(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "circBounds", getCirc(), velocity, interpolation);
-					break;
-				}
-				case RECT_COMPLEX:
-				{
-					g.setColor(new Color(128, 128, 128)); // rectBounds
-					ReferenceRender.drawInterpolatedRect(g, getRect(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRect(), velocity, interpolation);
+	//
+	// GENERAL METHODS
+	//
 
-					g.setColor(new Color(255, 255, 255));
-					ReferenceRender.drawInterpolatedComplex(g, getComplex(), velocity, interpolation);
-					break;
-				}
-				case CIRC_COMPLEX:
-				{
-					g.setColor(new Color(192, 192, 192)); // cirBounds
-					ReferenceRender.drawInterpolatedCirc(g, getCirc(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "circBounds", getCirc(), velocity, interpolation);
+	/**
+	 * Returns the Bounds represented by a rectangle.
+	 * 
+	 * @return rect
+	 */
+	public Bounds getRect()
+	{
+		return new Bounds(getPosition(), getWidth(), getHeight());
+	}
 
-					g.setColor(new Color(255, 255, 255));
-					ReferenceRender.drawInterpolatedComplex(g, getComplex(), velocity, interpolation);
-					break;
-				}
-				case ALL:
-				{
-					g.setColor(new Color(128, 128, 128)); // rectBounds
-					ReferenceRender.drawInterpolatedRect(g, getRect(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "rectBounds", getRect(), velocity, interpolation);
+	/**
+	 * Returns the Bounds represented by a circle.
+	 * 
+	 * @return circ
+	 */
+	public Bounds getCirc()
+	{
+		return new Bounds(getPosition(), getWidth());
+	}
 
-					g.setColor(new Color(192, 192, 192)); // circBounds
-					ReferenceRender.drawInterpolatedCirc(g, getCirc(), velocity, interpolation);
-					ReferenceRender.drawInterpolatedString(g, "circBounds", getCirc(), velocity, interpolation);
-
-					g.setColor(new Color(255, 255, 255));
-					g.setColor(Color.MAGENTA);
-					g.setStroke(new BasicStroke(2));
-					ReferenceRender.drawInterpolatedComplex(g, getComplex(), velocity, interpolation);
-					break;
-				}
-				case NONE:
-				{
-					break;
-				}
-			}
-		}
+	/**
+	 * Returns the Bounds represented by many circles specified. Should be overriden
+	 * for complex functionality.
+	 * 
+	 * @return complex
+	 */
+	public Bounds[] getComplex()
+	{
+		Bounds[] complex = new Bounds[1];
+		complex[0] = getCirc();
+		return complex;
 	}
 
 	//
@@ -194,7 +155,7 @@ public class Moving extends Entity
 		if (aLength > 1) { // limit to circular movement
 			getAcceleration().quickNormalize(aLength);
 		}
-		getAcceleration().scale(getThrust());
+		setAcceleration(Vector2D.getScaled(getAcceleration(), getThrust()));
 	}
 
 	/**
@@ -202,6 +163,66 @@ public class Moving extends Entity
 	 */
 	protected void calcVelocity()
 	{}
+
+	/**
+	 * FOR DEBUG PURPOSES ONLY.
+	 * 
+	 * @param g
+	 *            Graphics2D
+	 * @param interpolation
+	 *            Interpolation for smoother rendering.
+	 */
+	public void renderBounds(Graphics2D g, float interpolation)
+	{
+		renderRect(g, interpolation);
+		renderCirc(g, interpolation);
+		renderComplex(g, interpolation);
+	}
+
+	/**
+	 * FOR DEBUG PURPOSES ONLY.
+	 * 
+	 * @param g
+	 *            Graphics2D
+	 * @param interpolation
+	 *            Interpolation for smoother rendering.
+	 */
+	public void renderRect(Graphics2D g, float interpolation)
+	{
+		g.setColor(new Color(128, 128, 128)); // rectBounds
+		ReferenceRender.drawInterpolatedRect(g, getRect(), velocity, interpolation);
+		ReferenceRender.drawInterpolatedString(g, "rectBounds", getRect(), velocity, interpolation);
+	}
+
+	/**
+	 * FOR DEBUG PURPOSES ONLY.
+	 * 
+	 * @param g
+	 *            Graphics2D
+	 * @param interpolation
+	 *            Interpolation for smoother rendering.
+	 */
+	public void renderCirc(Graphics2D g, float interpolation)
+	{
+		g.setColor(new Color(192, 192, 192)); // circBounds
+		ReferenceRender.drawInterpolatedCirc(g, getCirc(), velocity, interpolation);
+		ReferenceRender.drawInterpolatedString(g, "circBounds", getCirc(), velocity, interpolation);
+	}
+
+	/**
+	 * FOR DEBUG PURPOSES ONLY.
+	 * 
+	 * @param g
+	 *            Graphics2D
+	 * @param interpolation
+	 *            Interpolation for smoother rendering.
+	 */
+	public void renderComplex(Graphics2D g, float interpolation)
+	{
+		g.setColor(new Color(255, 255, 255));
+		g.setStroke(new BasicStroke(2));
+		ReferenceRender.drawInterpolatedComplex(g, getComplex(), velocity, interpolation);
+	}
 
 	//
 	// SETTER AND GETTER METHODS
@@ -216,6 +237,17 @@ public class Moving extends Entity
 	public void setVelocity(Vector2D velocity)
 	{
 		this.velocity = velocity;
+	}
+
+	/**
+	 * Sets the acceleration vector.
+	 * 
+	 * @param acceleration
+	 *            The acceleration vector
+	 */
+	public void setAcceleration(Vector2D acceleration)
+	{
+		this.acceleration = acceleration;
 	}
 
 	/**

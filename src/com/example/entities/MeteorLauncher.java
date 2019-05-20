@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -14,14 +13,13 @@ import com.example.libs.ReferenceConfig;
 import com.example.libs.ReferenceMath;
 import com.example.libs.ReferenceRender;
 import com.example.libs.Vector2D;
-import com.example.utils.gameloop_instructions.Loopable;
 
 /**
  * Manages the meteors' cooldown and launch.
  * 
  * @author poroia
  */
-public class MeteorManager implements Loopable
+public class MeteorLauncher
 {
 	//
 	// FIELDS
@@ -96,7 +94,7 @@ public class MeteorManager implements Loopable
 	// CONSTRUCTORS
 	//
 
-	public MeteorManager(float targetAreaProportion, float failAreaProportion, float successRate,
+	public MeteorLauncher(float targetAreaProportion, float failAreaProportion, float successRate,
 			float launchPreparationSec, float launchWindowSec, int launchCount)
 	{
 		targetArea = new Bounds(Bounds.Type.RECT);
@@ -120,38 +118,15 @@ public class MeteorManager implements Loopable
 	//
 	// GAMELOOP METHODS
 	//
-
-	@Override
-	public void update()
+	public void update(List<Moving> movables)
 	{
 		tick++;
-
 		updateTargetArea(targetAreaProportion);
-
-		handleLaunchTiming();
-
-		for (Iterator<Meteor> iter = meteors.iterator(); iter.hasNext();) {
-			Meteor meteor = iter.next();
-			meteor.update();
-
-			// if (a.isLanded()) {
-			// a.actionOnLanding();
-			// iter.remove();
-			// }
-
-			if (!meteor.getCirc().intersects(ReferenceConfig.getOuter())) {
-				iter.remove(); // remove off-screen meteors
-			}
-		}
+		handleLaunchTiming(movables);
 	}
-
-	@Override
+	
 	public void render(Graphics2D g, float interpolation)
 	{
-		for (Meteor meteor : meteors) {
-			meteor.render(g, interpolation);
-		}
-
 		if (Reference.DEBUG) {
 			g.setColor(new Color(255, 128, 128));
 			ReferenceRender.drawRect(g, failArea);
@@ -173,7 +148,7 @@ public class MeteorManager implements Loopable
 	 * velocity vector, randomizes its size and rotation, and adds it to the
 	 * manager.
 	 */
-	public void launchMeteor()
+	public void launchMeteor(List<Moving> movables)
 	{
 		// determine launch and target coordinates
 		Vector2D launch = ReferenceMath.getRandPerimeterPoint(ReferenceConfig.getOuter());
@@ -190,13 +165,14 @@ public class MeteorManager implements Loopable
 		float radPerSec = ReferenceMath.getRandomFloatNormal(0, 1.5f * (float) Math.PI);
 
 		// add it
-		meteors.add(new Meteor(launch, velocity, size, radPerSec));
+		movables.add(new Meteor(launch, velocity, size, radPerSec));
 	}
 
 	/**
+	 * @param movables 
 	 * 
 	 */
-	public void handleLaunchTiming()
+	public void handleLaunchTiming(List<Moving> movables)
 	{
 		int launchSegTime = tick % launchSegment;
 
@@ -224,7 +200,7 @@ public class MeteorManager implements Loopable
 		else if (launchSegTime > launchPreparation) {
 			if (launchTimes.size() > 0) { // if there are meteors left
 				while (launchSegTime == launchPreparation + launchTimes.get(0)) {
-					launchMeteor();
+					launchMeteor(movables);
 					launchTimes.remove(0);
 
 					if (launchTimes.size() == 0) break;
@@ -360,5 +336,15 @@ public class MeteorManager implements Loopable
 	public Bounds getFailArea()
 	{
 		return failArea;
+	}
+	
+	/**
+	 * Returns the meteors list.
+	 * 
+	 * @return meteors
+	 */
+	public List<Meteor> getMeteors()
+	{
+		return meteors;
 	}
 }

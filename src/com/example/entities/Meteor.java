@@ -1,5 +1,7 @@
 package com.example.entities;
 
+import java.awt.Graphics2D;
+
 import com.example.entities.animations.Render;
 import com.example.libs.ReferenceConfig;
 import com.example.libs.ReferenceMath;
@@ -13,15 +15,18 @@ public class Meteor extends Moving
 
 	public Meteor(Vector2D position, Vector2D velocity, float size, float radPerSec)
 	{
-		super(position, size, size, ReferenceMath.getRandomFloat(5, 12), 0, BoundsCombination.CIRC, null);
+		super(position, size, size, ReferenceMath.getRandomFloat(5, 12), 0, null, ID.METEOR);
 		setMainRender(new Render(new Resource(
 				ReferenceResource.METEOR_LOC + "meteor-" + chooseRandColor() + "-" + chooseRandType() + ".png")));
 		radPerTick = radPerSec / ReferenceConfig.TARGET_UPS;
 
 		reposition(size / 2);
-		velocity.scale(getTargetSpd());
-		setVelocity(velocity);
+		setVelocity(Vector2D.getScaled(velocity, getTargetSpd()));
 	}
+
+	//
+	// GAMELOOP METHODS
+	//
 
 	@Override
 	public void update()
@@ -34,6 +39,11 @@ public class Meteor extends Moving
 	// HELPER METHODS
 	//
 
+	/**
+	 * Chooses a random color meteor between brown and gray.
+	 * 
+	 * @return random color
+	 */
 	private String chooseRandColor()
 	{
 		String color = "";
@@ -52,8 +62,19 @@ public class Meteor extends Moving
 		return color;
 	}
 
+	/**
+	 * Chooses a random meteor of four types.
+	 * 
+	 * @return meteor type
+	 */
 	private String chooseRandType()
 	{
 		return "" + ReferenceMath.getRandomInt(1, 5);
+	}
+	
+	@Override
+	public void renderBounds(Graphics2D g, float interpolation)
+	{
+		renderCirc(g, interpolation);
 	}
 }
