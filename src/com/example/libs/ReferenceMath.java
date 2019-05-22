@@ -3,6 +3,7 @@ package com.example.libs;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.example.entities.collisions.Bounds;
+import com.example.entities.collisions.BoundsManager;
 
 public class ReferenceMath
 {
@@ -110,8 +111,9 @@ public class ReferenceMath
 	 * 
 	 * @return randPoint
 	 */
-	public static Vector2D getRandPerimeterPoint(Bounds rect)
+	public static Vector2D getRandPerimeterPoint(BoundsManager bm)
 	{
+		Bounds rect = bm.getFirst();
 		Vector2D randPoint = new Vector2D();
 
 		Vector2D topLeft = new Vector2D(rect.getX(), rect.getY());

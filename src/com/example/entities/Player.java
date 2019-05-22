@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 
 import com.example.entities.animations.Render;
 import com.example.entities.collisions.Bounds;
+import com.example.entities.collisions.BoundsManager.BoundsType;
 import com.example.libs.Reference;
 import com.example.libs.ReferenceConfig;
 import com.example.libs.ReferenceResource;
@@ -54,7 +55,7 @@ public final class Player extends Moving implements Playable
 	private Player()
 	{
 		super(new Vector2D(ReferenceConfig.getWidth() / 2 - 50, ReferenceConfig.getHeight() / 2 - 50), 100, 100, 7,
-				1 / (float) Math.E, new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true)),
+				1 / (float) Math.E, BoundsType.COMPLEX, new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true)),
 				ID.PLAYER);
 		resistance = new Vector2D();
 		damageRender = new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-damaged-2.png", true));
@@ -134,6 +135,7 @@ public final class Player extends Moving implements Playable
 		damageRender.update(getWidth(), getHeight(), getRotation());
 
 		setRotation(targetRotation);
+		getBm().updateComplexBounds(createComplex());
 	}
 
 	/**
@@ -170,8 +172,7 @@ public final class Player extends Moving implements Playable
 	// GENERAL METHODS
 	//
 
-	@Override
-	public Bounds[] getComplex()
+	public Bounds[] createComplex()
 	{
 		Bounds[] complex = new Bounds[4];
 
@@ -183,7 +184,7 @@ public final class Player extends Moving implements Playable
 		float size = 22;
 		float x = 38 * (float) Math.cos(getRotation()) + center.getX() - size / 2;
 		float y = 38 * (float) Math.sin(getRotation()) + center.getY() - size / 2;
-		complex[0] = new Bounds(new Vector2D(x, y), size);
+		complex[0] = new Bounds(new Vector2D(x, y), size, size);
 
 		/*
 		 * CENTER
@@ -191,7 +192,7 @@ public final class Player extends Moving implements Playable
 		size = 60;
 		x = center.getX() - size / 2;
 		y = center.getY() - size / 2;
-		complex[1] = new Bounds(new Vector2D(x, y), size);
+		complex[1] = new Bounds(new Vector2D(x, y), size, size);
 
 		/*
 		 * BOTTOM LEFT
@@ -199,7 +200,7 @@ public final class Player extends Moving implements Playable
 		size = 24;
 		x = 36 * (float) Math.cos(getRotation() + Math.toRadians(102)) + center.getX() - size / 2;
 		y = 36 * (float) Math.sin(getRotation() + Math.toRadians(102)) + center.getY() - size / 2;
-		complex[2] = new Bounds(new Vector2D(x, y), size);
+		complex[2] = new Bounds(new Vector2D(x, y), size, size);
 
 		/*
 		 * BOTTOM RIGHT
@@ -207,7 +208,7 @@ public final class Player extends Moving implements Playable
 		size = 24;
 		x = 36 * (float) Math.cos(getRotation() + Math.toRadians(-102)) + center.getX() - size / 2;
 		y = 36 * (float) Math.sin(getRotation() + Math.toRadians(-102)) + center.getY() - size / 2;
-		complex[3] = new Bounds(new Vector2D(x, y), size);
+		complex[3] = new Bounds(new Vector2D(x, y), size, size);
 
 		return complex;
 	}
@@ -251,12 +252,5 @@ public final class Player extends Moving implements Playable
 			setVelocity(Vector2D.getScaled(getVelocity(), getTargetSpd()));
 		}
 		getVelocity().validateZero();
-	}
-
-	@Override
-	public void renderBounds(Graphics2D g, float interpolation)
-	{
-		renderCirc(g, interpolation);
-		renderComplex(g, interpolation);
 	}
 }

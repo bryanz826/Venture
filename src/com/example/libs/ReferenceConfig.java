@@ -1,13 +1,13 @@
 package com.example.libs;
 
-import com.example.entities.collisions.Bounds;
+import com.example.entities.collisions.BoundsManager;
 import com.example.main.VenturePanel;
 import com.example.main.VentureRunner;
 
 public class ReferenceConfig
 {
-	public static final int	FRAME_CAP			= VenturePanel.FRAME_CAP;
-	public static final int	TARGET_UPS			= VenturePanel.TARGET_UPS;
+	public static final int	FRAME_CAP	= VenturePanel.FRAME_CAP;
+	public static final int	TARGET_UPS	= VenturePanel.TARGET_UPS;
 
 	public static int getWidth()
 	{
@@ -19,7 +19,7 @@ public class ReferenceConfig
 		return VentureRunner.HEIGHT;
 	}
 
-	public static Bounds getOuter()
+	public static BoundsManager getOuter()
 	{
 		return VentureRunner.outer;
 	}

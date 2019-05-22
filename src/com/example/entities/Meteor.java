@@ -1,8 +1,7 @@
 package com.example.entities;
 
-import java.awt.Graphics2D;
-
 import com.example.entities.animations.Render;
+import com.example.entities.collisions.BoundsManager.BoundsType;
 import com.example.libs.ReferenceConfig;
 import com.example.libs.ReferenceMath;
 import com.example.libs.ReferenceResource;
@@ -15,7 +14,7 @@ public class Meteor extends Moving
 
 	public Meteor(Vector2D position, Vector2D velocity, float size, float radPerSec)
 	{
-		super(position, size, size, ReferenceMath.getRandomFloat(5, 12), 0, null, ID.METEOR);
+		super(position, size, size, ReferenceMath.getRandomFloat(5, 12), 0, BoundsType.CIRC, null, ID.METEOR);
 		setMainRender(new Render(new Resource(
 				ReferenceResource.METEOR_LOC + "meteor-" + chooseRandColor() + "-" + chooseRandType() + ".png")));
 		radPerTick = radPerSec / ReferenceConfig.TARGET_UPS;
@@ -70,11 +69,5 @@ public class Meteor extends Moving
 	private String chooseRandType()
 	{
 		return "" + ReferenceMath.getRandomInt(1, 5);
-	}
-	
-	@Override
-	public void renderBounds(Graphics2D g, float interpolation)
-	{
-		renderCirc(g, interpolation);
 	}
 }

@@ -13,9 +13,12 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import com.example.entities.collisions.Bounds;
+import com.example.entities.collisions.BoundsManager;
+import com.example.entities.collisions.BoundsManager.BoundsType;
 import com.example.libs.ReferenceResource;
+import com.example.libs.Vector2D;
 import com.example.utils.ConsoleLog;
+import com.example.utils.resource.Resource;
 
 /**
  * Game runner that contains a Frame that holds a game reference. Currently
@@ -47,9 +50,9 @@ public class VentureRunner
 	public static int				HEIGHT;						// current height
 
 	/**
-	 * 
+	 * The outer bounds where objects may spawn.
 	 */
-	public static Bounds			outer;
+	public static BoundsManager		outer;
 
 	private static GraphicsDevice	device;						// contains device configurations
 	private static DisplayMode		origDisplayMode;			// for use in window switching
@@ -64,8 +67,6 @@ public class VentureRunner
 
 	public VentureRunner()
 	{
-		outer = new Bounds(Bounds.Type.RECT);
-
 		device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		origDisplayMode = device.getDisplayMode();
 
@@ -90,6 +91,7 @@ public class VentureRunner
 		window.setCursor(cursor); // TODO not sure if I will use this method for painting cursor
 		// may use a transparent cursor
 
+		outer = new BoundsManager(BoundsType.RECT);
 		setFullscreen(); // initial setting TODO will add to menu to make it toggleable
 
 		game.start();
@@ -106,7 +108,7 @@ public class VentureRunner
 		} else {
 			setFullscreen();
 		}
-//		resizeAll(Entity.class, width, new String[] { "width" });
+		// resizeAll(Entity.class, width, new String[] { "width" });
 	}
 
 	private static void setWindowed()
@@ -223,14 +225,19 @@ public class VentureRunner
 		int width = WIDTH + 2 * space;
 		int height = HEIGHT + 2 * space;
 
-		outer.setPosition(x, y);
-		outer.setWidth(width);
-		outer.setHeight(height);
+		outer.update(new Vector2D(x, y), width, height);
 	}
 
 	public static void main(String args[])
 	{
-		// new Splash();
+		ConsoleLog.write("Launching Splash...");
+		new Splash();
+		
+		for (String name: Resource.getMap().keySet()){
+            String key = name.toString();
+            String value = Resource.getMap().get(name).toString();  
+            System.out.println(key + " " + value);  
+} 
 
 		ConsoleLog.write("Launching Venture...");
 		new VentureRunner();
@@ -241,41 +248,44 @@ public class VentureRunner
 		return full;
 	}
 
-//	private static void resizeAll(Class<?> clazz, float newSize, String[] wantedFields)
-//	{
-//		List<Field> fields = new ArrayList<Field>();
-//		for (Class<?> c = clazz; c != null; c = c.getSuperclass()) {
-//			fields.addAll(Arrays.asList(c.getDeclaredFields()));
-//		}
-//
-//		for (int i = 0; i < wantedFields.length; i++)
-//			for (int j = 0; j < fields.size(); j++) {
-//				if (wantedFields[i].equals(fields.get(j).getName())) {
-//					String name = wantedFields[i].substring(0, 1).toUpperCase() + wantedFields[i].substring(1);
-//
-//					Method method = null;
-//					try {
-//						method = clazz.getMethod("set" + name, float.class);
-//					} catch (NoSuchMethodException | SecurityException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//
-//					try {
-//						method.invoke(clazz.newInstance(), 900);
-//					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (InstantiationException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				}
-//			}
-//	}
-//
-//	private static float getResize(float size, float newSize)
-//	{
-//		return size * newSize / ReferenceConfig.getWidth();
-//	}
+	// private static void resizeAll(Class<?> clazz, float newSize, String[]
+	// wantedFields)
+	// {
+	// List<Field> fields = new ArrayList<Field>();
+	// for (Class<?> c = clazz; c != null; c = c.getSuperclass()) {
+	// fields.addAll(Arrays.asList(c.getDeclaredFields()));
+	// }
+	//
+	// for (int i = 0; i < wantedFields.length; i++)
+	// for (int j = 0; j < fields.size(); j++) {
+	// if (wantedFields[i].equals(fields.get(j).getName())) {
+	// String name = wantedFields[i].substring(0, 1).toUpperCase() +
+	// wantedFields[i].substring(1);
+	//
+	// Method method = null;
+	// try {
+	// method = clazz.getMethod("set" + name, float.class);
+	// } catch (NoSuchMethodException | SecurityException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	//
+	// try {
+	// method.invoke(clazz.newInstance(), 900);
+	// } catch (IllegalAccessException | IllegalArgumentException |
+	// InvocationTargetException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// } catch (InstantiationException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// }
+	// }
+	// }
+	//
+	// private static float getResize(float size, float newSize)
+	// {
+	// return size * newSize / ReferenceConfig.getWidth();
+	// }
 }

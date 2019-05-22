@@ -19,17 +19,17 @@ public class Resource
 	 * A HashMp that stores all resources to be retrieved later (no repeat loading)
 	 * and uses a file path to access the BufferedImage
 	 */
-	private final static Map<String, BufferedImage>	map	= new HashMap<String, BufferedImage>();
+	private static final Map<String, BufferedImage>	map	= new HashMap<String, BufferedImage>();
 
 	/**
 	 * The file path of the stored BufferedImage
 	 */
-	private String									fileName;
+	private String								fileName;
 
 	/**
 	 * The BufferedImage stored in the HashMap
 	 */
-	private BufferedImage							image;
+	private BufferedImage						image;
 
 	//
 	// CONSTRUCTORS
@@ -145,6 +145,15 @@ public class Resource
 	{
 		return image.getHeight();
 	}
+
+	public static Map<String, BufferedImage> getMap()
+	{
+		return map;
+	}
+	
+	//
+	// INHERENT METHODS
+	//
 
 	public String toString()
 	{

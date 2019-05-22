@@ -7,7 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.example.entities.collisions.Bounds;
+import com.example.entities.collisions.BoundsManager;
+import com.example.entities.collisions.BoundsManager.BoundsType;
 import com.example.libs.Reference;
 import com.example.libs.ReferenceConfig;
 import com.example.libs.ReferenceMath;
@@ -19,7 +20,7 @@ import com.example.libs.Vector2D;
  * 
  * @author poroia
  */
-public class MeteorLauncher
+public class MeteorManager
 {
 	//
 	// FIELDS
@@ -33,7 +34,7 @@ public class MeteorLauncher
 	/**
 	 * The target area of the meteors around the Player.
 	 */
-	private Bounds			targetArea;
+	private BoundsManager	targetArea;
 
 	/**
 	 * The target area size proportion compared to the screen.
@@ -43,7 +44,7 @@ public class MeteorLauncher
 	/**
 	 * The hitting area of the meteors if they fail to hit the target area.
 	 */
-	private Bounds			failArea;
+	private BoundsManager	failArea;
 
 	/**
 	 * The chance that the the meteors will hit the target area. If it misses, it
@@ -94,11 +95,11 @@ public class MeteorLauncher
 	// CONSTRUCTORS
 	//
 
-	public MeteorLauncher(float targetAreaProportion, float failAreaProportion, float successRate,
+	public MeteorManager(float targetAreaProportion, float failAreaProportion, float successRate,
 			float launchPreparationSec, float launchWindowSec, int launchCount)
 	{
-		targetArea = new Bounds(Bounds.Type.RECT);
-		failArea = new Bounds(Bounds.Type.RECT);
+		targetArea = new BoundsManager(BoundsType.RECT);
+		failArea = new BoundsManager(BoundsType.RECT);
 
 		setTargetAreaProportion(targetAreaProportion);
 		setFailAreaProportion(failAreaProportion);
@@ -124,16 +125,16 @@ public class MeteorLauncher
 		updateTargetArea(targetAreaProportion);
 		handleLaunchTiming(movables);
 	}
-	
+
 	public void render(Graphics2D g, float interpolation)
 	{
 		if (Reference.DEBUG) {
 			g.setColor(new Color(255, 128, 128));
-			ReferenceRender.drawRect(g, failArea);
-			ReferenceRender.drawString(g, "failArea", failArea);
+			ReferenceRender.drawRect(g, failArea.getFirst());
+			ReferenceRender.drawString(g, "failArea", failArea.getFirst());
 
 			g.setColor(new Color(128, 255, 128));
-			ReferenceRender.drawInterpolatedRect(g, targetArea, Player.I().getVelocity(), interpolation);
+			ReferenceRender.drawInterpolatedRect(g, targetArea.getFirst(), Player.I().getVelocity(), interpolation);
 			ReferenceRender.drawInterpolatedString(g, "targetArea", targetArea, Player.I().getVelocity(),
 					interpolation);
 		}
@@ -153,8 +154,9 @@ public class MeteorLauncher
 		// determine launch and target coordinates
 		Vector2D launch = ReferenceMath.getRandPerimeterPoint(ReferenceConfig.getOuter());
 		Vector2D target = null;
-		if (ThreadLocalRandom.current().nextFloat() < successRate) target = ReferenceMath.getRandInPoint(targetArea);
-		else target = ReferenceMath.getRandInPoint(failArea);
+		if (ThreadLocalRandom.current().nextFloat() < successRate)
+			target = ReferenceMath.getRandInPoint(targetArea.getFirst());
+		else target = ReferenceMath.getRandInPoint(failArea.getFirst());
 
 		// determine velocity vector
 		float rad = launch.getRadians(target);
@@ -169,7 +171,7 @@ public class MeteorLauncher
 	}
 
 	/**
-	 * @param movables 
+	 * @param movables
 	 * 
 	 */
 	public void handleLaunchTiming(List<Moving> movables)
@@ -220,11 +222,11 @@ public class MeteorLauncher
 	{
 		float width = ReferenceConfig.getWidth() * proportion;
 		float height = ReferenceConfig.getHeight() * proportion;
-		
+
 		float x = Player.I().getCenter().getX() - width / 2;
 		float y = Player.I().getCenter().getY() - height / 2;
 
-		targetArea.setRect(new Vector2D(x, y), width, height);
+		targetArea.update(new Vector2D(x, y), width, height);
 	}
 
 	/**
@@ -242,7 +244,7 @@ public class MeteorLauncher
 		float x = ReferenceConfig.getWidth() / 2 - width / 2;
 		float y = ReferenceConfig.getHeight() / 2 - height / 2;
 
-		failArea.setRect(new Vector2D(x, y), width, height);
+		failArea.update(new Vector2D(x, y), width, height);
 	}
 
 	//
@@ -323,7 +325,7 @@ public class MeteorLauncher
 	 * 
 	 * @return targetArea
 	 */
-	public Bounds getTargetArea()
+	public BoundsManager getTargetArea()
 	{
 		return targetArea;
 	}
@@ -333,11 +335,11 @@ public class MeteorLauncher
 	 * 
 	 * @return failArea
 	 */
-	public Bounds getFailArea()
+	public BoundsManager getFailArea()
 	{
 		return failArea;
 	}
-	
+
 	/**
 	 * Returns the meteors list.
 	 * 

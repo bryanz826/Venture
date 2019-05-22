@@ -3,6 +3,8 @@ package com.example.libs;
 import java.awt.Graphics2D;
 
 import com.example.entities.collisions.Bounds;
+import com.example.entities.collisions.BoundsManager;
+import com.example.entities.collisions.BoundsManager.BoundsType;
 
 public class ReferenceRender
 {
@@ -99,37 +101,6 @@ public class ReferenceRender
 	}
 
 	/*
-	 * COMPLEX
-	 */
-	public static void drawComplex(Graphics2D g, Bounds[] complex)
-	{
-		for (Bounds b : complex) {
-			if (Bounds.checkType(b, Bounds.Type.CIRC)) drawCircFromCenter(g, b);
-			else if (Bounds.checkType(b, Bounds.Type.RECT)) drawRectFromCenter(g, b);
-		}
-	}
-
-	public static void drawInterpolatedComplex(Graphics2D g, Bounds[] complex, Vector2D velocity, float interpolation)
-	{
-		for (Bounds b : complex) {
-			if (Bounds.checkType(b, Bounds.Type.CIRC)) //
-				drawInterpolatedCirc(g, b, velocity, interpolation);
-			else if (Bounds.checkType(b, Bounds.Type.RECT)) drawInterpolatedRect(g, b, velocity, interpolation);
-		}
-	}
-
-	public static void drawInterpolatedComplexFromCenter(Graphics2D g, Bounds[] complex, Vector2D velocity,
-			float interpolation)
-	{
-		for (Bounds b : complex) {
-			if (Bounds.checkType(b, Bounds.Type.CIRC)) //
-				drawInterpolatedCircFromCenter(g, b, velocity, interpolation);
-			else if (Bounds.checkType(b, Bounds.Type.RECT))
-				drawInterpolatedRectFromCenter(g, b, velocity, interpolation);
-		}
-	}
-
-	/*
 	 * STRING
 	 */
 	public static void drawString(Graphics2D g, String str, Bounds bounds)
@@ -137,12 +108,14 @@ public class ReferenceRender
 		g.drawString(str, bounds.getX(), bounds.getY());
 	}
 
-	public static void drawInterpolatedString(Graphics2D g, String str, Bounds bounds, Vector2D velocity,
+	public static void drawInterpolatedString(Graphics2D g, String str, BoundsManager bm, Vector2D velocity,
 			float interpolation)
 	{
+		Bounds bounds = bm.getFirst();
 		int x = getInterpolatedX(bounds, velocity, interpolation);
 		int y = getInterpolatedY(bounds, velocity, interpolation);
-		if (Bounds.checkType(bounds, Bounds.Type.RECT)) g.drawString(str, x, y);
-		else if (Bounds.checkType(bounds, Bounds.Type.CIRC)) g.drawString(str, x, y + bounds.getHeight());
+		
+		if (bm.getType() == BoundsType.RECT) g.drawString(str, x, y);
+		else if (bm.getType() == BoundsType.CIRC) g.drawString(str, x, y + bounds.getHeight());
 	}
 }

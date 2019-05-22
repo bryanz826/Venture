@@ -6,9 +6,6 @@ import java.awt.image.BufferStrategy;
 
 import com.example.libs.Reference;
 import com.example.state.StateManager;
-import com.example.state.list.Intro;
-import com.example.state.list.Menu;
-import com.example.state.list.Play;
 import com.example.utils.ConsoleLog;
 import com.example.utils.input.KeyManager;
 import com.example.utils.input.MouseManager;
@@ -44,11 +41,7 @@ public class VenturePanel extends Canvas implements Runnable
 	}
 
 	private void init() // initializes game (not in constructor bc we need a secondary init)
-	{
-		StateManager.addState(new Intro());
-		StateManager.addState(new Menu());
-		StateManager.addState(new Play());
-	}
+	{}
 
 	private void processInput() // get all user interaction input
 	{

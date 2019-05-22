@@ -5,7 +5,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.example.entities.animations.Render;
-import com.example.entities.collisions.Bounds;
+import com.example.entities.collisions.BoundsManager;
+import com.example.entities.collisions.BoundsManager.BoundsType;
 import com.example.libs.Reference;
 import com.example.libs.ReferenceRender;
 import com.example.libs.Vector2D;
@@ -26,23 +27,28 @@ public class Moving extends Entity
 	/**
 	 * A vector representing this Entity's velocity.
 	 */
-	private Vector2D	velocity;
+	private Vector2D		velocity;
 
 	/**
 	 * A vector representing this Entity's acceleration.
 	 */
-	private Vector2D	acceleration;
+	private Vector2D		acceleration;
 
 	/**
 	 * The target velocity in floating-point precision. It is used to cap the
-	 * velocity of this Player to prevent it from going too fast.
+	 * velocity of this Moving entity to prevent it from going too fast.
 	 */
-	private float		targetSpd;
+	private float			targetSpd;
 
 	/**
 	 * The self acceleration capabilities upon movement in floating-point precision.
 	 */
-	private float		thrust;
+	private float			thrust;
+
+	/**
+	 * A BoundsManager representing this object's bounds.
+	 */
+	private BoundsManager	bm;
 
 	//
 	// CONSTRUCTORS
@@ -64,13 +70,15 @@ public class Moving extends Entity
 	 * @param mainRender
 	 *            The main image to be rendered.
 	 */
-	public Moving(Vector2D position, float width, float height, float targetSpd, float thrust, Render mainRender, ID id)
+	public Moving(Vector2D position, float width, float height, float targetSpd, float thrust, BoundsType type,
+			Render mainRender, ID id)
 	{
 		super(position, width, height, mainRender, id);
 		velocity = new Vector2D();
 		acceleration = new Vector2D();
 		setTargetSpd(targetSpd);
 		setThrust(thrust);
+		bm = new BoundsManager(type);
 	}
 
 	//
@@ -90,6 +98,8 @@ public class Moving extends Entity
 
 		calcVelocity();
 		setPosition(Vector2D.add(getPosition(), getVelocity()));
+
+		bm.update(getPosition(), getWidth(), getHeight());
 	}
 
 	/**
@@ -103,43 +113,6 @@ public class Moving extends Entity
 		getMainRender().render(g, x, y);
 
 		if (Reference.DEBUG) renderBounds(g, interpolation);
-	}
-
-	//
-	// GENERAL METHODS
-	//
-
-	/**
-	 * Returns the Bounds represented by a rectangle.
-	 * 
-	 * @return rect
-	 */
-	public Bounds getRect()
-	{
-		return new Bounds(getPosition(), getWidth(), getHeight());
-	}
-
-	/**
-	 * Returns the Bounds represented by a circle.
-	 * 
-	 * @return circ
-	 */
-	public Bounds getCirc()
-	{
-		return new Bounds(getPosition(), getWidth());
-	}
-
-	/**
-	 * Returns the Bounds represented by many circles specified. Should be overriden
-	 * for complex functionality.
-	 * 
-	 * @return complex
-	 */
-	public Bounds[] getComplex()
-	{
-		Bounds[] complex = new Bounds[1];
-		complex[0] = getCirc();
-		return complex;
 	}
 
 	//
@@ -174,54 +147,36 @@ public class Moving extends Entity
 	 */
 	public void renderBounds(Graphics2D g, float interpolation)
 	{
-		renderRect(g, interpolation);
-		renderCirc(g, interpolation);
-		renderComplex(g, interpolation);
-	}
+		switch (bm.getType())
+		{
+			case CIRC:
+			{
+				g.setColor(new Color(192, 192, 192)); // circBounds
+				ReferenceRender.drawInterpolatedCirc(g, bm.getFirst(), velocity, interpolation);
+				ReferenceRender.drawInterpolatedString(g, "circBounds", bm, velocity, interpolation);
+				break;
+			}
 
-	/**
-	 * FOR DEBUG PURPOSES ONLY.
-	 * 
-	 * @param g
-	 *            Graphics2D
-	 * @param interpolation
-	 *            Interpolation for smoother rendering.
-	 */
-	public void renderRect(Graphics2D g, float interpolation)
-	{
-		g.setColor(new Color(128, 128, 128)); // rectBounds
-		ReferenceRender.drawInterpolatedRect(g, getRect(), velocity, interpolation);
-		ReferenceRender.drawInterpolatedString(g, "rectBounds", getRect(), velocity, interpolation);
-	}
+			case RECT:
+			{
+				g.setColor(new Color(128, 128, 128)); // rectBounds
+				ReferenceRender.drawInterpolatedRect(g, bm.getFirst(), velocity, interpolation);
+				ReferenceRender.drawInterpolatedString(g, "rectBounds", bm, velocity, interpolation);
+				break;
+			}
 
-	/**
-	 * FOR DEBUG PURPOSES ONLY.
-	 * 
-	 * @param g
-	 *            Graphics2D
-	 * @param interpolation
-	 *            Interpolation for smoother rendering.
-	 */
-	public void renderCirc(Graphics2D g, float interpolation)
-	{
-		g.setColor(new Color(192, 192, 192)); // circBounds
-		ReferenceRender.drawInterpolatedCirc(g, getCirc(), velocity, interpolation);
-		ReferenceRender.drawInterpolatedString(g, "circBounds", getCirc(), velocity, interpolation);
-	}
+			case COMPLEX:
+			{
+				g.setColor(new Color(255, 255, 255));
+				g.setStroke(new BasicStroke(2));
+				for (int i = 1; i < bm.getBounds().length; i++)
+					ReferenceRender.drawInterpolatedCirc(g, bm.getBounds()[i], velocity, interpolation);
+				break;
+			}
 
-	/**
-	 * FOR DEBUG PURPOSES ONLY.
-	 * 
-	 * @param g
-	 *            Graphics2D
-	 * @param interpolation
-	 *            Interpolation for smoother rendering.
-	 */
-	public void renderComplex(Graphics2D g, float interpolation)
-	{
-		g.setColor(new Color(255, 255, 255));
-		g.setStroke(new BasicStroke(2));
-		ReferenceRender.drawInterpolatedComplex(g, getComplex(), velocity, interpolation);
+			default:
+				break;
+		}
 	}
 
 	//
@@ -310,5 +265,15 @@ public class Moving extends Entity
 	public float getThrust()
 	{
 		return thrust;
+	}
+
+	/**
+	 * Returns the BoundsManager containing the bounds.
+	 * 
+	 * @return bm
+	 */
+	public BoundsManager getBm()
+	{
+		return bm;
 	}
 }
