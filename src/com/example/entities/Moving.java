@@ -5,8 +5,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.example.entities.animations.Render;
+import com.example.entities.collisions.Bounds;
 import com.example.entities.collisions.BoundsManager;
 import com.example.entities.collisions.BoundsManager.BoundsType;
+import com.example.entities.types.ID;
 import com.example.libs.Reference;
 import com.example.libs.ReferenceRender;
 import com.example.libs.Vector2D;
@@ -46,6 +48,11 @@ public class Moving extends Entity
 	private float			thrust;
 
 	/**
+	 * The mass of this Moving entity. Basically the area approximation.
+	 */
+	private float			mass;
+
+	/**
 	 * A BoundsManager representing this object's bounds.
 	 */
 	private BoundsManager	bm;
@@ -78,7 +85,12 @@ public class Moving extends Entity
 		acceleration = new Vector2D();
 		setTargetSpd(targetSpd);
 		setThrust(thrust);
-		bm = new BoundsManager(type);
+		this.bm = new BoundsManager(type);
+		
+		if (bm.getBounds().length == 1) {
+			bm.update(position, width, height);
+			setMass(bm.getBounds());
+		}
 	}
 
 	//
@@ -169,7 +181,7 @@ public class Moving extends Entity
 			{
 				g.setColor(new Color(255, 255, 255));
 				g.setStroke(new BasicStroke(2));
-				for (int i = 1; i < bm.getBounds().length; i++)
+				for (int i = 0; i < bm.getBounds().length; i++)
 					ReferenceRender.drawInterpolatedCirc(g, bm.getBounds()[i], velocity, interpolation);
 				break;
 			}
@@ -228,6 +240,22 @@ public class Moving extends Entity
 	}
 
 	/**
+	 * Takes all the bounds and gets the total area of them and sets them to this
+	 * mass.
+	 * 
+	 * @param bounds
+	 *            The bounds for calculations
+	 */
+	public void setMass(Bounds[] bounds)
+	{
+		float mass = 0;
+		for (Bounds b : bounds) {
+			mass += b.getOvalArea();
+		}
+		this.mass = mass;
+	}
+
+	/**
 	 * Returns the velocity vector.
 	 * 
 	 * @return velocity
@@ -265,6 +293,16 @@ public class Moving extends Entity
 	public float getThrust()
 	{
 		return thrust;
+	}
+
+	/**
+	 * Returns the mass.
+	 * 
+	 * @return mass
+	 */
+	public float getMass()
+	{
+		return mass;
 	}
 
 	/**

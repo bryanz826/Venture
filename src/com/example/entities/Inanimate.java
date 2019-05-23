@@ -1,6 +1,7 @@
 package com.example.entities;
 
 import com.example.entities.animations.Render;
+import com.example.entities.types.ID;
 import com.example.libs.Vector2D;
 
 public class Inanimate extends Entity

@@ -18,7 +18,6 @@ import com.example.entities.collisions.BoundsManager.BoundsType;
 import com.example.libs.ReferenceResource;
 import com.example.libs.Vector2D;
 import com.example.utils.ConsoleLog;
-import com.example.utils.resource.Resource;
 
 /**
  * Game runner that contains a Frame that holds a game reference. Currently
@@ -232,12 +231,6 @@ public class VentureRunner
 	{
 		ConsoleLog.write("Launching Splash...");
 		new Splash();
-		
-		for (String name: Resource.getMap().keySet()){
-            String key = name.toString();
-            String value = Resource.getMap().get(name).toString();  
-            System.out.println(key + " " + value);  
-} 
 
 		ConsoleLog.write("Launching Venture...");
 		new VentureRunner();

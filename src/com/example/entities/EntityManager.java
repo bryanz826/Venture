@@ -6,27 +6,29 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.example.entities.collisions.Collisions;
+import com.example.entities.types.meteor.MeteorManager;
+import com.example.entities.types.player.PlayerManager;
 import com.example.libs.ReferenceConfig;
 import com.example.utils.gameloop_instructions.Playable;
 
 public class EntityManager implements Playable
 {
 	private List<Moving>	movables;
-
-	private MeteorManager	ml;
+	
+	private MeteorManager	mm;
 
 	public EntityManager()
 	{
 		movables = new ArrayList<Moving>();
-		movables.add(0, Player.I());
+		movables.add(0, PlayerManager.I().getPlayer());
 
-		ml = new MeteorManager(0.42f, 0.84f, 0.5f, 2, 2, 4);
+		mm = new MeteorManager(0.42f, 0.84f, 0.5f, 2, 2, 4);
 	}
 
-	@Override
+
 	public void processInput()
 	{
-		Player.I().processInput();
+		PlayerManager.I().processInput();
 	}
 
 	@Override
@@ -35,7 +37,7 @@ public class EntityManager implements Playable
 		/*
 		 * Helpers
 		 */
-		ml.update(movables);
+		mm.update(movables);
 
 		/*
 		 * Entities
@@ -51,6 +53,7 @@ public class EntityManager implements Playable
 	@Override
 	public void render(Graphics2D g, float interpolation)
 	{
+		mm.render(g, interpolation);
 		renderMovables(g, interpolation);
 	}
 

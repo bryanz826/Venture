@@ -40,7 +40,7 @@ public class Bounds
 		this.width = width;
 		this.height = height;
 	}
-	
+
 	//
 	// GENERAL METHODS
 	//
@@ -138,7 +138,17 @@ public class Bounds
 	 */
 	public float getRadius()
 	{
-		return width / 2;
+		if (width == height) return width / 2;
+		else throw new UnsupportedOperationException("Radii are only for circles!");
+	}
+
+	/**
+	 * Returns the oval area of the Bounds.
+	 * @return oval area
+	 */
+	public float getOvalArea()
+	{
+		return width / 2 * height / 2 * (float) Math.PI;
 	}
 
 	//

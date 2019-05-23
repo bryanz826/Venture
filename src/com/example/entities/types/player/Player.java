@@ -1,17 +1,19 @@
-package com.example.entities;
+package com.example.entities.types.player;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import com.example.entities.Moving;
 import com.example.entities.animations.Render;
 import com.example.entities.collisions.Bounds;
 import com.example.entities.collisions.BoundsManager.BoundsType;
+import com.example.entities.types.ID;
+import com.example.entities.collisions.ComplexBounds;
 import com.example.libs.Reference;
 import com.example.libs.ReferenceConfig;
 import com.example.libs.ReferenceResource;
 import com.example.libs.Vector2D;
 import com.example.utils.ConsoleLog;
-import com.example.utils.gameloop_instructions.Playable;
 import com.example.utils.input.KeyManager;
 import com.example.utils.input.MouseManager;
 import com.example.utils.resource.Resource;
@@ -20,7 +22,7 @@ import com.example.utils.resource.Resource;
  * The player-controlled space ship that utilizes a singleton pattern allowing
  * the class to be accessed anywhere.
  */
-public final class Player extends Moving implements Playable
+public class Player extends Moving implements ComplexBounds
 {
 	//
 	// FIELDS
@@ -52,75 +54,23 @@ public final class Player extends Moving implements Playable
 	/**
 	 * Constructs the Player with basic features.
 	 */
-	private Player()
+	public Player()
 	{
 		super(new Vector2D(ReferenceConfig.getWidth() / 2 - 50, ReferenceConfig.getHeight() / 2 - 50), 100, 100, 7,
-				1 / (float) Math.E, BoundsType.COMPLEX, new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true)),
-				ID.PLAYER);
+				1 / (float) Math.E, BoundsType.COMPLEX,
+				new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true)), ID.PLAYER);
 		resistance = new Vector2D();
 		damageRender = new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-damaged-2.png", true));
+
+		getBm().updateComplex(createComplex());
+		setMass(getBm().getBounds());
 
 		ConsoleLog.write("Player constructed.");
 	}
 
 	//
-	// SINGLETON IMPLEMENTATION
-	//
-
-	/**
-	 * Implements a singleton pattern into this Player using a private PlayerHolder
-	 * class for lazy initialization. When the Player class is loaded, this inner
-	 * class will not be loaded but can be loaded whenever it is needed using I().
-	 */
-	private static class PlayerHolder
-	{
-		/**
-		 * An instance of the Player class that cannot be instantiated more than once
-		 * (because of the final keyword).
-		 */
-		private static final Player INSTANCE = new Player();
-	}
-
-	/**
-	 * Returns the instance of this class to be accessed globally. Because of this,
-	 * an instance of this class may theoretically be anywhere in this project.
-	 * 
-	 * @return INSTANCE
-	 */
-	public static Player I()
-	{
-		return PlayerHolder.INSTANCE;
-	}
-
-	//
 	// GAMELOOP METHODS
 	//
-
-	/**
-	 * Processes the user input accordingly based on the WASD keys and mouse
-	 * location. Acceleration is adjusted from the movement keys while the rotation
-	 * is determined with the mouse location.
-	 */
-	public void processInput()
-	{
-		if (KeyManager.isDown(KeyManager.A)) {
-			getAcceleration().setX(-1);
-		} else if (KeyManager.isDown(KeyManager.D)) {
-			getAcceleration().setX(1);
-		} else {
-			getAcceleration().setX(0);
-		}
-		if (KeyManager.isDown(KeyManager.W)) {
-			getAcceleration().setY(-1);
-		} else if (KeyManager.isDown(KeyManager.S)) {
-			getAcceleration().setY(1);
-		} else {
-			getAcceleration().setY(0);
-		}
-
-		targetRotation = (float) Math.atan2(MouseManager.getY() - (getPosition().getY() + getHeight() / 2),
-				MouseManager.getX() - (getPosition().getX() + getWidth() / 2));
-	}
 
 	/**
 	 * Updates the various movement vectors including the resistance/friction of the
@@ -135,7 +85,7 @@ public final class Player extends Moving implements Playable
 		damageRender.update(getWidth(), getHeight(), getRotation());
 
 		setRotation(targetRotation);
-		getBm().updateComplexBounds(createComplex());
+		getBm().updateComplex(createComplex());
 	}
 
 	/**
@@ -252,5 +202,30 @@ public final class Player extends Moving implements Playable
 			setVelocity(Vector2D.getScaled(getVelocity(), getTargetSpd()));
 		}
 		getVelocity().validateZero();
+	}
+
+	//
+	// SETTER AND GETTER METHODS
+	//
+
+	/**
+	 * Returns the targetRotation
+	 * 
+	 * @param targetRotation
+	 *            The target rotation in radians
+	 */
+	public void setTargetRotation(float targetRotation)
+	{
+		this.targetRotation = targetRotation;
+	}
+
+	/**
+	 * Returns the damageRender
+	 * 
+	 * @param damageRender
+	 */
+	public void setDamageRender(Resource damage)
+	{
+		damageRender.setCurrentFrame(damage);
 	}
 }

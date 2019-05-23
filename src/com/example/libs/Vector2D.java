@@ -67,28 +67,32 @@ public class Vector2D
 	//
 
 	/**
-	 * Adds the other vector to this vector.
+	 * Adds one vector to another vector.
 	 * 
-	 * @param other
-	 *            The other vector used in the calculation.
+	 * @param v1
+	 *            The first vector
+	 * @param v2
+	 *            The second vectors
 	 */
 	public static Vector2D add(Vector2D v1, Vector2D v2)
 	{
 		return new Vector2D(v1.getX() + v2.getX(), v1.getY() + v2.getY());
 	}
 
-//	/**
-//	 * Adds a multitude of other vectors to this vector.
-//	 * 
-//	 * @param others
-//	 */
-//	public static Vector2D add(Vector2D... others)
-//	{
-//		for (Vector2D other : others) {
-//			this.add(other);
-//		}
-//		return new Vector2D(x, y);
-//	}
+	/**
+	 * Adds a multitude of other vectors to this vector.
+	 *
+	 * @param vs
+	 *            The vectors
+	 */
+	public static Vector2D add(Vector2D... vs)
+	{
+		Vector2D res = new Vector2D();
+		for (Vector2D v : vs) {
+			add(res, v);
+		}
+		return res;
+	}
 
 	/**
 	 * Multiply this vector by a scalar value.
@@ -258,7 +262,9 @@ public class Vector2D
 	}
 
 	/**
-	 * Negates the x and y values.
+	 * Returns the opposite (negated) x and y values.
+	 * 
+	 * @return negated
 	 */
 	public Vector2D getNegate()
 	{
@@ -266,19 +272,13 @@ public class Vector2D
 	}
 
 	/**
-	 * Negates the x value.
+	 * Returns the absolute-valued x and y values.
+	 * 
+	 * @return abs
 	 */
-	public void negateX()
+	public Vector2D getAbs()
 	{
-		x = -x;
-	}
-
-	/**
-	 * Negates the y value.
-	 */
-	public void negateY()
-	{
-		y = -y;
+		return new Vector2D(Math.abs(x), Math.abs(y));
 	}
 
 	/**

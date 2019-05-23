@@ -3,7 +3,7 @@ package com.example.entities.collisions;
 import java.util.List;
 
 import com.example.entities.Moving;
-import com.example.entities.Player;
+import com.example.entities.types.player.PlayerManager;
 import com.example.libs.ReferenceConfig;
 import com.example.libs.Vector2D;
 
@@ -13,16 +13,16 @@ public class Collisions
 	private static void handleCollisionWall()
 	{
 		int space = 0;
-		if (Player.I().getPosition().getX() < space) {
-			Player.I().getPosition().setX(space);
-		} else if (Player.I().getPosition().getX() + Player.I().getWidth() > ReferenceConfig.getWidth() - space) {
-			Player.I().getPosition().setX(ReferenceConfig.getWidth() - Player.I().getWidth() - space);
+		if (PlayerManager.I().getPlayer().getPosition().getX() < space) {
+			PlayerManager.I().getPlayer().getPosition().setX(space);
+		} else if (PlayerManager.I().getPlayer().getPosition().getX() + PlayerManager.I().getPlayer().getWidth() > ReferenceConfig.getWidth() - space) {
+			PlayerManager.I().getPlayer().getPosition().setX(ReferenceConfig.getWidth() - PlayerManager.I().getPlayer().getWidth() - space);
 		}
 
-		if (Player.I().getPosition().getY() < space) {
-			Player.I().getPosition().setY(space);
-		} else if (Player.I().getPosition().getY() + Player.I().getHeight() > ReferenceConfig.getHeight() - space) {
-			Player.I().getPosition().setY(ReferenceConfig.getHeight() - Player.I().getHeight() - space);
+		if (PlayerManager.I().getPlayer().getPosition().getY() < space) {
+			PlayerManager.I().getPlayer().getPosition().setY(space);
+		} else if (PlayerManager.I().getPlayer().getPosition().getY() + PlayerManager.I().getPlayer().getHeight() > ReferenceConfig.getHeight() - space) {
+			PlayerManager.I().getPlayer().getPosition().setY(ReferenceConfig.getHeight() - PlayerManager.I().getPlayer().getHeight() - space);
 		}
 	}
 
@@ -32,7 +32,7 @@ public class Collisions
 			for (int j = i + 1; j < movables.size(); j++) {
 				Moving m1 = movables.get(i);
 				Moving m2 = movables.get(j);
-				elasticCollision(m1, m2, 0.7f);
+				applyElastic(m1, m2, 0.7f);
 			}
 	}
 
@@ -42,19 +42,25 @@ public class Collisions
 		handleCollisionMovables(movables);
 	}
 
-	public static void elasticCollision(Moving m1, Moving m2, float restitution)
+	public static void applyElastic(Moving m1, Moving m2, float restitution)
 	{
 		int intersect = m1.getBm().intersects(m2.getBm());
 		if (intersect != -1) {
 
+			/*
+			 * Determine index of Bounds intersected
+			 */
 			int m1i = 0, m2i = 0;
 			if (m1.getBm().getBounds().length > 0) m1i = m1.getBm().intersects(m2.getBm());
 			if (m2.getBm().getBounds().length > 0) m2i = m2.getBm().intersects(m1.getBm());
 
 			Vector2D collision = Vector2D.add(m1.getBm().getBounds()[m1i].getCenter(),
 					m2.getBm().getBounds()[m2i].getCenter().getNegate());
-			float dist = collision.getExactLength();
 
+			/*
+			 * Separate Moving entities
+			 */
+			float dist = collision.getExactLength();
 			float r1 = m1.getBm().getBounds()[m1i].getRadius();
 			float r2 = m2.getBm().getBounds()[m2i].getRadius();
 			if (dist > r1 + r2) return;
@@ -64,19 +70,22 @@ public class Collisions
 			m1.setPosition(Vector2D.add(m1.getPosition(), Vector2D.getScaled(mtd, r1 / (r1 + r2))));
 			m2.setPosition(Vector2D.add(m2.getPosition(), Vector2D.getScaled(mtd, r2 / (r1 + r2)).getNegate()));
 
-			mtd.normalize();
+			/*
+			 * Calculate resulting velocities
+			 */
+			collision.quickNormalize(dist);
+			float u1 = Vector2D.getDot(m1.getVelocity(), collision);
+			float u2 = Vector2D.getDot(m2.getVelocity(), collision);
 
-			// impulse
-			Vector2D v = Vector2D.add(m1.getVelocity(), m2.getVelocity().getNegate());
-			float vn = Vector2D.getDot(v, mtd);
+			// Solve for new velocities using the CONSERVATION OF MOMENTUM equation
+			float ma1 = m1.getMass();
+			float ma2 = m2.getMass();
+			float v1 = (u1 * (ma1 - ma2) + 2 * ma2 * u2) / (ma1 + ma2);
+			float v2 = (u2 * (ma2 - ma1) + 2 * ma1 * u1) / (ma1 + ma2);
 
-			if (vn > 0f) return;
-
-			float impulseCalc = -((1 + restitution) * vn) / 2f;
-			Vector2D impulse = Vector2D.getScaled(mtd, impulseCalc);
-
-			m1.setVelocity(Vector2D.add(m1.getVelocity(), impulse));
-			m2.setVelocity(Vector2D.add(m2.getVelocity(), impulse.getNegate()));
+			// Add new velocities
+			m1.setVelocity(Vector2D.add(m1.getVelocity(), Vector2D.getScaled(collision, v1 - u1)));
+			m2.setVelocity(Vector2D.add(m2.getVelocity(), Vector2D.getScaled(collision, v2 - u2)));
 		}
 	}
 }

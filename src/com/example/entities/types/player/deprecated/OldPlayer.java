@@ -1,4 +1,4 @@
-package com.example.entities.deprecated;
+package com.example.entities.types.player.deprecated;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

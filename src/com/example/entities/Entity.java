@@ -3,6 +3,7 @@ package com.example.entities;
 import java.awt.Graphics2D;
 
 import com.example.entities.animations.Render;
+import com.example.entities.types.ID;
 import com.example.libs.Vector2D;
 import com.example.utils.gameloop_instructions.Loopable;
 

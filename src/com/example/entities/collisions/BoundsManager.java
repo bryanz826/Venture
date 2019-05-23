@@ -26,18 +26,20 @@ public class BoundsManager
 	// GAMELOOP METHODS
 	//
 
+	/**
+	 * Updates the position of the first bounds. Will always run.
+	 * @param position
+	 * @param width
+	 * @param height
+	 */
 	public void update(Vector2D position, float width, float height)
 	{
 		getFirst().setBounds(position, width, height);
 	}
 
-	public void updateComplexBounds(Bounds... bounds)
+	public void updateComplex(Bounds...bounds)
 	{
-		Bounds[] result = new Bounds[bounds.length + 1];
-		result[0] = getFirst();
-		for (int i = 1; i < result.length; i++)
-			result[i] = bounds[i - 1];
-		this.bounds = result;
+		this.bounds = bounds;
 	}
 
 	//
@@ -72,7 +74,7 @@ public class BoundsManager
 						return -1;
 
 					case COMPLEX:
-						for (int i = 1; i < other.getBounds().length; i++)
+						for (int i = 0; i < other.getBounds().length; i++)
 							if (circCirc(thisFirst, other.getBounds()[i])) return 0;
 						return -1;
 
@@ -94,7 +96,7 @@ public class BoundsManager
 						return -1;
 
 					case COMPLEX:
-						for (int i = 1; i < other.getBounds().length; i++)
+						for (int i = 0; i < other.getBounds().length; i++)
 							if (circRect(other.getBounds()[i], thisFirst)) return 0;
 						return -1;
 
@@ -108,17 +110,17 @@ public class BoundsManager
 				switch (other.getType())
 				{
 					case CIRC:
-						for (int i = 1; i < this.getBounds().length; i++)
+						for (int i = 0; i < this.getBounds().length; i++)
 							if (circCirc(this.getBounds()[i], otherFirst)) return i;
 						return -1;
 
 					case RECT:
-						for (int i = 1; i < this.getBounds().length; i++)
+						for (int i = 0; i < this.getBounds().length; i++)
 							if (circRect(this.getBounds()[i], otherFirst)) return i;
 						return -1;
 
 					case COMPLEX:
-						for (int i = 1; i < this.getBounds().length; i++)
+						for (int i = 0; i < this.getBounds().length; i++)
 							for (int j = 1; j < other.getBounds().length; j++)
 								if (circCirc(this.getBounds()[i], other.getBounds()[j])) return i;
 						return -1;

@@ -1,7 +1,9 @@
-package com.example.entities;
+package com.example.entities.types.meteor;
 
+import com.example.entities.Moving;
 import com.example.entities.animations.Render;
 import com.example.entities.collisions.BoundsManager.BoundsType;
+import com.example.entities.types.ID;
 import com.example.libs.ReferenceConfig;
 import com.example.libs.ReferenceMath;
 import com.example.libs.ReferenceResource;

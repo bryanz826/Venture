@@ -1,4 +1,4 @@
-package com.example.entities;
+package com.example.entities.types.meteor;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -7,8 +7,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.example.entities.Moving;
 import com.example.entities.collisions.BoundsManager;
 import com.example.entities.collisions.BoundsManager.BoundsType;
+import com.example.entities.types.player.PlayerManager;
 import com.example.libs.Reference;
 import com.example.libs.ReferenceConfig;
 import com.example.libs.ReferenceMath;
@@ -119,6 +121,13 @@ public class MeteorManager
 	//
 	// GAMELOOP METHODS
 	//
+
+	/**
+	 * Updates the target area and handles meteors launches.
+	 * 
+	 * @param movables
+	 *            The meteors are added to the entities list.
+	 */
 	public void update(List<Moving> movables)
 	{
 		tick++;
@@ -134,8 +143,8 @@ public class MeteorManager
 			ReferenceRender.drawString(g, "failArea", failArea.getFirst());
 
 			g.setColor(new Color(128, 255, 128));
-			ReferenceRender.drawInterpolatedRect(g, targetArea.getFirst(), Player.I().getVelocity(), interpolation);
-			ReferenceRender.drawInterpolatedString(g, "targetArea", targetArea, Player.I().getVelocity(),
+			ReferenceRender.drawInterpolatedRect(g, targetArea.getFirst(), PlayerManager.I().getPlayer().getVelocity(), interpolation);
+			ReferenceRender.drawInterpolatedString(g, "targetArea", targetArea, PlayerManager.I().getPlayer().getVelocity(),
 					interpolation);
 		}
 	}
@@ -223,8 +232,8 @@ public class MeteorManager
 		float width = ReferenceConfig.getWidth() * proportion;
 		float height = ReferenceConfig.getHeight() * proportion;
 
-		float x = Player.I().getCenter().getX() - width / 2;
-		float y = Player.I().getCenter().getY() - height / 2;
+		float x = PlayerManager.I().getPlayer().getCenter().getX() - width / 2;
+		float y = PlayerManager.I().getPlayer().getCenter().getY() - height / 2;
 
 		targetArea.update(new Vector2D(x, y), width, height);
 	}

@@ -18,7 +18,7 @@ public class Render
 	private Resource	scaledFrame;
 	private Resource	rotatedFrame;
 
-	public Render()//, float radians)
+	public Render()// , float radians)
 	{
 		this(new Resource("flying-bonger.png"));
 	}
@@ -58,7 +58,7 @@ public class Render
 		g.drawImage(currentFrame.getImage(), 0, 0, Math.round(width), Math.round(height), null);
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		g.dispose();
-		
+
 		scaledFrame.setImage(resizedImage);
 	}
 
@@ -85,7 +85,7 @@ public class Render
 		this.lastHeight = lastHeight;
 	}
 
-	void setCurrentFrame(Resource currentFrame)
+	public void setCurrentFrame(Resource currentFrame)
 	{
 		this.currentFrame = currentFrame;
 	}
