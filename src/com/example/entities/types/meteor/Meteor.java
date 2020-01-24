@@ -16,9 +16,9 @@ public class Meteor extends Moving
 
 	public Meteor(Vector2D position, Vector2D velocity, float size, float radPerSec)
 	{
-		super(position, size, size, ReferenceMath.getRandomFloat(5, 12), 0, BoundsType.CIRC, null, ID.METEOR);
-		setMainRender(new Render(new Resource(
-				ReferenceResource.METEOR_LOC + "meteor-" + chooseRandColor() + "-" + chooseRandType() + ".png")));
+		super(position, size, size, ReferenceMath.getRandomFloat(5, 12), 0, BoundsType.CIRC, new Render(new Resource(
+				ReferenceResource.METEOR_LOC + "meteor-" + chooseRandColor() + "-" + chooseRandType() + ".png")), ID.METEOR);
+//		setMainRender();
 		radPerTick = radPerSec / ReferenceConfig.TARGET_UPS;
 
 		reposition(size / 2);
@@ -45,7 +45,7 @@ public class Meteor extends Moving
 	 * 
 	 * @return random color
 	 */
-	private String chooseRandColor()
+	private static String chooseRandColor()
 	{
 		String color = "";
 
@@ -68,7 +68,7 @@ public class Meteor extends Moving
 	 * 
 	 * @return meteor type
 	 */
-	private String chooseRandType()
+	private static String chooseRandType()
 	{
 		return "" + ReferenceMath.getRandomInt(1, 5);
 	}

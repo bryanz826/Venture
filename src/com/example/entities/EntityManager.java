@@ -2,15 +2,17 @@ package com.example.entities;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.example.entities.collisions.Collisions;
 import com.example.entities.types.meteor.MeteorManager;
-import com.example.entities.types.player.PlayerManager;
+import com.example.entities.types.player.Player;
 import com.example.libs.ReferenceConfig;
 import com.example.utils.gameloop_instructions.Playable;
 
+/**
+ * Manages all the entities, updating input
+ */
 public class EntityManager implements Playable
 {
 	private List<Moving>	movables;
@@ -20,15 +22,14 @@ public class EntityManager implements Playable
 	public EntityManager()
 	{
 		movables = new ArrayList<Moving>();
-		movables.add(0, PlayerManager.I().getPlayer());
+		movables.add(0, Player.I().getMechanics());
 
 		mm = new MeteorManager(0.42f, 0.84f, 0.5f, 2, 2, 4);
 	}
 
-
 	public void processInput()
 	{
-		PlayerManager.I().processInput();
+		Player.I().processInput();
 	}
 
 	@Override
@@ -43,6 +44,7 @@ public class EntityManager implements Playable
 		 * Entities
 		 */
 		updateMovables();
+		Player.I().update();
 
 		/*
 		 * Collisions
@@ -53,8 +55,20 @@ public class EntityManager implements Playable
 	@Override
 	public void render(Graphics2D g, float interpolation)
 	{
+		/*
+		 * Helpers
+		 */
 		mm.render(g, interpolation);
+		
+		/*
+		 * Entities
+		 */
 		renderMovables(g, interpolation);
+
+		/*
+		 * Collisions
+		 */
+		Player.I().render(g, interpolation);
 	}
 
 	//
@@ -62,25 +76,37 @@ public class EntityManager implements Playable
 	//
 	private void updateMovables()
 	{
-		for (Iterator<Moving> iter = movables.iterator(); iter.hasNext();) {
-			Moving moving = iter.next();
+//		for (Iterator<Moving> iter = movables.iterator(); iter.hasNext();) {
+//			Moving moving = iter.next();
+//			moving.update();
+//
+//			// if (a.isLanded()) {
+//			// a.actionOnLanding();
+//			// iter.remove();
+//			// }
+//
+//			if (moving.getBm().intersects(ReferenceConfig.getOuter()) == -1) {
+//				iter.remove(); // remove off-screen meteors
+//			}
+//		}
+		int i = 1; // ignore Player
+		while (i < movables.size())
+		{
+			Moving moving = movables.get(i);
 			moving.update();
 
-			// if (a.isLanded()) {
-			// a.actionOnLanding();
-			// iter.remove();
-			// }
-
 			if (moving.getBm().intersects(ReferenceConfig.getOuter()) == -1) {
-				iter.remove(); // remove off-screen meteors
+				movables.remove(i); // remove off-screen meteors
+			} else {
+				i++;
 			}
 		}
 	}
 
 	private void renderMovables(Graphics2D g, float interpolation)
 	{
-		for (Moving moving : movables)
-			moving.render(g, interpolation);
+		for (int i = 1; i < movables.size(); i++)
+			movables.get(i).render(g, interpolation);
 	}
 
 	//

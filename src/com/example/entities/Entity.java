@@ -1,6 +1,7 @@
 package com.example.entities;
 
 import java.awt.Graphics2D;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.example.entities.animations.Render;
 import com.example.entities.types.ID;
@@ -50,6 +51,11 @@ public abstract class Entity implements Loopable
 	 */
 	private ID			id;
 
+	/**
+	 * 
+	 */
+	private int			uniqueCode;
+
 	//
 	// CONSTRUCTORS
 	//
@@ -73,6 +79,7 @@ public abstract class Entity implements Loopable
 		this.height = height;
 		setMainRender(mainRender);
 		this.id = id;
+		this.uniqueCode = ThreadLocalRandom.current().nextInt(2, (int) Math.pow(2, 16)) * mainRender.hashCode();
 	}
 
 	//
@@ -162,6 +169,12 @@ public abstract class Entity implements Loopable
 	{
 		this.height = height;
 	}
+	
+	public void setSize(float size)
+	{
+		setWidth(size);
+		setHeight(size);
+	}
 
 	/**
 	 * Sets the position.
@@ -246,14 +259,25 @@ public abstract class Entity implements Loopable
 	{
 		return mainRender;
 	}
-	
+
 	/**
 	 * Returns the ID
+	 * 
 	 * @return ID
 	 */
-	public ID getId()
+	public ID getID()
 	{
 		return id;
+	}
+
+	/**
+	 * Returns the unique code
+	 * 
+	 * @return uniqueCode
+	 */
+	public int getUniqueCode()
+	{
+		return uniqueCode;
 	}
 
 	//

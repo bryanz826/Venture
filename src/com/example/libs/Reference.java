@@ -11,5 +11,5 @@ public class Reference
 	/**
 	 * When paused, game is paused. Temporary, and will be implemented another way later.
 	 */
-	public static boolean PAUSE = false;
+	public static boolean PAUSE = true;
 }

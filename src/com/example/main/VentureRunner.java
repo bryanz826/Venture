@@ -2,6 +2,7 @@ package com.example.main;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.DisplayMode;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
@@ -37,6 +38,12 @@ public class VentureRunner
 	 * calculations based off it.
 	 */
 	public static final int			RECOMMENDED_HEIGHT	= 1080;
+
+	public static final int				SCREEN_WIDTH = 
+							Toolkit.getDefaultToolkit().getScreenSize().width;
+	
+	public static final int				SCREEN_HEIGHT = 
+							Toolkit.getDefaultToolkit().getScreenSize().height;
 
 	/**
 	 * Current width of Frame
@@ -84,7 +91,7 @@ public class VentureRunner
 		window.add(game); // add game to the window
 		window.setResizable(false); // fix size of window
 
-		String cLocation = ReferenceResource.RESOURCE_LOC + "cursor.png";
+		String cLocation = ReferenceResource.IMAGE_LOC + "cursor.png";
 		Image cImage = Toolkit.getDefaultToolkit().createImage(getClass().getResource(cLocation));
 		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(cImage, new Point(0, 0), "Cursor");
 		window.setCursor(cursor); // TODO not sure if I will use this method for painting cursor
@@ -129,6 +136,9 @@ public class VentureRunner
 		updateDimensions(true);
 		full = false;
 		ConsoleLog.write("Minimized Screen Initiated - " + WIDTH + " x " + HEIGHT);
+		
+		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+		ConsoleLog.write("Screen size - " + (int) d.getWidth() + " x " + (int) d.getHeight());
 	}
 
 	private static void setFullscreen()
@@ -198,6 +208,9 @@ public class VentureRunner
 			updateDimensions(false); // TODO work with display modes?
 			full = true;
 			ConsoleLog.write("Full Screen Initiated - " + WIDTH + " x " + HEIGHT);
+			
+			Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+			ConsoleLog.write("Screen size - " + (int) d.getWidth() + " x " + (int) d.getHeight());
 		} else { // if full screen isn't allowed :(
 			ConsoleLog.write("Fullscreen not supported. Switching screen mode to windowed");
 			if (!game.isRunning()) setWindowed();
@@ -206,8 +219,8 @@ public class VentureRunner
 
 	private static void updateDimensions(boolean windowOffset) // update current window size to new window
 	{
-		WIDTH = window.getWidth();
-		HEIGHT = window.getHeight();
+		WIDTH = device.getDisplayMode().getWidth();
+		HEIGHT = device.getDisplayMode().getHeight();
 		updateOuter();
 		if (windowOffset) {
 			WIDTH -= windowedOffsetX;
@@ -240,7 +253,7 @@ public class VentureRunner
 	{
 		return full;
 	}
-
+	//
 	// private static void resizeAll(Class<?> clazz, float newSize, String[]
 	// wantedFields)
 	// {
@@ -259,7 +272,6 @@ public class VentureRunner
 	// try {
 	// method = clazz.getMethod("set" + name, float.class);
 	// } catch (NoSuchMethodException | SecurityException e) {
-	// // TODO Auto-generated catch block
 	// e.printStackTrace();
 	// }
 	//
@@ -267,10 +279,8 @@ public class VentureRunner
 	// method.invoke(clazz.newInstance(), 900);
 	// } catch (IllegalAccessException | IllegalArgumentException |
 	// InvocationTargetException e) {
-	// // TODO Auto-generated catch block
 	// e.printStackTrace();
 	// } catch (InstantiationException e) {
-	// // TODO Auto-generated catch block
 	// e.printStackTrace();
 	// }
 	// }

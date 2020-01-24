@@ -1,6 +1,7 @@
 package com.example.libs;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 
 import com.example.entities.collisions.Bounds;
 import com.example.entities.collisions.BoundsManager;
@@ -41,6 +42,8 @@ public class ReferenceRender
 	 */
 	public static void drawRect(Graphics2D g, Bounds rect)
 	{
+//		AffineTransform oldAT = g.getTransform();
+//		g.scale(ReferenceConfig.getScreenRatioX(), ReferenceConfig.getScreenRatioY());
 		g.drawRect(Math.round(rect.getX()), Math.round(rect.getY()), Math.round(rect.getWidth()),
 				Math.round(rect.getHeight()));
 	}

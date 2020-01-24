@@ -1,12 +1,14 @@
 package com.example.utils.resource;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import com.example.libs.ReferenceConfig;
 import com.example.libs.ReferenceResource;
 
 public class Resource
@@ -61,7 +63,7 @@ public class Resource
 			this.image = resource;
 		} else { // else load the image in
 			try {
-				image = ImageIO.read(getClass().getResourceAsStream(ReferenceResource.RESOURCE_LOC + fileName));
+				image = ImageIO.read(getClass().getResourceAsStream(ReferenceResource.IMAGE_LOC + fileName));
 				map.put(fileName, image);
 			} catch (Exception e) {
 				System.err.printf("Cannot find " + fileName + "!\n");
@@ -115,12 +117,18 @@ public class Resource
 
 	public void render(Graphics2D g, float x, float y)
 	{
+//		AffineTransform oldAT = g.getTransform();
+//		g.scale(ReferenceConfig.getScreenRatioX(), ReferenceConfig.getScreenRatioY());
 		g.drawImage(image, Math.round(x), Math.round(y), null);
+//		g.setTransform(oldAT);
 	}
 
 	public void render(Graphics2D g, float x, float y, float width, float height) // for resizing
 	{
+//		AffineTransform oldAT = g.getTransform();
+//		g.scale(ReferenceConfig.getScreenRatioX(), ReferenceConfig.getScreenRatioY());
 		g.drawImage(image, Math.round(x), Math.round(y), Math.round(width), Math.round(height), null);
+//		g.setTransform(oldAT);
 	}
 
 	//

@@ -18,6 +18,16 @@ public class ReferenceConfig
 	{
 		return VentureRunner.HEIGHT;
 	}
+	
+	public static float getScreenRatioX()
+	{
+		return VentureRunner.SCREEN_WIDTH / (float) VentureRunner.WIDTH;
+	}
+	
+	public static float getScreenRatioY()
+	{
+		return VentureRunner.SCREEN_HEIGHT / (float) VentureRunner.HEIGHT;
+	}
 
 	public static BoundsManager getOuter()
 	{

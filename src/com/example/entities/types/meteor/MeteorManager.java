@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.example.entities.Moving;
 import com.example.entities.collisions.BoundsManager;
 import com.example.entities.collisions.BoundsManager.BoundsType;
-import com.example.entities.types.player.PlayerManager;
+import com.example.entities.types.player.Player;
 import com.example.libs.Reference;
 import com.example.libs.ReferenceConfig;
 import com.example.libs.ReferenceMath;
@@ -143,8 +143,8 @@ public class MeteorManager
 			ReferenceRender.drawString(g, "failArea", failArea.getFirst());
 
 			g.setColor(new Color(128, 255, 128));
-			ReferenceRender.drawInterpolatedRect(g, targetArea.getFirst(), PlayerManager.I().getPlayer().getVelocity(), interpolation);
-			ReferenceRender.drawInterpolatedString(g, "targetArea", targetArea, PlayerManager.I().getPlayer().getVelocity(),
+			ReferenceRender.drawInterpolatedRect(g, targetArea.getFirst(), Player.I().getMechanics().getVelocity(), interpolation);
+			ReferenceRender.drawInterpolatedString(g, "targetArea", targetArea, Player.I().getMechanics().getVelocity(),
 					interpolation);
 		}
 	}
@@ -232,8 +232,8 @@ public class MeteorManager
 		float width = ReferenceConfig.getWidth() * proportion;
 		float height = ReferenceConfig.getHeight() * proportion;
 
-		float x = PlayerManager.I().getPlayer().getCenter().getX() - width / 2;
-		float y = PlayerManager.I().getPlayer().getCenter().getY() - height / 2;
+		float x = Player.I().getMechanics().getCenter().getX() - width / 2;
+		float y = Player.I().getMechanics().getCenter().getY() - height / 2;
 
 		targetArea.update(new Vector2D(x, y), width, height);
 	}
