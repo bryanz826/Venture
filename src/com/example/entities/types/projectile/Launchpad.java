@@ -1,6 +1,6 @@
 package com.example.entities.types.projectile;
 
-import com.example.libs.Vector2D;
+import com.example.refs.Vector2D;
 
 public class Launchpad
 {

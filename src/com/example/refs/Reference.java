@@ -1,4 +1,4 @@
-package com.example.libs;
+package com.example.refs;
 
 public class Reference
 {
@@ -11,5 +11,5 @@ public class Reference
 	/**
 	 * When paused, game is paused. Temporary, and will be implemented another way later.
 	 */
-	public static boolean PAUSE = true;
+	public static boolean PAUSE = false;
 }

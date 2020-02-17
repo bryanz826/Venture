@@ -6,8 +6,8 @@ import com.example.entities.Moving;
 import com.example.entities.types.ID;
 import com.example.entities.types.player.Player;
 import com.example.entities.types.projectile.Projectile;
-import com.example.libs.ReferenceConfig;
-import com.example.libs.Vector2D;
+import com.example.refs.ReferenceConfig;
+import com.example.refs.Vector2D;
 
 // ur mum gei
 public class Collisions

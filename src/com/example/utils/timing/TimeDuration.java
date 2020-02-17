@@ -1,6 +1,6 @@
 package com.example.utils.timing;
 
-import com.example.libs.ReferenceMath;
+import com.example.refs.ReferenceMath;
 
 public class TimeDuration
 {

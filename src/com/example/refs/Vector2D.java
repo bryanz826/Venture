@@ -1,4 +1,4 @@
-package com.example.libs;
+package com.example.refs;
 
 /**
  * A two-dimensional vector library with many utility methods useful for

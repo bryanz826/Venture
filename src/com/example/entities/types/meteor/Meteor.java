@@ -4,10 +4,10 @@ import com.example.entities.Moving;
 import com.example.entities.animations.Render;
 import com.example.entities.collisions.BoundsManager.BoundsType;
 import com.example.entities.types.ID;
-import com.example.libs.ReferenceConfig;
-import com.example.libs.ReferenceMath;
-import com.example.libs.ReferenceResource;
-import com.example.libs.Vector2D;
+import com.example.refs.ReferenceConfig;
+import com.example.refs.ReferenceMath;
+import com.example.refs.ReferenceResource;
+import com.example.refs.Vector2D;
 import com.example.utils.resource.Resource;
 
 public class Meteor extends Moving

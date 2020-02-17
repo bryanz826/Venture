@@ -16,8 +16,8 @@ import java.awt.event.WindowEvent;
 
 import com.example.entities.collisions.BoundsManager;
 import com.example.entities.collisions.BoundsManager.BoundsType;
-import com.example.libs.ReferenceResource;
-import com.example.libs.Vector2D;
+import com.example.refs.ReferenceResource;
+import com.example.refs.Vector2D;
 import com.example.utils.ConsoleLog;
 
 /**

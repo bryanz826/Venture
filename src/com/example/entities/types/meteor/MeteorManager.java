@@ -11,11 +11,11 @@ import com.example.entities.Moving;
 import com.example.entities.collisions.BoundsManager;
 import com.example.entities.collisions.BoundsManager.BoundsType;
 import com.example.entities.types.player.Player;
-import com.example.libs.Reference;
-import com.example.libs.ReferenceConfig;
-import com.example.libs.ReferenceMath;
-import com.example.libs.ReferenceRender;
-import com.example.libs.Vector2D;
+import com.example.refs.Reference;
+import com.example.refs.ReferenceConfig;
+import com.example.refs.ReferenceMath;
+import com.example.refs.ReferenceRender;
+import com.example.refs.Vector2D;
 
 /**
  * Manages the meteors' cooldown and launch.

@@ -6,8 +6,8 @@ import com.example.entities.collisions.Bounds;
 import com.example.entities.collisions.BoundsManager.BoundsType;
 import com.example.entities.collisions.ComplexBounds;
 import com.example.entities.types.ID;
-import com.example.libs.ReferenceResource;
-import com.example.libs.Vector2D;
+import com.example.refs.ReferenceResource;
+import com.example.refs.Vector2D;
 import com.example.utils.resource.Resource;
 
 public class Projectile extends Moving implements ComplexBounds

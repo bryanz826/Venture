@@ -8,8 +8,8 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import com.example.libs.ReferenceConfig;
-import com.example.libs.ReferenceResource;
+import com.example.refs.ReferenceConfig;
+import com.example.refs.ReferenceResource;
 
 public class Resource
 {

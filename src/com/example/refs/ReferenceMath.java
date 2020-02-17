@@ -1,4 +1,4 @@
-package com.example.libs;
+package com.example.refs;
 
 import java.util.concurrent.ThreadLocalRandom;
 

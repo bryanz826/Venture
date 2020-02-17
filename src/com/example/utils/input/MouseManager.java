@@ -3,7 +3,7 @@ package com.example.utils.input;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import com.example.libs.ReferenceConfig;
+import com.example.refs.ReferenceConfig;
 
 public class MouseManager extends MouseAdapter
 {

@@ -1,6 +1,6 @@
 package com.example.entities.collisions;
 
-import com.example.libs.Vector2D;
+import com.example.refs.Vector2D;
 
 /**
  * The bounds used for collision detection.

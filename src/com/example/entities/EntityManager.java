@@ -7,7 +7,7 @@ import java.util.List;
 import com.example.entities.collisions.Collisions;
 import com.example.entities.types.meteor.MeteorManager;
 import com.example.entities.types.player.Player;
-import com.example.libs.ReferenceConfig;
+import com.example.refs.ReferenceConfig;
 import com.example.utils.gameloop_instructions.Playable;
 
 /**

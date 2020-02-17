@@ -12,7 +12,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
-import com.example.libs.ReferenceResource;
+import com.example.refs.ReferenceResource;
 import com.example.state.StateManager;
 import com.example.state.list.Intro;
 import com.example.state.list.Menu;

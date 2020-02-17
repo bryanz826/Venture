@@ -1,4 +1,4 @@
-package com.example.libs;
+package com.example.refs;
 
 import com.example.entities.collisions.BoundsManager;
 import com.example.main.VenturePanel;
