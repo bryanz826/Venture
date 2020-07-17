@@ -11,7 +11,7 @@ import com.example.utils.input.MouseManager;
 
 public class Menu implements State
 {
-	public enum MenuButton
+	public static enum Button
 	{
 		START,
 		SETTINGS,
@@ -23,10 +23,10 @@ public class Menu implements State
 
 	public Menu()
 	{
-		int optionLen = MenuButton.values().length;
+		int optionLen = Menu.Button.values().length;
 		options = new String[optionLen];
 		for (int i = 0; i < optionLen; i++) {
-			options[i] = MenuButton.values()[i].toString();
+			options[i] = Menu.Button.values()[i].toString();
 		}
 	}
 

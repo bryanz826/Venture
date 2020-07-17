@@ -2,6 +2,7 @@ package com.example.entities.types.player.deprecated;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 
 import com.example.entities.animations.Render;
 import com.example.libs.Reference;
@@ -47,17 +48,17 @@ public class OldPlayer
 	 */
 	public void processInputSimple() // for demonstration purposes only (not actually used)
 	{
-		if (KeyManager.isDown(KeyManager.A)) {
+		if (KeyManager.isDown(KeyEvent.VK_A)) {
 			setDx(-5);
-		} else if (KeyManager.isDown(KeyManager.D)) {
+		} else if (KeyManager.isDown(KeyEvent.VK_D)) {
 			setDx(5);
 		} else {
 			setDx(0);
 		}
 
-		if (KeyManager.isDown(KeyManager.W)) {
+		if (KeyManager.isDown(KeyEvent.VK_W)) {
 			setDy(-5);
-		} else if (KeyManager.isDown(KeyManager.S)) {
+		} else if (KeyManager.isDown(KeyEvent.VK_S)) {
 			setDy(5);
 		} else {
 			setDy(0);
@@ -77,7 +78,7 @@ public class OldPlayer
 		int vCount = 0; // keep track of # of vertical keys pressed (look location used for more info)
 
 		// Horizontal
-		if (KeyManager.isDown(KeyManager.A)) {
+		if (KeyManager.isDown(KeyEvent.VK_A)) {
 			hCount++;
 			setD2x(-getThrust()); // accelerate
 			if (getDx() < -getTargetSpd()) { // cap speed
@@ -86,7 +87,7 @@ public class OldPlayer
 			} else if (getDx() == -getTargetSpd()) setD2x(0); // validate capped speed
 		}
 
-		if (KeyManager.isDown(KeyManager.D)) {
+		if (KeyManager.isDown(KeyEvent.VK_D)) {
 			hCount++;
 			setD2x(getThrust()); // accelerate
 			if (getDx() > getTargetSpd()) { // cap speed
@@ -96,7 +97,7 @@ public class OldPlayer
 		}
 
 		// Vertical
-		if (KeyManager.isDown(KeyManager.W)) {
+		if (KeyManager.isDown(KeyEvent.VK_W)) {
 			vCount++;
 			setD2y(-getThrust()); // accelerate
 			if (getDy() < -getTargetSpd()) { // cap speed
@@ -105,7 +106,7 @@ public class OldPlayer
 			} else if (getDy() == -getTargetSpd()) setD2y(0); // validate capped speed
 		}
 
-		if (KeyManager.isDown(KeyManager.S)) {
+		if (KeyManager.isDown(KeyEvent.VK_S)) {
 			vCount++;
 			setD2y(getThrust()); // accelerate
 			if (getDy() > getTargetSpd()) { // cap speed
@@ -128,7 +129,7 @@ public class OldPlayer
 			if (++tickMovement > 60) tickMovement = 60; // cap tick
 
 			// Horizontal
-			if (KeyManager.isDown(KeyManager.A)) {
+			if (KeyManager.isDown(KeyEvent.VK_A)) {
 				if (getDx() < -diagTargetSpd) { // if slowing down
 					// decelerate based on the curve
 					setD2x(getThrust() * (float) Math.sin(tickMovement * Math.PI / 4 / ReferenceConfig.TARGET_UPS));
@@ -146,7 +147,7 @@ public class OldPlayer
 				} else { // validate capped speed
 					setD2x(0);
 				}
-			} else if (KeyManager.isDown(KeyManager.D)) {
+			} else if (KeyManager.isDown(KeyEvent.VK_D)) {
 				if (getDx() > diagTargetSpd) { // if slowing down
 					// decelerate based on the curve
 					setD2x(-getThrust() * (float) Math.sin(tickMovement * Math.PI / 4 / ReferenceConfig.TARGET_UPS));
@@ -167,7 +168,7 @@ public class OldPlayer
 			}
 
 			// Vertical
-			if (KeyManager.isDown(KeyManager.W)) {
+			if (KeyManager.isDown(KeyEvent.VK_W)) {
 				if (getDy() < -diagTargetSpd) { // if slowing down
 					// decelerate based on the curve
 					setD2y(getThrust() * (float) Math.sin(tickMovement * Math.PI / 4 / ReferenceConfig.TARGET_UPS));
@@ -185,7 +186,7 @@ public class OldPlayer
 				} else { // validate capped speed
 					setD2y(0);
 				}
-			} else if (KeyManager.isDown(KeyManager.S)) {
+			} else if (KeyManager.isDown(KeyEvent.VK_S)) {
 				if (getDy() > diagTargetSpd) { // if slowing down
 					// decelerate based on the curve
 					setD2y(-getThrust() * (float) Math.sin(tickMovement * Math.PI / 4 / ReferenceConfig.TARGET_UPS));
@@ -341,10 +342,10 @@ public class OldPlayer
 		int hCount = 0;
 		int vCount = 0;
 
-		if (KeyManager.isDown(KeyManager.A)) hCount++;
-		if (KeyManager.isDown(KeyManager.D)) hCount++;
-		if (KeyManager.isDown(KeyManager.W)) vCount++;
-		if (KeyManager.isDown(KeyManager.S)) vCount++;
+		if (KeyManager.isDown(KeyEvent.VK_A)) hCount++;
+		if (KeyManager.isDown(KeyEvent.VK_D)) hCount++;
+		if (KeyManager.isDown(KeyEvent.VK_W)) vCount++;
+		if (KeyManager.isDown(KeyEvent.VK_S)) vCount++;
 
 		return hCount == 1 && vCount == 1;
 	}
@@ -353,19 +354,19 @@ public class OldPlayer
 	{
 		int hCount = 0;
 		int vCount = 0;
-		if (KeyManager.isDown(KeyManager.A)) hCount++;
-		if (KeyManager.isDown(KeyManager.D)) hCount++;
-		if (KeyManager.wasPressed(KeyManager.W)) vCount++;
-		if (KeyManager.wasPressed(KeyManager.S)) vCount++;
+		if (KeyManager.isDown(KeyEvent.VK_A)) hCount++;
+		if (KeyManager.isDown(KeyEvent.VK_D)) hCount++;
+		if (KeyManager.wasPressed(KeyEvent.VK_W)) vCount++;
+		if (KeyManager.wasPressed(KeyEvent.VK_S)) vCount++;
 
 		if (hCount == 1 && vCount == 1) return true;
 
 		hCount = 0;
 		vCount = 0;
-		if (KeyManager.wasPressed(KeyManager.A)) hCount++;
-		if (KeyManager.wasPressed(KeyManager.D)) hCount++;
-		if (KeyManager.isDown(KeyManager.W)) vCount++;
-		if (KeyManager.isDown(KeyManager.S)) vCount++;
+		if (KeyManager.wasPressed(KeyEvent.VK_A)) hCount++;
+		if (KeyManager.wasPressed(KeyEvent.VK_D)) hCount++;
+		if (KeyManager.isDown(KeyEvent.VK_W)) vCount++;
+		if (KeyManager.isDown(KeyEvent.VK_S)) vCount++;
 
 		if (hCount == 1 && vCount == 1) return true;
 

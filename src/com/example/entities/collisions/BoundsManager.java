@@ -27,7 +27,8 @@ public class BoundsManager
 	//
 
 	/**
-	 * Updates the position of the first bounds. Will always run.
+	 * Updates the position of the first bounds.
+	 * 
 	 * @param position
 	 * @param width
 	 * @param height
@@ -37,7 +38,7 @@ public class BoundsManager
 		getFirst().setBounds(position, width, height);
 	}
 
-	public void updateComplex(Bounds...bounds)
+	public void updateComplex(Bounds... bounds)
 	{
 		this.bounds = bounds;
 	}
@@ -49,6 +50,8 @@ public class BoundsManager
 	/**
 	 * Determines if two BoundsManagers intersect and returns the index of the
 	 * corresponding intersect or -1 if none.
+	 * 
+	 * TODO: Multiple intersections. ie. return an array of all indexes collided.
 	 * 
 	 * @param other
 	 *            The other bounds

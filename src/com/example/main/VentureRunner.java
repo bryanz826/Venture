@@ -84,7 +84,7 @@ public class VentureRunner
 		window.add(game); // add game to the window
 		window.setResizable(false); // fix size of window
 
-		String cLocation = ReferenceResource.RESOURCE_LOC + "cursor.png";
+		String cLocation = ReferenceResource.IMAGE_LOC + "cursor.png";
 		Image cImage = Toolkit.getDefaultToolkit().createImage(getClass().getResource(cLocation));
 		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(cImage, new Point(0, 0), "Cursor");
 		window.setCursor(cursor); // TODO not sure if I will use this method for painting cursor
@@ -240,45 +240,39 @@ public class VentureRunner
 	{
 		return full;
 	}
-
-	// private static void resizeAll(Class<?> clazz, float newSize, String[]
-	// wantedFields)
-	// {
-	// List<Field> fields = new ArrayList<Field>();
-	// for (Class<?> c = clazz; c != null; c = c.getSuperclass()) {
-	// fields.addAll(Arrays.asList(c.getDeclaredFields()));
-	// }
-	//
-	// for (int i = 0; i < wantedFields.length; i++)
-	// for (int j = 0; j < fields.size(); j++) {
-	// if (wantedFields[i].equals(fields.get(j).getName())) {
-	// String name = wantedFields[i].substring(0, 1).toUpperCase() +
-	// wantedFields[i].substring(1);
-	//
-	// Method method = null;
-	// try {
-	// method = clazz.getMethod("set" + name, float.class);
-	// } catch (NoSuchMethodException | SecurityException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	//
-	// try {
-	// method.invoke(clazz.newInstance(), 900);
-	// } catch (IllegalAccessException | IllegalArgumentException |
-	// InvocationTargetException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// } catch (InstantiationException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
-	// }
-	// }
-	//
-	// private static float getResize(float size, float newSize)
-	// {
-	// return size * newSize / ReferenceConfig.getWidth();
-	// }
+//
+//	private static void resizeAll(Class<?> clazz, float newSize, String[] wantedFields)
+//	{
+//		List<Field> fields = new ArrayList<Field>();
+//		for (Class<?> c = clazz; c != null; c = c.getSuperclass()) {
+//			fields.addAll(Arrays.asList(c.getDeclaredFields()));
+//		}
+//
+//		for (int i = 0; i < wantedFields.length; i++)
+//			for (int j = 0; j < fields.size(); j++) {
+//				if (wantedFields[i].equals(fields.get(j).getName())) {
+//					String name = wantedFields[i].substring(0, 1).toUpperCase() + wantedFields[i].substring(1);
+//
+//					Method method = null;
+//					try {
+//						method = clazz.getMethod("set" + name, float.class);
+//					} catch (NoSuchMethodException | SecurityException e) {
+//						e.printStackTrace();
+//					}
+//
+//					try {
+//						method.invoke(clazz.newInstance(), 900);
+//					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+//						e.printStackTrace();
+//					} catch (InstantiationException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			}
+//	}
+//
+//	private static float getResize(float size, float newSize)
+//	{
+//		return size * newSize / ReferenceConfig.getWidth();
+//	}
 }

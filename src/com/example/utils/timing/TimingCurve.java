@@ -2,7 +2,7 @@ package com.example.utils.timing;
 
 public class TimingCurve extends TimeDuration
 {
-	public enum CurvePreset
+	public static enum Preset
 	{
 		LINEAR,
 		EASE_IN,
@@ -11,10 +11,10 @@ public class TimingCurve extends TimeDuration
 		RUSH_IN_OUT
 	}
 
-	private CurvePreset	preset;
+	private TimingCurve.Preset	preset;
 	private float		progression;
 
-	public TimingCurve(CurvePreset preset, float seconds)
+	public TimingCurve(TimingCurve.Preset preset, float seconds)
 	{
 		super(seconds);
 		this.preset = preset;

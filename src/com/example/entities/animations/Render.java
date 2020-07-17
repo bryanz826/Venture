@@ -18,7 +18,7 @@ public class Render
 	private Resource	scaledFrame;
 	private Resource	rotatedFrame;
 
-	public Render()// , float radians)
+	public Render()
 	{
 		this(new Resource("flying-bonger.png"));
 	}

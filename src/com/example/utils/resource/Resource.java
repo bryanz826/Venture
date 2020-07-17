@@ -61,7 +61,7 @@ public class Resource
 			this.image = resource;
 		} else { // else load the image in
 			try {
-				image = ImageIO.read(getClass().getResourceAsStream(ReferenceResource.RESOURCE_LOC + fileName));
+				image = ImageIO.read(getClass().getResourceAsStream(ReferenceResource.IMAGE_LOC + fileName));
 				map.put(fileName, image);
 			} catch (Exception e) {
 				System.err.printf("Cannot find " + fileName + "!\n");

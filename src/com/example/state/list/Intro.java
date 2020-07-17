@@ -11,7 +11,6 @@ import com.example.utils.input.KeyManager;
 import com.example.utils.input.MouseManager;
 import com.example.utils.timing.TimeDuration;
 import com.example.utils.timing.TimingCurve;
-import com.example.utils.timing.TimingCurve.CurvePreset;
 
 public class Intro implements State
 {
@@ -24,9 +23,9 @@ public class Intro implements State
 	public Intro()
 	{
 		alpha = 255;
-		fadeIn = new TimingCurve(CurvePreset.EASE_IN, 1.5f);
+		fadeIn = new TimingCurve(TimingCurve.Preset.EASE_IN, 1.5f);
 		wait = new TimeDuration(0.5f);
-		fadeOut = new TimingCurve(CurvePreset.EASE_IN_OUT, 1);
+		fadeOut = new TimingCurve(TimingCurve.Preset.EASE_IN_OUT, 1);
 	}
 
 	@Override

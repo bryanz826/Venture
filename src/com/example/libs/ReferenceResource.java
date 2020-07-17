@@ -5,10 +5,12 @@ import java.awt.image.BufferedImage;
 
 public class ReferenceResource
 {
-	public static final String	RESOURCE_LOC	= "/com/example/xres/";
+	public static final String	IMAGE_LOC	= "/com/example/xres/image/";
+	public static final String	DATA_LOC	= "./src/com/example/xres/data/";
 
 	public static final String	PLAYER_LOC		= "player/";
 	public static final String	METEOR_LOC		= "meteor/";
+	public static final String	PROJECTILE_LOC	= "projectile/";
 
 	public static BufferedImage rotate90(BufferedImage image)
 	{

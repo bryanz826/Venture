@@ -33,7 +33,7 @@ public class Splash
 
 	public Splash()
 	{
-		screen = new Screen(ReferenceResource.RESOURCE_LOC + "flying-bonger.png");
+		screen = new Screen(ReferenceResource.IMAGE_LOC + "flying-bonger.png");
 		screen.setLocationRelativeTo(null);
 		screen.setMaxProgress(50);
 		screen.setVisible(true);
@@ -58,12 +58,6 @@ public class Splash
 		StateManager.addState(new Intro());
 		StateManager.addState(new Menu());
 		StateManager.addState(new Play());
-
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 
 		screen.setVisible(false);
 	}
