@@ -4,7 +4,7 @@ import java.awt.Canvas;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 
-import com.example.libs.Reference;
+import com.example.refs.Reference;
 import com.example.state.StateManager;
 import com.example.utils.ConsoleLog;
 import com.example.utils.input.KeyManager;

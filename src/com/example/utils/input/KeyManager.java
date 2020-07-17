@@ -3,8 +3,8 @@ package com.example.utils.input;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import com.example.libs.Reference;
 import com.example.main.VentureRunner;
+import com.example.refs.Reference;
 
 public class KeyManager extends KeyAdapter
 {

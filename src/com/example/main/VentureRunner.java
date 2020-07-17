@@ -2,6 +2,7 @@ package com.example.main;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.DisplayMode;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
@@ -15,14 +16,14 @@ import java.awt.event.WindowEvent;
 
 import com.example.entities.collisions.BoundsManager;
 import com.example.entities.collisions.BoundsManager.BoundsType;
-import com.example.libs.ReferenceResource;
-import com.example.libs.Vector2D;
+import com.example.refs.ReferenceResource;
+import com.example.refs.Vector2D;
 import com.example.utils.ConsoleLog;
 
 /**
  * Game runner that contains a Frame that holds a game reference. Currently
  * offers windowed and fullscreen
- * 
+ *
  * @author poroia
  */
 public class VentureRunner
@@ -37,6 +38,12 @@ public class VentureRunner
 	 * calculations based off it.
 	 */
 	public static final int			RECOMMENDED_HEIGHT	= 1080;
+
+	public static final int				SCREEN_WIDTH =
+							Toolkit.getDefaultToolkit().getScreenSize().width;
+
+	public static final int				SCREEN_HEIGHT =
+							Toolkit.getDefaultToolkit().getScreenSize().height;
 
 	/**
 	 * Current width of Frame
@@ -129,6 +136,9 @@ public class VentureRunner
 		updateDimensions(true);
 		full = false;
 		ConsoleLog.write("Minimized Screen Initiated - " + WIDTH + " x " + HEIGHT);
+
+		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+		ConsoleLog.write("Screen size - " + (int) d.getWidth() + " x " + (int) d.getHeight());
 	}
 
 	private static void setFullscreen()
@@ -198,6 +208,9 @@ public class VentureRunner
 			updateDimensions(false); // TODO work with display modes?
 			full = true;
 			ConsoleLog.write("Full Screen Initiated - " + WIDTH + " x " + HEIGHT);
+
+			Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+			ConsoleLog.write("Screen size - " + (int) d.getWidth() + " x " + (int) d.getHeight());
 		} else { // if full screen isn't allowed :(
 			ConsoleLog.write("Fullscreen not supported. Switching screen mode to windowed");
 			if (!game.isRunning()) setWindowed();
@@ -206,8 +219,8 @@ public class VentureRunner
 
 	private static void updateDimensions(boolean windowOffset) // update current window size to new window
 	{
-		WIDTH = window.getWidth();
-		HEIGHT = window.getHeight();
+		WIDTH = device.getDisplayMode().getWidth();
+		HEIGHT = device.getDisplayMode().getHeight();
 		updateOuter();
 		if (windowOffset) {
 			WIDTH -= windowedOffsetX;

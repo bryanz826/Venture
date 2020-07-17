@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.example.entities.EntityManager;
-import com.example.libs.ReferenceConfig;
+import com.example.refs.ReferenceConfig;
 import com.example.state.State;
 
 public class Play implements State

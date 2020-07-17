@@ -9,10 +9,10 @@ import com.example.entities.collisions.Bounds;
 import com.example.entities.collisions.BoundsManager.BoundsType;
 import com.example.entities.collisions.ComplexBounds;
 import com.example.entities.types.ID;
-import com.example.libs.Reference;
-import com.example.libs.ReferenceConfig;
-import com.example.libs.ReferenceResource;
-import com.example.libs.Vector2D;
+import com.example.refs.Reference;
+import com.example.refs.ReferenceConfig;
+import com.example.refs.ReferenceResource;
+import com.example.refs.Vector2D;
 import com.example.utils.ConsoleLog;
 import com.example.utils.input.KeyManager;
 import com.example.utils.input.MouseManager;
@@ -51,7 +51,7 @@ public class PlayerMechanics extends Moving implements ComplexBounds
 	//
 	// CONSTRUCTORS
 	//
-	
+
 	/**
 	 * Constructs the Player with basic features.
 	 */
@@ -62,7 +62,6 @@ public class PlayerMechanics extends Moving implements ComplexBounds
 				new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-orange.png", true)), ID.PLAYER);
 		resistance = new Vector2D();
 		damageRender = new Render(new Resource(ReferenceResource.PLAYER_LOC + "player-damaged-2.png", true));
-
 		getBm().updateComplex(createComplex());
 		setMass(getBm().getBounds());
 
@@ -237,7 +236,7 @@ public class PlayerMechanics extends Moving implements ComplexBounds
 
 	/**
 	 * Returns the targetRotation
-	 * 
+	 *
 	 * @param targetRotation
 	 *            The target rotation in radians
 	 */
@@ -248,7 +247,7 @@ public class PlayerMechanics extends Moving implements ComplexBounds
 
 	/**
 	 * Returns the damageRender
-	 * 
+	 *
 	 * @param damageRender
 	 */
 	public void setDamageRender(Resource damage)

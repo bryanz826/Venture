@@ -9,9 +9,9 @@ import com.example.entities.collisions.Bounds;
 import com.example.entities.collisions.BoundsManager;
 import com.example.entities.collisions.BoundsManager.BoundsType;
 import com.example.entities.types.ID;
-import com.example.libs.Reference;
-import com.example.libs.ReferenceRender;
-import com.example.libs.Vector2D;
+import com.example.refs.Reference;
+import com.example.refs.ReferenceRender;
+import com.example.refs.Vector2D;
 
 /**
  * A Moving entity that has models real world physics using velocity and

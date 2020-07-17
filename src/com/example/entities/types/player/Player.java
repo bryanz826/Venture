@@ -43,7 +43,7 @@ public final class Player
 	/**
 	 * Returns the instance of this class to be accessed globally. Because of this,
 	 * an instance of this class may theoretically be anywhere in this project.
-	 * 
+	 *
 	 * @return INSTANCE
 	 */
 	public static Player I()
@@ -62,12 +62,12 @@ public final class Player
 
 	public void update()
 	{
-
+		mechanics.update();
 	}
 
 	public void render(Graphics2D g, float interpolation)
 	{
-
+		mechanics.render(g, interpolation);
 	}
 
 	//

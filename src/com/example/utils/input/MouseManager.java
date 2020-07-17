@@ -3,10 +3,12 @@ package com.example.utils.input;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import com.example.refs.ReferenceConfig;
+
 public class MouseManager extends MouseAdapter
 {
-	private static int			x, y;
-	private static int			prevX, prevY;
+	private static float		x, y;
+	private static float		prevX, prevY;
 	private static boolean		moving;
 
 	private static final int	NUM_BUTTONS		= 7;
@@ -19,9 +21,9 @@ public class MouseManager extends MouseAdapter
 		for (int i = 0; i < NUM_BUTTONS; i++) {
 			prevButtonState[i] = buttonState[i];
 		}
-		if (x == prevX && y == prevY) moving = false;
-		prevX = x;
-		prevY = y;
+		if (getX() == prevX && getY() == prevY) moving = false;
+		prevX = getX();
+		prevY = getY();
 	}
 
 	public static boolean isDown(int i)
@@ -75,25 +77,25 @@ public class MouseManager extends MouseAdapter
 	@Override
 	public void mouseDragged(MouseEvent e)
 	{
-		x = e.getX();
-		y = e.getY();
+		x = e.getX() / ReferenceConfig.getScreenRatioX();
+		y = e.getY() / ReferenceConfig.getScreenRatioY();
 		moving = true;
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e)
 	{
-		x = e.getX();
-		y = e.getY();
+		x = e.getX() / ReferenceConfig.getScreenRatioX();
+		y = e.getY() / ReferenceConfig.getScreenRatioY();
 		moving = true;
 	}
 
-	public static int getX()
+	public static float getX()
 	{
 		return x;
 	}
 
-	public static int getY()
+	public static float getY()
 	{
 		return y;
 	}

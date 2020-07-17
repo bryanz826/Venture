@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.example.libs.ReferenceResource;
+import com.example.refs.ReferenceResource;
 
 public class DataHandler
 {

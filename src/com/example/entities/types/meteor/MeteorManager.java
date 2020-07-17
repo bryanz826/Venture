@@ -11,15 +11,15 @@ import com.example.entities.Moving;
 import com.example.entities.collisions.BoundsManager;
 import com.example.entities.collisions.BoundsManager.BoundsType;
 import com.example.entities.types.player.Player;
-import com.example.libs.Reference;
-import com.example.libs.ReferenceConfig;
-import com.example.libs.ReferenceMath;
-import com.example.libs.ReferenceRender;
-import com.example.libs.Vector2D;
+import com.example.refs.Reference;
+import com.example.refs.ReferenceConfig;
+import com.example.refs.ReferenceMath;
+import com.example.refs.ReferenceRender;
+import com.example.refs.Vector2D;
 
 /**
  * Manages the meteors' cooldown and launch.
- * 
+ *
  * @author poroia
  */
 public class MeteorManager
@@ -124,7 +124,7 @@ public class MeteorManager
 
 	/**
 	 * Updates the target area and handles meteors launches.
-	 * 
+	 *
 	 * @param movables
 	 *            The meteors are added to the entities list.
 	 */
@@ -181,7 +181,7 @@ public class MeteorManager
 
 	/**
 	 * @param movables
-	 * 
+	 *
 	 */
 	public void handleLaunchTiming(List<Moving> movables)
 	{
@@ -223,7 +223,7 @@ public class MeteorManager
 	/**
 	 * Sets the size of the targetArea around the ship based on a ratio to the
 	 * screen.
-	 * 
+	 *
 	 * @param proportion
 	 *            The size ratio compared to the screen
 	 */
@@ -241,7 +241,7 @@ public class MeteorManager
 	/**
 	 * Sets the size of the failArea around the center of the screen based on a
 	 * ratio to the screen.
-	 * 
+	 *
 	 * @param proportion
 	 *            The size ratio compared to the screen
 	 */
@@ -262,7 +262,7 @@ public class MeteorManager
 
 	/**
 	 * Sets the target area proportion.
-	 * 
+	 *
 	 * @param proportion
 	 *            The ratio of target area rectangle to the screen.
 	 */
@@ -274,7 +274,7 @@ public class MeteorManager
 
 	/**
 	 * Sets the fail area proportion.
-	 * 
+	 *
 	 * @param proportion
 	 *            The ratio of fail area rectangle to the screen.
 	 */
@@ -285,7 +285,7 @@ public class MeteorManager
 
 	/**
 	 * Sets the successRate.
-	 * 
+	 *
 	 * @param successRate
 	 *            The chance the meteor will hit the targetArea.
 	 */
@@ -296,7 +296,7 @@ public class MeteorManager
 
 	/**
 	 * Sets the launch time window.
-	 * 
+	 *
 	 * @param launchWindow
 	 *            The time window in seconds that a meteor can be launched.
 	 */
@@ -307,7 +307,7 @@ public class MeteorManager
 
 	/**
 	 * Sets the launch time preparation.
-	 * 
+	 *
 	 * @param launchPreparation
 	 *            The time window in seconds that a meteor cannot be launched and
 	 *            launch is prepared.
@@ -319,7 +319,7 @@ public class MeteorManager
 
 	/**
 	 * Sets the launch count. Cannot be greater than launch preparation in ticks
-	 * 
+	 *
 	 * @param launchCount
 	 *            The number of meteors launched in the launch window.
 	 */
@@ -331,7 +331,7 @@ public class MeteorManager
 
 	/**
 	 * Returns the target area rect of the meteors.
-	 * 
+	 *
 	 * @return targetArea
 	 */
 	public BoundsManager getTargetArea()
@@ -341,7 +341,7 @@ public class MeteorManager
 
 	/**
 	 * Returns the fail area rect of the meteors.
-	 * 
+	 *
 	 * @return failArea
 	 */
 	public BoundsManager getFailArea()
@@ -351,7 +351,7 @@ public class MeteorManager
 
 	/**
 	 * Returns the meteors list.
-	 * 
+	 *
 	 * @return meteors
 	 */
 	public List<Meteor> getMeteors()

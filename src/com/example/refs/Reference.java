@@ -1,4 +1,4 @@
-package com.example.libs;
+package com.example.refs;
 
 public class Reference
 {

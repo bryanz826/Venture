@@ -2,7 +2,7 @@ package com.example.entities.animations;
 
 import java.awt.Graphics2D;
 
-import com.example.libs.Vector2D;
+import com.example.refs.Vector2D;
 import com.example.utils.resource.Resource;
 
 /**

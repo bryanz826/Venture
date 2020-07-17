@@ -1,4 +1,4 @@
-package com.example.libs;
+package com.example.refs;
 
 import com.example.entities.collisions.BoundsManager;
 import com.example.main.VenturePanel;
@@ -17,6 +17,16 @@ public class ReferenceConfig
 	public static int getHeight()
 	{
 		return VentureRunner.HEIGHT;
+	}
+	
+	public static float getScreenRatioX()
+	{
+		return VentureRunner.SCREEN_WIDTH / (float) VentureRunner.WIDTH;
+	}
+	
+	public static float getScreenRatioY()
+	{
+		return VentureRunner.SCREEN_HEIGHT / (float) VentureRunner.HEIGHT;
 	}
 
 	public static BoundsManager getOuter()
